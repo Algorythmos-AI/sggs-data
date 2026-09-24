@@ -39,6 +39,11 @@ EOF
 shasum -a 256 -c pipeline/translations.SHA256SUMS >/dev/null 2>&1 \
   || { echo "translation sources missing or altered — run: bash scripts/data/fetch_translations.sh" >&2; exit 1; }
 echo "translation sources verified against pipeline/translations.SHA256SUMS"
+# The Nitnem layer is built from the ShabadOS database.sqlite (release 4.8.7); a missing or
+# different copy would change the bani registry, so it is pinned like the translations.
+shasum -a 256 -c pipeline/shabados.SHA256SUMS >/dev/null 2>&1 \
+  || { echo "ShabadOS database.sqlite missing or altered — run: bash scripts/data/fetch_shabados.sh" >&2; exit 1; }
+echo "ShabadOS database verified against pipeline/shabados.SHA256SUMS"
 # Reproducible stamps: every date written into the DB/MANIFEST derives from this (build_clock.py).
 # Default = the HEAD commit time, so the same commit + same PDF + same toolchain => same bytes.
 export SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-$(git log -1 --format=%ct)}"
@@ -126,7 +131,7 @@ python3 pipeline/timing/seed_timing.py      --db "$ANALYTICS_DB" --skip-baseline
 python3 pipeline/timing/derive_bani_forms.py --db "$ANALYTICS_DB" --skip-baseline
 
 echo "── 7c/8 Nitnem bani registry (additive NEW tables: banis, bani_lines, extra_lines; scripture untouched)"
-# Needs the ShabadOS database.sqlite in the repo root (git-ignored; NOTICE.md says how to fetch it).
+# Needs the ShabadOS database.sqlite in the repo root (git-ignored; verified above; scripts/data/fetch_shabados.sh restores it).
 python3 pipeline/banis/build_banis.py --db "$ANALYTICS_DB" --skip-baseline --report validation/banis/sggs-placements.json
 python3 pipeline/banis/guard_banis.py --db "$ANALYTICS_DB"
 

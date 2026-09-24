@@ -1,0 +1,5 @@
+# The rebuild toolchain, pinned (the interpreter that runs pipeline/rebuild_all.sh).
+# These are the versions every release so far was built with; the DR drill installs exactly these.
+PyMuPDF==1.26.4
+numpy==2.0.2
+scipy==1.13.1
