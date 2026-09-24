@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0              # ledger_check diffs the corpus against the merge base
       - uses: ./.github/actions/lfs-db
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version-file: ".python-version"
       - name: Hash chain — MANIFEST ⇄ corpus ⇄ DB ⇄ reconcile attestation
@@ -63,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/lfs-db
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version-file: ".python-version"
       - name: Ruff (bug-only lint gate)
