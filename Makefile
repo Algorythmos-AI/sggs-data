@@ -3,7 +3,7 @@
 PIPELINE_PY ?= /usr/bin/python3
 PDF ?= ../Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf
 
-.PHONY: help doctor ci test-data verify guard ledger-check fingerprint fetch-translations fetch-shabados dr-drill reconcile rebuild ios-db scripture-diff compare-builds
+.PHONY: help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill reconcile rebuild ios-db scripture-diff compare-builds
 help: ## list targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-20s\033[0m %s\n",$$1,$$2}'
 
@@ -13,7 +13,7 @@ doctor: ## check the local toolchain (PyMuPDF/numpy/scipy interpreter, git-lfs, 
 	@test -f db/sggs.sqlite && head -c 16 db/sggs.sqlite | grep -q "SQLite format 3" && echo "db: real SQLite" || echo "  db/sggs.sqlite missing or an LFS pointer — run: git lfs pull"
 	@test -f "$(PDF)" && echo "pdf: present" || echo "  source PDF not at $(PDF) (needed only for reconcile/rebuild)"
 
-ci: verify guard ledger-check fingerprint test-data ## run the gates CI runs (no PDF needed)
+ci: verify guard ledger-check fingerprint quality test-data ## run the gates CI runs (no PDF needed)
 	@echo "make ci: PASS"
 
 test-data: ## data-integrity tests: install safety, fingerprints, editorial ledger, reproducibility
@@ -28,6 +28,9 @@ guard: ## pre-existing tables byte-identical to the committed baseline (+ bani r
 
 ledger-check: ## editorial ledger: fix_text rules == register; scripture diffs vs main covered by new entries
 	python3 pipeline/ledger_check.py --base $$(git merge-base HEAD origin/main)
+
+quality: ## data-quality contract: shape, comp_id gaps, headers, script separation, references, tracked review rows
+	python3 pipeline/data_quality.py
 
 fingerprint: ## db/sggs.sqlite content == audit/dataset-fingerprint.json (per table, FTS index, scripture)
 	python3 pipeline/sggs_integrity.py db/sggs.sqlite --compare audit/dataset-fingerprint.json
