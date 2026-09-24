@@ -151,6 +151,13 @@ class RebuildWritesOnlyDataPaths(unittest.TestCase):
             with self.subTest(path=foreign):
                 self.assertNotIn(foreign, script)
 
+    def test_rebuild_refuses_unpinned_third_party_inputs(self):
+        script = (ROOT / "pipeline" / "rebuild_all.sh").read_text(encoding="utf-8")
+        for sums in ("pipeline/translations.SHA256SUMS", "pipeline/shabados.SHA256SUMS"):
+            with self.subTest(sums=sums):
+                self.assertIn(f"shasum -a 256 -c {sums}", script)
+                self.assertTrue((ROOT / sums).is_file(), sums)
+
     def test_banis_report_parent_is_created(self):
         src = (ROOT / "pipeline" / "banis" / "build_banis.py").read_text(encoding="utf-8")
         self.assertIn("Path(args.report).parent.mkdir(parents=True, exist_ok=True)", src)

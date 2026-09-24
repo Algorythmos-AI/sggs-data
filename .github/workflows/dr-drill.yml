@@ -1,0 +1,43 @@
+name: dr-drill
+
+# Disaster-recovery drill on a clean machine, quarterly and on demand: rebuild the dataset from
+# the off-site backups alone (Algorythmos-AI/sggs-source: PDF, translation sources, ShabadOS
+# database — each hash-verified) with the pinned toolchain, and prove it is the same data
+# (scripts/data/dr_drill.sh). Runbook: docs/process/runbooks/data-restore.md.
+# Needs the repository secret SGGS_SOURCE_TOKEN: a fine-grained token with read-only "Contents"
+# on Algorythmos-AI/sggs-source (the backups are private).
+
+on:
+  schedule:
+    - cron: "23 3 1 1,4,7,10 *"     # 1 Jan/Apr/Jul/Oct, 03:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dr-drill
+  cancel-in-progress: false
+
+jobs:
+  drill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Pinned rebuild toolchain
+        run: python3 -m pip install --quiet -r pipeline/requirements-toolchain.txt
+      - name: Rebuild from the backups and compare (Linux vs the macOS release build → float tables may differ)
+        env:
+          GH_TOKEN: ${{ secrets.SGGS_SOURCE_TOKEN }}
+        run: |
+          test -n "$GH_TOKEN" || { echo "::error::SGGS_SOURCE_TOKEN is not set (read-only access to sggs-source)"; exit 1; }
+          bash scripts/data/dr_drill.sh --ref "$GITHUB_SHA" --workdir "$RUNNER_TEMP/drill" --allow-float-tables | tee "$RUNNER_TEMP/drill.log"
+      - name: Drill summary
+        if: always()
+        run: |
+          { echo '## DR drill'; echo '```'; tail -20 "$RUNNER_TEMP/drill.log" 2>/dev/null || echo "no log"; echo '```';
+            echo 'Record the RESULT line in audit/dr-drills.md.'; } >> "$GITHUB_STEP_SUMMARY"
