@@ -24,18 +24,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-      - name: Pinned rebuild toolchain
-        run: python3 -m pip install --quiet -r pipeline/requirements-toolchain.txt
-      - name: Rebuild from the backups and compare (Linux vs the macOS release build → float tables may differ)
+      - uses: actions/checkout@v7
+      - name: Build the pinned rebuild toolchain (toolchain/Dockerfile)
+        run: docker build -t sggs-toolchain -f toolchain/Dockerfile .
+      - name: Rebuild from the backups inside the toolchain and compare (Linux vs the macOS release build → float tables may differ)
         env:
           GH_TOKEN: ${{ secrets.SGGS_SOURCE_TOKEN }}
         run: |
           test -n "$GH_TOKEN" || { echo "::error::SGGS_SOURCE_TOKEN is not set (read-only access to sggs-source)"; exit 1; }
-          bash scripts/data/dr_drill.sh --ref "$GITHUB_SHA" --workdir "$RUNNER_TEMP/drill" --allow-float-tables | tee "$RUNNER_TEMP/drill.log"
+          docker run --rm -e GH_TOKEN -v "$PWD:/repo" -v "$RUNNER_TEMP:/drill" sggs-toolchain \
+            bash scripts/data/dr_drill.sh --ref "$GITHUB_SHA" --workdir /drill/work --allow-float-tables \
+            | tee "$RUNNER_TEMP/drill.log"
       - name: Drill summary
         if: always()
         run: |

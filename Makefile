@@ -3,7 +3,7 @@
 PIPELINE_PY ?= /usr/bin/python3
 PDF ?= ../Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf
 
-.PHONY: help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill reconcile rebuild ios-db scripture-diff compare-builds
+.PHONY: help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
 help: ## list targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-20s\033[0m %s\n",$$1,$$2}'
 
@@ -40,6 +40,9 @@ fetch-translations: ## restore the private English translation sources (checksum
 
 fetch-shabados: ## restore the ShabadOS database (Nitnem input) from the private backup, hash-verified
 	bash scripts/data/fetch_shabados.sh
+
+toolchain: ## build the pinned rebuild toolchain image (toolchain/Dockerfile) — the same one the DR drill uses
+	docker build -t sggs-toolchain -f toolchain/Dockerfile .
 
 dr-drill: ## disaster-recovery drill: fresh clone + backups → full rebuild → identical data (needs ~5 GB, sggs-source access)
 	PIPELINE_PY=$(PIPELINE_PY) bash scripts/data/dr_drill.sh

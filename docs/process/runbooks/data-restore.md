@@ -21,8 +21,11 @@ bash scripts/data/dr_drill.sh                       # fresh clone of main, resto
 bash scripts/data/dr_drill.sh --ref data-v1.0.0     # any past commit or tag
 ```
 
-It needs `gh` with read access to `sggs-source`, ~5 GB free disk, and the pinned toolchain
-(`pipeline/requirements-toolchain.txt`). It clones this repository fresh (nothing from your
+It needs `gh` with read access to `sggs-source`, ~5 GB free disk, and the pinned toolchain:
+`make toolchain` builds `toolchain/Dockerfile` (base image pinned by digest, the libraries in
+`pipeline/requirements-toolchain.txt`, `gh` pinned by checksum), and
+`docker run --rm -e GH_TOKEN -v "$PWD:/repo" sggs-toolchain bash scripts/data/dr_drill.sh` runs the
+drill inside it — exactly what the quarterly workflow does. It clones this repository fresh (nothing from your
 checkout is used), restores the PDF, the translation sources and the ShabadOS database from
 `sggs-source` — each verified against its committed hash — runs the full fail-hard rebuild
 (reconcile char-exact, golden checks, every gate), then requires:
