@@ -42,6 +42,7 @@ BaniDB/ShabadOS) and are never blended into the Gurmukhi.
 | `pipeline/reconcile.py` | corpus == PDF, character for character | every rebuild (gate) |
 | `pipeline/golden_test.py` | canonical structural checks | every rebuild (gate) |
 | `pipeline/sggs_integrity.py` | the committed DB's content equals `audit/dataset-fingerprint.json` — every table (build stamps blanked), every FTS5 index (via `fts5vocab`), `scripture_sha256` (the iOS definition) and `t0_sha256`; stable across SQLite versions | every PR (CI gate); written by every rebuild |
+| `pipeline/data_quality.py` | the dataset is well formed and the tracked rows are as reviewed: 60,658 lines over Angs 1–1430, no line without a `comp_id` and the set of `comp_id` gaps unchanged (ids are never reused), the heading set unchanged, no Latin in Gurmukhi columns and no Gurmukhi in the English layer, no reference to a missing line, and the 21 isolated-sign lines plus the empty-`translit_norm` line exactly as in `audit/data-quality-baseline.json` | every PR (CI gate); the baseline is re-recorded only in a reviewed PR |
 | `pipeline/ledger_check.py` | `fix_text` editorial rules == the ledger; any scripture (T0) change is covered by a new, reviewed ledger entry | every PR (CI gate) |
 | `pipeline/verify_regroup.py` | a corpus change touched only `comp_id`/`line_no`; scripture byte-identical | any PR touching corpus/db |
 | `pipeline/timing/guard_scripture.py` | pre-existing tables byte-identical to the committed baseline | after any DB write |
