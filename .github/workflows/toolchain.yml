@@ -1,0 +1,40 @@
+name: toolchain
+
+# The pinned rebuild toolchain (toolchain/Dockerfile) must build and carry exactly the pinned
+# versions. Runs when the toolchain definition changes.
+on:
+  pull_request:
+    paths:
+      - "toolchain/**"
+      - "pipeline/requirements-toolchain.txt"
+      - ".github/workflows/toolchain.yml"
+  push:
+    branches: [main]
+    paths:
+      - "toolchain/**"
+      - "pipeline/requirements-toolchain.txt"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - name: Build the toolchain image
+        run: docker build -t sggs-toolchain -f toolchain/Dockerfile .
+      - name: It carries exactly the pinned versions
+        run: |
+          docker run --rm sggs-toolchain python - <<'PY'
+          import re, fitz, numpy, scipy
+          want = dict(l.split("==") for l in open("/tmp/requirements-toolchain.txt") if "==" in l)
+          got = {"PyMuPDF": re.search(r"PyMuPDF ([0-9.]+)", fitz.__doc__).group(1),
+                 "numpy": numpy.__version__, "scipy": scipy.__version__}
+          bad = {k: (want[k].strip(), got[k]) for k in got if got[k] != want[k].strip()}
+          print("pinned:", {k: v.strip() for k, v in want.items()}, "installed:", got)
+          raise SystemExit(f"version drift: {bad}" if bad else 0)
+          PY
+          docker run --rm sggs-toolchain sh -c 'gh --version | head -1 && shasum --version && git --version'
