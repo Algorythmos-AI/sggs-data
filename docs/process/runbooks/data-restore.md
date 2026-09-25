@@ -7,12 +7,28 @@ procedure is the **quarterly disaster-recovery drill** that proves it still work
 
 | Asset | Copy 1 | Copy 2 | Copy 3 |
 |---|---|---|---|
-| Source PDF (`pdf_sha256` in `validation/reconcile-attestation.json`) | private `Algorythmos-AI/sggs-source`, release `source-pdf-v1` | object-lock bucket *(owner decision pending)* | offline drive *(owner decision pending)* |
-| English translation sources (`pipeline/translations.SHA256SUMS`) | `sggs-source`, release `translations-en-v1` | — | — |
-| ShabadOS database 4.8.7 (`pipeline/shabados.SHA256SUMS`) | `sggs-source`, release `shabados-database-4.8.7` | — | — |
+| Source PDF (`pdf_sha256` in `validation/reconcile-attestation.json`) | private `Algorythmos-AI/sggs-source`, release `source-pdf-v1` | R2 bucket `sggs-source-backup`, prefix `source-pdf-v1/` | encrypted offline drive *(pending)* |
+| English translation sources (`pipeline/translations.SHA256SUMS`) | `sggs-source`, release `translations-en-v1` | R2 `sggs-source-backup`, prefix `translations-en-v1/` | encrypted offline drive *(pending)* |
+| ShabadOS database 4.8.7 (`pipeline/shabados.SHA256SUMS`) | `sggs-source`, release `shabados-database-4.8.7` | R2 `sggs-source-backup`, prefix `shabados-database-4.8.7/` | encrypted offline drive *(pending)* |
 | Corpus, database, ledger, fingerprints, history | this repository (git + LFS) | `sggs-source` release `data-v1.0.0` | every clone |
 
 Nothing in `sggs-source` is ever replaced or deleted: a new edition or release gets a new release.
+
+**Copy 2** is a Cloudflare R2 bucket, `sggs-source-backup`, in the company Cloudflare account. It
+holds each `sggs-source` release under a prefix named after the release, with the release's own
+checksum files. Every object was downloaded back and verified by sha256 when it was stored
+(2026-09-25). The bucket lock rule `keep-forever` retains every object indefinitely, so nothing
+stored there can be deleted or overwritten. A new release gets a new prefix. To restore from it
+when GitHub is unavailable (Cloudflare access needed, e.g. `npx wrangler login`):
+
+```bash
+npx wrangler r2 object get sggs-source-backup/source-pdf-v1/SHA256SUMS --file SHA256SUMS --remote
+npx wrangler r2 object get "sggs-source-backup/source-pdf-v1/Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf" --file Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf --remote
+shasum -a 256 -c SHA256SUMS
+```
+
+The same pattern restores `translations-en-v1/` and `shabados-database-4.8.7/`. Verify every file
+against its checksum file (and the PDF against `pdf_sha256`) before using it.
 
 ## Restore (or drill) — one command
 
