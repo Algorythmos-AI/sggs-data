@@ -8,6 +8,8 @@ and is **never** edited, paraphrased, normalized, reordered, or guessed at.
 
 ```mermaid
 flowchart LR
+    accTitle: The guarantee chain
+    accDescr: The corpus is built from the source PDF, must reconcile character for character and pass the golden checks or the rebuild aborts; the database then must pass the regroup and scripture-guard checks before a commit and release.
     pdf[(Source Bir PDF)] -->|build_corpus.py| corpus[corpus/sggs.jsonl]
     corpus -->|reconcile.py| g1{char-exact<br/>vs PDF?}
     corpus -->|golden_test.py| g2{structural<br/>golden checks?}
@@ -19,7 +21,7 @@ flowchart LR
     db -->|guard_scripture.py| g4{pre-existing tables<br/>byte-identical to baseline?}
     g3 --> ok[commit + release]
     g4 --> ok
-    classDef gate fill:#7a1f1f,color:#fff;
+    classDef gate fill:#8A1538,color:#FFFFFF;
     class g1,g2,g3,g4 gate;
 ```
 

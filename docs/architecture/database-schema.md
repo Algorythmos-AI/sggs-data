@@ -19,6 +19,8 @@ the body it introduces** — a raag/title line, the `ੴ` invocation, and a
 
 ```mermaid
 flowchart TB
+    accTitle: comp_id before and after v1.1.0
+    accDescr: Before v1.1.0 a heading line and the invocation after it each had their own comp_id, orphaned from the composition they open; since v1.1.0 the heading run shares the comp_id of the composition, and the vacated ids stay gaps.
     subgraph before["Before v1.1.0 (the bug)"]
       t1["ਟੋਡੀ ਮਹਲਾ ੫ ਘਰੁ ੨ ਚਉਪਦੇ · comp 2844 (orphan)"]
       i1["ੴ ਸਤਿਗੁਰ ਪ੍ਰਸਾਦਿ · comp 2845"]
@@ -43,9 +45,11 @@ opens.
 - The run adopts its **last** heading's `comp_id` → **no body line's `comp_id`
   ever changes**, so saved bookmarks, deep links, and analytics keyed on `comp_id`
   stay valid.
-- Vacated ids become **permanent gaps**: distinct compositions **4,706**,
-  `max(comp_id)` **5,380**. `comp_id` 1 is a gap (Mool Mantar folds into Japji,
-  `comp_id` 2). `/api/shabad/{gap}` → 404.
+- Vacated ids become **permanent gaps**: distinct compositions **4,527**,
+  `max(comp_id)` **5,376** (since the v1.1.4 build, which demoted 233 verses mis-flagged as
+  headings and burned the ids they had opened; `pipeline/tests/test_docs_facts.py` holds these
+  numbers to the database). `comp_id` 1 is a gap (Mool Mantar folds into Japji, `comp_id` 2).
+  `/api/shabad/{gap}` → 404.
 - Every composition's first line is a heading; no heading follows a body line.
 - Exactly **3** header-only compositions remain — the closing rubrics `ਜੁਮਲਾ`,
   `ਦੁਤੁਕੇ`, `ਏਹੁ ਸਲੋਕੁ ਆਦਿ ਅੰਤਿ ਪੜਣਾ` (`TRAILING_RUBRICS`), which belong to the

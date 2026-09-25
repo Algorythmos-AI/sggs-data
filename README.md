@@ -3,6 +3,9 @@
 The verbatim corpus of **Sri Guru Granth Sahib Ji** (60,658 lines · 1,430 Angs), the SQLite/FTS5
 dataset built from it, and the pipeline that builds and **proves** them.
 
+The engineering wiki publishes this repository's docs at
+[docs.gurbanisoul.com/data](https://docs.gurbanisoul.com/data/), pinned at a commit; edit them here.
+
 > **Prime directive.** The Gurmukhi is verbatim from the source edition and is never edited,
 > normalised or "corrected". Suspected issues are flagged for scholarly review, never fixed. The only
 > sanctioned text transforms are registered in [`audit/editorial-ledger.jsonl`](audit/editorial-ledger.jsonl),
