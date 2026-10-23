@@ -60,9 +60,11 @@ opens.
 - **Search:** `fts`, `fts_en`, `fts_shabad`, `fts_tri`, `variants`, `word_freq`, `canon_tokens`.
 - **Translations:** `translations`, `sources`.
 - **Analytics:** `concepts`, `concept_lines`, `theme_network`, `theme_fingerprint`, `author_analytics`, `raag_analytics`, `author_distinctive_terms`, `author_resonance`, `line_neighbors`, `shabad_neighbors`.
+- **Voices (per-author read models, `build_voices.py`):** `author_raag` (where each voice sings; after Ang 1353 the row carries the section, `is_raag = 0`), `author_ang_hist` (verse lines per 10-Ang bucket, 143 buckets), `author_entry` (each voice's first verse line).
 - **Knowledge / meta:** `raag_timing_claims`, `timing_sources`, `timing_migrations`, `meta`, `analytics_meta`.
 
 ## Gotchas
 - `comp_type` is known-mislabeled in places; it is suppressed at the display layer. Prefer `comp_id`/`section`.
-- Japji (385 lines) has `author = null` in the source, so author filters for Guru Nanak miss it.
+- **Authorship** is the `author` column, set by the header pass and then refined by `pipeline/attribution_pass.py` (build_corpus post-pass 4): Bhagat shabads by rubric + signature, per-salok ਮਹਲਾ scope in Kabir's/Farid's salok blocks, and the reviewed ledger `pipeline/attribution_decisions.json` (e.g. Japji → Guru Nanak Dev Ji). Contested attributions (Mardana's saloks, Raagmala, the ਮਹਲਾ ੫ shabads that name Kabir/Surdas, some Bhatt splits) are recorded as `flags` and left as printed. `crosscheck_authors.py` gates every rebuild against the pinned ShabadOS database.
+- `author_analytics` stylometry (`mattr_100`, `hapax_pct`, `is_reliable`) is computed over the **English translation's** tokens — the Gurmukhi is never scored — so it describes the translation, not the author's own vocabulary.
 - `line_neighbors` is built with a nondeterministic random projection — its row *order* varies across rebuilds (its content is what matters).

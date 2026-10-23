@@ -28,7 +28,7 @@ REQUIRED = (
     'authors', 'meta', 'analytics_meta', 'theme_network', 'theme_fingerprint',
     'author_analytics', 'raag_analytics', 'shabad_neighbors', 'line_neighbors',
     'author_resonance', 'vaars', 'vaar_units', 'raag_timing_claims', 'timing_sources',
-    'banis', 'bani_lines',
+    'banis', 'bani_lines', 'author_raag', 'author_ang_hist', 'author_entry',
 )
 
 

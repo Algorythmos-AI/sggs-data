@@ -217,6 +217,19 @@ if os.path.exists(_bhatt_file):
                 r['author'] = rg['bhatt'] + ' (ਭਟ)'; _n += 1
     print(f'bhatt attribution: {_n} lines refined across {len(_ranges)} ranges')
 
+# ---- post-pass 4: author attribution (author field ONLY -- see attribution_pass.py):
+#      Bhagat shabads signed + rubricated for a different author than the header context
+#      carried in, per-salok ਮਹਲਾ scope inside Kabir's/Farid's salok blocks, and the reviewed
+#      ledger (attribution_decisions.json). The log is the review trail.
+from attribution_pass import apply as _attribute
+_ledger = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                      'attribution_decisions.json'), encoding='utf-8'))
+_alog = _attribute(records, _ledger)
+_by_rule = {}
+for _row in _alog: _by_rule[_row[4]] = _by_rule.get(_row[4], 0) + 1
+print(f'author attribution: {len(_alog)} lines re-attributed '
+      f'({", ".join(f"rule {k}: {v}" for k, v in sorted(_by_rule.items()))})')
+
 with open(OUT, 'w', encoding='utf-8') as f:
     for r in records:
         f.write(json.dumps(r, ensure_ascii=False) + '\n')

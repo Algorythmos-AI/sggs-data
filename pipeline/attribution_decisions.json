@@ -1,0 +1,59 @@
+{
+  "_doc": "Reviewed authorship decisions applied by attribution_pass.py rule C (author field only). Each 'set_author' entry names an id range, the author it expects to find (guard: the build fails if the corpus moved), the evidence, and an independent cross-check. 'flag' entries change nothing: they record contested attributions for the scholar (gate G3). review: pending until a scholar signs validation/attribution-review/.",
+  "cross_check": "ShabadOS database 4.8.7, sha256 d8e071347bd5485cc6aa2533c1f51347a16ed1724b4d8abaa4939520257074c2 (Algorythmos-AI/sggs-source release shabados-database-4.8.7) -- evidence only, never a source of corpus data",
+  "decisions": [
+    {"key": "japji-m1", "action": "set_author", "ids": [1, 385], "author": "Guru Nanak Dev Ji (M1)", "expect_author": [null],
+     "evidence": "Mool Mantar and Japji (section ਜਪੁ, Angs 1-8). The print carries no ਮਹਲਾ label for Japji, so the header pass left author null; Guru Nanak's authorship of Japji is universal in the tradition.",
+     "cross_check": "ShabadOS: Guru Nanak Dev Ji", "review": "pending"},
+
+    {"key": "sri-raag-ravidas", "action": "set_author", "ids": [3744, 3752], "author": "Bhagat Ravidas Ji", "expect_author": ["Bhagat Beni Ji"],
+     "evidence": "Opens with a bare ਸਿਰੀਰਾਗੁ heading after Beni's shabad; closing couplet ਰਵਿਦਾਸ ਸਮ ਦਲ ਸਮਝਾਵੈ ਕੋਊ (id 3752). The shabad closes with a single ॥੩॥, so rule A never sees it as a counted shabad.",
+     "cross_check": "ShabadOS: Bhagat Ravidas Ji", "review": "pending"},
+
+    {"key": "gauri-vaar-pauri-5-a", "action": "set_author", "ids": [14375, 14380], "author": "Guru Arjan Dev Ji (M5)", "expect_author": ["Guru Ram Das Ji (M4)"],
+     "evidence": "Heading ਪਉੜੀ ੫ (id 14375) in Gauri ki Vaar M4: the print marks this pauri as the Fifth Guru's. The Vaar-author rule assigned it to the Vaar's author.",
+     "cross_check": "ShabadOS: Guru Arjan Dev Ji", "review": "pending"},
+    {"key": "gauri-vaar-pauri-5-b", "action": "set_author", "ids": [14387, 14392], "author": "Guru Arjan Dev Ji (M5)", "expect_author": ["Guru Ram Das Ji (M4)"],
+     "evidence": "Heading ਪਉੜੀ ੫ (id 14387); as above.", "cross_check": "ShabadOS: Guru Arjan Dev Ji", "review": "pending"},
+    {"key": "gauri-vaar-pauri-5-c", "action": "set_author", "ids": [14399, 14404], "author": "Guru Arjan Dev Ji (M5)", "expect_author": ["Guru Ram Das Ji (M4)"],
+     "evidence": "Heading ਪਉੜੀ ੫ (id 14399); as above.", "cross_check": "ShabadOS: Guru Arjan Dev Ji", "review": "pending"},
+
+    {"key": "gujri-vaar-kabir-salok", "action": "set_author", "ids": [22806, 22810], "author": "Bhagat Kabir Ji", "expect_author": ["Guru Amar Das Ji (M3)"],
+     "evidence": "A salok under a bare ਸਲੋਕੁ heading (no ਮਹਲਾ/ਮਃ) inside Gujri ki Vaar M3, opening ਕਬੀਰ ਮੁਕਤਿ ਦੁਆਰਾ ਸੰਕੁੜਾ -- Kabir's salok quoted in the Vaar. The Guru's own saloks there carry ਮਃ ੩.",
+     "cross_check": "ShabadOS: Bhagat Kabir Ji", "review": "pending"},
+    {"key": "vadhans-vaar-kabir-salok", "action": "set_author", "ids": [24545, 24547], "author": "Bhagat Kabir Ji", "expect_author": ["Guru Ram Das Ji (M4)"],
+     "evidence": "Bare ਸਲੋਕ heading, salok ਕਬੀਰਾ ਮਰਤਾ ਮਰਤਾ ਜਗੁ ਮੁਆ (Ang 555).",
+     "cross_check": "ShabadOS: Bhagat Kabir Ji", "review": "pending"},
+    {"key": "ramkali-vaar-kabir-salok-a", "action": "set_author", "ids": [40633, 40635], "author": "Bhagat Kabir Ji", "expect_author": ["Guru Amar Das Ji (M3)"],
+     "evidence": "Bare ਸਲੋਕੁ heading, salok ਕਬੀਰ ਮਹਿਦੀ ਕਰਿ ਕੈ ਘਾਲਿਆ (Ang 947).",
+     "cross_check": "ShabadOS: Bhagat Kabir Ji", "review": "pending"},
+    {"key": "ramkali-vaar-kabir-salok-b", "action": "set_author", "ids": [40664, 40666], "author": "Bhagat Kabir Ji", "expect_author": ["Guru Amar Das Ji (M3)"],
+     "evidence": "Bare ਸਲੋਕੁ heading, salok ਕਬੀਰ ਕਸਉਟੀ ਰਾਮ ਕੀ (Ang 948).",
+     "cross_check": "ShabadOS: Bhagat Kabir Ji", "review": "pending"},
+
+    {"key": "ramkali-sadd-sundar", "action": "set_author", "ids": [39543, 39580], "author": "Baba Sundar Ji", "expect_author": ["Guru Amar Das Ji (M3)"],
+     "evidence": "Title ਰਾਮਕਲੀ ਸਦੁ names no author; closing line ਕਹੈ ਸੁੰਦਰੁ ਸੁਣਹੁ ਸੰਤਹੁ (id 39580, ॥੬॥੧॥). The header pass carried M3 forward from the preceding Anand Sahib.",
+     "cross_check": "ShabadOS: Baba Sundar", "review": "pending"},
+
+    {"key": "sarang-parmanand", "action": "set_author", "ids": [53925, 53934], "author": "Bhagat Parmanand Ji", "expect_author": ["Bhagat Namdev Ji"],
+     "evidence": "Heading ਸਾਰੰਗ + ੴ, shabad ਤੈ ਨਰ ਕਿਆ ਪੁਰਾਨੁ ਸੁਨਿ ਕੀਨਾ closing ਪਰਮਾਨੰਦ ਸਾਧਸੰਗਤਿ ਮਿਲਿ ਕਥਾ ਪੁਨੀਤ ਨ ਚਾਲੀ (id 53934). ਪਰਮਾਨੰਦ is also an ordinary word, so rule A never treats it as a signature -- hence a ledger decision.",
+     "cross_check": "ShabadOS: Bhagat Parmanand Ji", "review": "pending"},
+    {"key": "sarang-surdas-tuk", "action": "set_author", "ids": [53935, 53935], "author": "Bhagat Surdas Ji", "expect_author": ["Bhagat Namdev Ji"],
+     "evidence": "The single tuk ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ preceding ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ. It carries no signature; the tradition credits this one line to Bhagat Surdas.",
+     "cross_check": "ShabadOS: Bhagat Surdas Ji", "review": "pending"}
+  ],
+  "flags": [
+    {"key": "mardana-saloks", "ids": [24461, 24475], "current": "Bhai Mardana",
+     "note": "Headings read ਸਲੋਕੁ ਮਰਦਾਨਾ ੧ (Ang 553). Many read the ੧ as Guru Nanak, addressing Mardana; ShabadOS credits Guru Nanak Dev Ji. Left unchanged for the scholar."},
+    {"key": "raagmala", "ang": [1429, 1430], "current": "Guru Arjan Dev Ji (M5)",
+     "note": "Raagmala's authorship is debated; the M5 label is carried forward from Mundavani's ਮਹਲਾ ੫, and ShabadOS credits Poet Alam. Neither is settled -- left unchanged; the scholar decides whether it needs its own label."},
+    {"key": "gauri-kabir-naal-ralai", "ids": [14916, 14926], "current": "Guru Arjan Dev Ji (M5)",
+     "note": "Heading ਗਉੜੀ ਕਬੀਰ ਜੀ ਕੀ ਨਾਲਿ ਰਲਾਇ ਲਿਖਿਆ ਮਹਲਾ ੫ (Ang 326). The print's ਮਹਲਾ ੫ is kept; ShabadOS credits Kabir."},
+    {"key": "bhairo-na-ham-hindu", "ids": [48614, 48626], "current": "Guru Arjan Dev Ji (M5)",
+     "note": "Heading ਭੈਰਉ ਮਹਲਾ ੫, closing ਕਹੁ ਕਬੀਰ ਇਹੁ ਕੀਆ ਵਖਾਨਾ (Ang 1136). The print's ਮਹਲਾ ੫ is kept; ShabadOS credits Kabir."},
+    {"key": "sarang-m5-surdas", "ids": [53936, 53943], "current": "Guru Arjan Dev Ji (M5)",
+     "note": "Heading ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ (Ang 1253). The print's ਮਹਲਾ ੫ is kept; ShabadOS credits Surdas."},
+    {"key": "bhatt-internal", "ang": [1389, 1409], "current": "per bhatt_attribution.json",
+     "note": "ShabadOS splits some Swaiyye differently (The Bhatts->Gayand 42 lines, Kalsahar->Jalap 6, Sal->Bhikha 6, Mathura->Haribans 5). bhatt_attribution.json is a prior SME-audited table and is not changed here."}
+  ]
+}

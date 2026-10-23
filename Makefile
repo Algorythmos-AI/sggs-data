@@ -3,7 +3,7 @@
 PIPELINE_PY ?= /usr/bin/python3
 PDF ?= ../Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf
 
-.PHONY: help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
+.PHONY: attribution-proof crosscheck-authors help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
 help: ## list targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-20s\033[0m %s\n",$$1,$$2}'
 
@@ -28,6 +28,13 @@ guard: ## pre-existing tables byte-identical to the committed baseline (+ bani r
 
 ledger-check: ## editorial ledger: fix_text rules == register; scripture diffs vs main covered by new entries
 	python3 pipeline/ledger_check.py --base $$(git merge-base HEAD origin/main)
+
+attribution-proof: ## author-only change proof for a PR: make attribution-proof OLD=<old corpus.jsonl>
+	@test -n "$(OLD)" || { echo "usage: make attribution-proof OLD=<previous corpus/sggs.jsonl>"; exit 2; }
+	python3 pipeline/verify_attribution.py "$(OLD)" corpus/sggs.jsonl
+
+crosscheck-authors: ## every verse author that differs from ShabadOS is a reviewed flag (needs make fetch-shabados)
+	python3 pipeline/crosscheck_authors.py corpus/sggs.jsonl database.sqlite
 
 quality: ## data-quality contract: shape, comp_id gaps, headers, script separation, references, tracked review rows
 	python3 pipeline/data_quality.py

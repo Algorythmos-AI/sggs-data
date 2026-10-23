@@ -59,6 +59,9 @@ echo "── 2/8 reconciliation (must be char-exact)"
 python3 pipeline/reconcile.py "$PDF" "$CORPUS_NEW"
 echo "── 3/8 golden suite"
 python3 pipeline/golden_test.py "$PDF" "$CORPUS_NEW" >/dev/null && echo "ALL GOLDEN TESTS PASS"
+# Authorship: every verse whose author differs from the independent ShabadOS database must be
+# a reviewed, flagged case in pipeline/attribution_decisions.json (attribution_pass.py, post-pass 4).
+python3 pipeline/crosscheck_authors.py "$CORPUS_NEW" database.sqlite
 python3 pipeline/atomic_install.py "$CORPUS_NEW" corpus/sggs.jsonl
 echo "── 4/8 database + FTS"
 python3 pipeline/build_db.py corpus/sggs.jsonl "$TMPDB"
@@ -120,6 +123,7 @@ python3 pipeline/ml_analytics_builder.py --db "$TMPDB" --out "$ANALYTICS_DB"   #
 python3 pipeline/build_semantic_vectors_lite.py --db "$ANALYTICS_DB"           # line_neighbors (tfidf-randproj-lite)
 python3 pipeline/build_resonance.py --db "$ANALYTICS_DB"                       # author_resonance (uses line_neighbors)
 python3 pipeline/build_vaars.py --db "$ANALYTICS_DB"                           # vaars + vaar_units (22 Vaars, detected by title header)
+python3 pipeline/build_voices.py --db "$ANALYTICS_DB"                         # author_raag, author_ang_hist, author_entry (Voices of the Granth)
 
 echo "── 7b/8 raag-timing knowledge layer (additive NEW tables only; scripture untouched)"
 # --skip-baseline is sanctioned ONLY here: the fresh build is already gated by
