@@ -217,6 +217,16 @@ if os.path.exists(_bhatt_file):
                 r['author'] = rg['bhatt'] + ' (ਭਟ)'; _n += 1
     print(f'bhatt attribution: {_n} lines refined across {len(_ranges)} ranges')
 
+# ---- post-pass 4: authorship from the evidence printed in the Granth (headings, ਮਃ
+#      labels, pen-names, shabad numbering) + the approved editorial ledger. Changes the
+#      `author` field only; pipeline/verify_attribution.py proves nothing else moved.
+import attribution
+_attr_log, _attr_flags = attribution.apply(
+    records, attribution.load_ledger(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                  'attribution_ledger.json')))
+print(f'attribution: {len(_attr_log)} lines re-attributed from printed evidence, '
+      f'{len(_attr_flags)} flagged for scholarly review')
+
 with open(OUT, 'w', encoding='utf-8') as f:
     for r in records:
         f.write(json.dumps(r, ensure_ascii=False) + '\n')

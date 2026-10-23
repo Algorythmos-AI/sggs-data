@@ -1,0 +1,96 @@
+{
+ "_note": "Editorial attribution decisions for corpus `author` (never text). Applied by pipeline/attribution.py rule E only when status is 'approved'. 'proposed' entries are recorded for scholarly review (gate G3) and change nothing. Evidence quotes the print verbatim.",
+ "entries": [
+  {
+   "key": "japji",
+   "start_id": 1,
+   "end_id": 385,
+   "from": null,
+   "to": "Guru Nanak Dev Ji (M1)",
+   "status": "approved",
+   "reason": "Mool Mantar and Japji (Angs 1-8): no Mahalla is printed here, so the tag was empty; the composition is Guru Nanak Dev Ji's and its verses sign ਨਾਨਕ (e.g. Ang 8: ਨਾਨਕ ਤੇ ਮੁਖ ਉਜਲੇ ਕੇਤੀ ਛੁਟੀ ਨਾਲਿ ॥੧॥). Approved by the owner in the Lineage v2 plan, 2026-10-23.",
+   "review": "The closing salok (ਪਵਣੁ ਗੁਰੂ ਪਾਣੀ ਪਿਤਾ) also appears at Ang 146 under ਮਹਲਾ ੨ with variant readings; scholars attribute it variously. Kept with Japji; flagged."
+  },
+  {
+   "key": "sadu",
+   "start_id": 39543,
+   "end_id": 39580,
+   "from": "Guru Amar Das Ji (M3)",
+   "to": "Baba Sundar Ji",
+   "status": "approved",
+   "reason": "Ramkali Sadu (Angs 923-924), heading ਰਾਮਕਲੀ ਸਦੁ with no Mahalla; the verse is signed by its poet: ਕਹੈ ਸੁੰਦਰੁ ਸੁਣਹੁ ਸੰਤਹੁ ਸਭੁ ਜਗਤੁ ਪੈਰੀ ਪਾਇ ਜੀਉ ॥੬॥੧॥ The tag had bled from Guru Amar Das Ji's Anand Sahib. Approved by the owner in the Lineage v2 plan, 2026-10-23."
+  },
+  {
+   "key": "mardana",
+   "start_id": 24461,
+   "end_id": 24475,
+   "from": "Bhai Mardana",
+   "to": "Guru Nanak Dev Ji (M1)",
+   "status": "proposed",
+   "reason": "Heading ਸਲੋਕੁ ਮਰਦਾਨਾ ੧ ॥ (Ang 553, Bihagre ki Vaar). Many commentators read these saloks as Guru Nanak Dev Ji's, addressed to Bhai Mardana (the ੧ as Mahalla 1); others attribute them to Bhai Mardana. Unchanged pending scholarly review."
+  },
+  {
+   "key": "surdas-line",
+   "start_id": 53935,
+   "end_id": 53935,
+   "from": "Bhagat Namdev Ji",
+   "to": "Bhagat Surdas Ji",
+   "status": "proposed",
+   "reason": "Ang 1253: the single line ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥ follows Bhagat Parmanand Ji's shabad and precedes ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥; it is traditionally Bhagat Surdas Ji's one line in the Granth. No heading or signature is printed with it here. Unchanged pending scholarly review."
+  },
+  {
+   "key": "raagmala",
+   "start_id": 60597,
+   "end_id": 60658,
+   "from": "Guru Arjan Dev Ji (M5)",
+   "to": null,
+   "status": "proposed",
+   "reason": "Raagmala (Angs 1429-1430) carries no Mahalla; its authorship is disputed (some attribute it to the poet Alam). The current tag is inherited from Mundavani. Proposed: leave unattributed and describe the dispute. Unchanged pending scholarly review."
+  },
+  {
+   "key": "bhatt-splits",
+   "start_id": 59363,
+   "end_id": 59860,
+   "from": null,
+   "to": null,
+   "status": "proposed",
+   "reason": "Per-Bhatt splits in the Swaiyye (pipeline/bhatt_attribution.json) differ from an independent edition at Angs 1394 (Kalsahar/Jalap), 1396 (Sal/Bhikha), 1401-1402 (54 lines tagged 'The Bhatts'; Gayand) and 1409 (Mathura/Haribans). Scholars count 11 or 17 Bhatts. Unchanged pending scholarly review."
+  },
+  {
+   "key": "kabir-saloks-signed-by-others",
+   "start_id": 58724,
+   "end_id": 58788,
+   "from": null,
+   "to": null,
+   "status": "proposed",
+   "reason": "Inside ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ, saloks 212-213 (Trilochan and Namdev in dialogue), 241 (ਕਹਿ ਨਾਮਾ) and 242 (ਸਤਿ ਭਾਖੈ ਰਵਿਦਾਸ) are signed by other Bhagats. Tagged with the collection (Bhagat Kabir Ji) as the independent edition does. Pending scholarly review."
+  },
+  {
+   "key": "keep-ang326",
+   "start_id": 14916,
+   "end_id": 14926,
+   "from": "Guru Arjan Dev Ji (M5)",
+   "to": "Guru Arjan Dev Ji (M5)",
+   "status": "keep",
+   "reason": "Heading ਗਉੜੀ ਕਬੀਰ ਜੀ ਕੀ ਨਾਲਿ ਰਲਾਇ ਲਿਖਿਆ ਮਹਲਾ ੫ ॥ (Ang 326): written by Mahalla 5 alongside Kabir's verses. The printed heading governs; an independent edition credits Kabir."
+  },
+  {
+   "key": "keep-ang1136",
+   "start_id": 48614,
+   "end_id": 48626,
+   "from": "Guru Arjan Dev Ji (M5)",
+   "to": "Guru Arjan Dev Ji (M5)",
+   "status": "keep",
+   "reason": "Heading ਭੈਰਉ ਮਹਲਾ ੫ ॥ (Ang 1136) over ਵਰਤ ਨ ਰਹਉ ਨ ਮਹ ਰਮਦਾਨਾ. The printed heading governs; an independent edition credits Kabir."
+  },
+  {
+   "key": "keep-ang1253-surdas-shabad",
+   "start_id": 53936,
+   "end_id": 53943,
+   "from": "Guru Arjan Dev Ji (M5)",
+   "to": "Guru Arjan Dev Ji (M5)",
+   "status": "keep",
+   "reason": "Heading ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥ (Ang 1253): Guru Arjan Dev Ji's shabad that names Surdas. The printed heading governs; an independent edition credits Surdas."
+  }
+ ]
+}
