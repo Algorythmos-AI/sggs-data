@@ -1,11 +1,11 @@
 {
-  "created": "2026-09-18T09:32:06+1000",
+  "created": "2026-10-23T21:33:28+0000",
   "db_path": "<external>/pretiming.sqlite",
-  "db_file_sha256": "dd1f69dceff3ee177d42abfaf2a06505c281635fb0731fe2556663761d886b89",
+  "db_file_sha256": "87f8e5ca1d86513b92e8a1b98602d33617e25603dbf8296f5b4a9b293818a905",
   "corpus_path": "corpus/sggs.jsonl",
-  "corpus_sha256": "7e53169bdc763cbd0a3b36f3eda1d3eb6ec1bc5d0629769659fad1675db0b665",
-  "manifest_db_sha256_at_baseline": "88745d1ddf91d4fb826c910fd9deddf3fc42514cd9be9794f185a63fd01019f5",
-  "manifest_corpus_sha256_at_baseline": "7e53169bdc763cbd0a3b36f3eda1d3eb6ec1bc5d0629769659fad1675db0b665",
+  "corpus_sha256": "753d2aba744a6e0a82da7275e9b409a5a0c2b8ccb2e2d9136a35171416be5b05",
+  "manifest_db_sha256_at_baseline": "e90eab8918cf80d0b126b2f8759273b413a86e5fa6b893b876b85460085ec6e0",
+  "manifest_corpus_sha256_at_baseline": "753d2aba744a6e0a82da7275e9b409a5a0c2b8ccb2e2d9136a35171416be5b05",
   "method": "data: sha256 of newline-joined compact-JSON rows, SELECT * ORDER BY rowid (fallback: ORDER BY all columns); blobs hex; floats repr. schema: sha256 of sqlite_master.sql. virtual tables: schema hash only.",
   "backup": null,
   "tables": {
@@ -14,42 +14,77 @@
       "virtual": false,
       "schema_sha256": "ebad4d3bfd9d82a1a26b428960c7eb84e69f5f7a680284a03d03d7d2c0f9afe9",
       "rows": 12,
-      "data_sha256": "d7f329818a34fc3c82ce2ad2da21091171cc31c964f4fe69039c8fe8863233b7"
+      "data_sha256": "a2c427ed2a91877930dc41df28f10eb4a6c27b9527704c5a47d741a973d6f4bc"
     },
     "author_analytics": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "589230cc797a0e2f1221621775432245a49a147cc4ca06bbdc25ff9bd85fe61d",
-      "rows": 29,
-      "data_sha256": "4042ed8d9e0436ba140d8996da763f0d39dd26f6df5a145bc9e2bcba990fe01e"
+      "rows": 35,
+      "data_sha256": "258e1f90e90a503ec4aba4b30e3b4f9af1ca16b4b6c42cf2947f2d3f830976cf"
+    },
+    "author_dialogues": {
+      "class": "metadata",
+      "virtual": false,
+      "schema_sha256": "3e72c021ebfe348d7d9364f317f71c527ea3ca29b9bbf89df2259f298b1dd5ef",
+      "rows": 17,
+      "data_sha256": "bebd1ec9f71125386047201f79b34dadc5bf477f18291f0c34628c9289641a86"
     },
     "author_distinctive_terms": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "6bf9a1e675b9df770f1707c29e2685b1dce6bef49150b0962903710e7400a594",
-      "rows": 105,
-      "data_sha256": "896789c0b2cb9e2bc359d80400b5de093c4cc10096173c3183439518ba1a5f58"
+      "rows": 195,
+      "data_sha256": "3cb7d1c674f7fceb9b7d710ae8648c7c32516b5baf061261b8896fb7b9f4351e"
+    },
+    "author_facts": {
+      "class": "metadata",
+      "virtual": false,
+      "schema_sha256": "46bf57de907672cf3b6bb6aca0aabe3a300416b7e2398bc83a7385bee4875b20",
+      "rows": 35,
+      "data_sha256": "f7dd19d38ad3aefa4da2d8b6fe59e76b080ae53dce3ec0e6d5a0769e3fe53cf8"
+    },
+    "author_mentions": {
+      "class": "metadata",
+      "virtual": false,
+      "schema_sha256": "66da0f6b094bbb29fd122289a5daa131490360b3c57645f8f81a9cb4a54a17e6",
+      "rows": 249,
+      "data_sha256": "6d1ebd20647f46d7fcb8f8ed456284a4b564ad2b2afa880be1b1d126828039b8"
     },
     "author_resonance": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "736195e1cd6ff92e96cbda5b8d82e3eabdcfd58773880ce63c559e4efe6aba56",
-      "rows": 533,
-      "data_sha256": "3afffba9eabf2c53a5e0c9529ae588a0b523371ed2c0da7540d290dfc398dfd9"
+      "rows": 670,
+      "data_sha256": "3d04fd5a863d0c64197c4405582e1bd3addb68e4d7e4d11c485941f0bbcaf96e"
     },
     "authors": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "c94a4b69adfc634afb8aec156e3114f775d1685b240040688eb947617f72dfae",
-      "rows": 29,
-      "data_sha256": "7fa38c04bd65e71466f40ceb5b206101b4d75f0c1e826e720f516ac6b24c07ac"
+      "rows": 35,
+      "data_sha256": "78b4b3a9b7a1d148780bbbb28df50f7ee1fa23fb078bc4e37dffe178e24bd550"
+    },
+    "bani_lines": {
+      "class": "scripture_derived",
+      "virtual": false,
+      "schema_sha256": "ca67b227ded452c1c4065fc6ce7901a050cc74e02b444d418f19851d296d7d5d",
+      "rows": 7910,
+      "data_sha256": "7d155f24c714636fb55c3002651ba53e8cb38622c9b109b1c5be45e82b1b1107"
+    },
+    "banis": {
+      "class": "scripture_derived",
+      "virtual": false,
+      "schema_sha256": "db5d1e6f618f10c485f8480ee7d1bf107f82fa5e8769f3552708292fe77effd0",
+      "rows": 23,
+      "data_sha256": "7ba47bd500b10562790a43e4dd3a6dee283f1b7ad5865b0a82b71392224cdba9"
     },
     "canon_tokens": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "fea761683afdac880036993f30ff83ab4a6295216347292bf472b9eaed26fa9d",
       "rows": 24676,
-      "data_sha256": "47eccf714f44bfe73aa994f5d87620c85c0a88142a1c1e172122783ce2f2d119"
+      "data_sha256": "21d5b69fa8d507d006b4cc46a7bd754f4b773309b126c378b66410377f9e6532"
     },
     "concept_lines": {
       "class": "scripture_derived",
@@ -64,6 +99,13 @@
       "schema_sha256": "0bb3a38058676fbb4cb3d72ce7fa9462187d62d44fa80e442e5f91fbd91afa9d",
       "rows": 54,
       "data_sha256": "31e72b3da95b05903b2f5feabd24eaa1c84a00b2da041e381dcd4f893561d69a"
+    },
+    "extra_lines": {
+      "class": "companion_text",
+      "virtual": false,
+      "schema_sha256": "fa49acb4e6fb5ec3c9eab0c2b553315c4f636848b2b9b27c0f531765a542924a",
+      "rows": 1191,
+      "data_sha256": "44eaf2e8d6cfbff64dd3e5bc5cde13017278da794a244fade61eeb0fd5dda38b"
     },
     "fts": {
       "class": "scripture_derived",
@@ -231,28 +273,28 @@
       "virtual": false,
       "schema_sha256": "8773ec3c445d581b53c622dd63f16cbccbef5267f2172577001b67659c0395bc",
       "rows": 532227,
-      "data_sha256": "d34453523108da616fde654beeba548fc13ff8c690fb8ad43310206f8beee419"
+      "data_sha256": "ceb31be35b2dd96e114e99386cf454996da4a292a5b140622ae5114e6bed7450"
     },
     "lines": {
       "class": "scripture",
       "virtual": false,
       "schema_sha256": "c6ec1e82aa56fec8e49618f665c385dbaa36d98aa6899bb4970d7fd53ce105d6",
       "rows": 60658,
-      "data_sha256": "c97a3e73339d5b4f9703c41a3173d054f893487b66f2feb54300083c7e74e7f4"
+      "data_sha256": "fe05dc0dcf52d0439f240c03003154c90aa56bea2774a508746b676b8182bba6"
     },
     "meta": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "ab4e509cf7260b979fd5799a4f45734378fb4e2a67f89b009192e4005405e027",
       "rows": 9,
-      "data_sha256": "f19e897d6d6d6af30bb914f3284e4095588744a3dbf6449027208809e08c251f"
+      "data_sha256": "41090855c5e58555c8cb62cc83898a56fbf29effbf5fff4d0ffb88fffbe858f6"
     },
     "raag_analytics": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "5d2f3477a9325a163ce173b10196a0b1c52477b766a40e11e9112834f2717548",
       "rows": 31,
-      "data_sha256": "9bdbf395835cc610dd3103fe1d13fcc7c82f1e46d1c049468156610457864815"
+      "data_sha256": "0b0b46438e3459eb4683c5c555853112bb8868f3866b28386b6922c410fbb341"
     },
     "raags": {
       "class": "metadata",
@@ -273,21 +315,21 @@
       "virtual": false,
       "schema_sha256": "ef7f3b6422c5d6f44ee7bce42d649a2109b280d4d5444ebb35b30a503f9a1fce",
       "rows": 43800,
-      "data_sha256": "436755f2d811cfc389c55fa2794bf79f7f16e701127eefc7d886621995363556"
+      "data_sha256": "cc7dff4dd5b5533b1e8f0490dc74c5777158a0f59916b9c7ed4f94659302f94e"
     },
     "sources": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "4d310698d2dfe4f33d885389565d7a577c8fbeb2ae0c67c69f93b6ccfbd56187",
       "rows": 2,
-      "data_sha256": "b237ac5db4bb73a9d763499663bdb4a410e5290a96b9c945fcdeea2c747e8830"
+      "data_sha256": "187b9f0ab7a76836a12db985df093f1ea5aeb439c294bebf67f30e0a232ecf0f"
     },
     "theme_fingerprint": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "fdd267461e33da48d75a1889d4a1322d31d8d39ffd5b7748c6defbc25bb34f0f",
-      "rows": 2250,
-      "data_sha256": "3a0be614ab6039886823e7ad0017fa9fdd93bfba94f27c667dc79cd9dcbf1625"
+      "rows": 2315,
+      "data_sha256": "6df01524c391267327fd25144e8c86de529952e4260b494523191e5ccebe0346"
     },
     "theme_network": {
       "class": "metadata",
@@ -308,14 +350,14 @@
       "virtual": false,
       "schema_sha256": "775230435492991c99d8e880a2fee3f5d6d904443a8501239f83995269a0c923",
       "rows": 1426,
-      "data_sha256": "8a08e82d1a7daacae6d37b174b61ddd6b42e120b134ba4c67b3b92215921cb2b"
+      "data_sha256": "19ccf685c6cf3fa2cc61f36dc1b75a211cdedceb62966596f832bd7a73ca06c6"
     },
     "vaars": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "11b540b87bcba45afc8fc55745069c0d9b08d166edd3579efbb66652b82dea3d",
       "rows": 22,
-      "data_sha256": "603d7e6c4d00639b2cf196c022e2f09995427eb35af6e45e9b014e8f7ea00ed6"
+      "data_sha256": "fefebe7151db45507d0b33a2fab2f0dbcff49ca0e7eddaba8b0914736e58e093"
     },
     "variants": {
       "class": "scripture_derived",
