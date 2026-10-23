@@ -1,5 +1,5 @@
 {
- "db_sha256": "cb6775ff309fbba57e64088efaa33503c50caab1e79983ace7081a888688818b",
+ "db_sha256": "be5dd2a86bc24321ed20469108d4ce4e4e17ea1c9ea08c85fe6a4e43f8b26428",
  "fts_index": {
   "fts": {
    "instances": 2385214,
@@ -20,7 +20,7 @@
  },
  "schema": 1,
  "scripture_sha256": "0eff4bae60cfcf1c63ae4ac14c2ecf255a9457edc0bebaf627aa28dedb89c84f",
- "sqlite_version": "3.53.4",
+ "sqlite_version": "3.51.0",
  "t0_sha256": "2c6289f10a2fb401978f66093bcf0bc951450caa00259c5e513a5317e3acfe57",
  "tables": {
   "analytics_meta": {
@@ -30,23 +30,38 @@
   },
   "author_analytics": {
    "class": "metadata",
-   "content_sha256": "4042ed8d9e0436ba140d8996da763f0d39dd26f6df5a145bc9e2bcba990fe01e",
-   "rows": 29
+   "content_sha256": "33679ca8bf590134d66b8332ecf783debd672729071bdede747ada6ed0e19f89",
+   "rows": 36
+  },
+  "author_ang_hist": {
+   "class": "metadata",
+   "content_sha256": "db2d763b28512ea97c68b778fc926191e5d25873a45410c36b6b42e364adc83b",
+   "rows": 469
   },
   "author_distinctive_terms": {
    "class": "metadata",
-   "content_sha256": "896789c0b2cb9e2bc359d80400b5de093c4cc10096173c3183439518ba1a5f58",
+   "content_sha256": "e3a6a71ba0d18de81fd11b34f81c23257e7627420421dbbc8ad094c2b6d4f74f",
    "rows": 105
+  },
+  "author_entry": {
+   "class": "metadata",
+   "content_sha256": "1bb71c45d691b44e5b9353598a0029ea624febf89f735dc73c2529bf1da279e9",
+   "rows": 36
+  },
+  "author_raag": {
+   "class": "metadata",
+   "content_sha256": "75de5ca750ea063e70021849d00c400b8609ed563c2224954af31c1d91d64eb1",
+   "rows": 226
   },
   "author_resonance": {
    "class": "metadata",
-   "content_sha256": "3afffba9eabf2c53a5e0c9529ae588a0b523371ed2c0da7540d290dfc398dfd9",
-   "rows": 533
+   "content_sha256": "dcfc2424023f1384b479e42ab05ef6e88f08d374b2f10f37818fd77b8cd8ddc4",
+   "rows": 678
   },
   "authors": {
    "class": "metadata",
-   "content_sha256": "7fa38c04bd65e71466f40ceb5b206101b4d75f0c1e826e720f516ac6b24c07ac",
-   "rows": 29
+   "content_sha256": "05915cd5608ff147d402985a542e926b4a7a4157da3bd10a144520da7cb6f21f",
+   "rows": 36
   },
   "bani_lines": {
    "class": "scripture_derived",
@@ -60,7 +75,7 @@
   },
   "canon_tokens": {
    "class": "scripture_derived",
-   "content_sha256": "47eccf714f44bfe73aa994f5d87620c85c0a88142a1c1e172122783ce2f2d119",
+   "content_sha256": "21d5b69fa8d507d006b4cc46a7bd754f4b773309b126c378b66410377f9e6532",
    "rows": 24676
   },
   "concept_lines": {
@@ -135,22 +150,22 @@
   },
   "line_neighbors": {
    "class": "scripture_derived",
-   "content_sha256": "d34453523108da616fde654beeba548fc13ff8c690fb8ad43310206f8beee419",
+   "content_sha256": "ceb31be35b2dd96e114e99386cf454996da4a292a5b140622ae5114e6bed7450",
    "rows": 532227
   },
   "lines": {
    "class": "scripture",
-   "content_sha256": "c97a3e73339d5b4f9703c41a3173d054f893487b66f2feb54300083c7e74e7f4",
+   "content_sha256": "905fd09ccf8c8fc126cda74886590f550cff59a6d0157847aa500a1f6c4add56",
    "rows": 60658
   },
   "meta": {
    "class": "metadata",
-   "content_sha256": "8efd64827b96305e11e2f0d49e2808ae46bbff0d3406618fc9fa80479a3fd139",
+   "content_sha256": "340367de59c47ff55273aef6465dfa1376126fadb072e86029ebe642e803c558",
    "rows": 9
   },
   "raag_analytics": {
    "class": "metadata",
-   "content_sha256": "9bdbf395835cc610dd3103fe1d13fcc7c82f1e46d1c049468156610457864815",
+   "content_sha256": "7b3f888332997879d8cc9e060a5b1a1adf611b38b86721907dc76c6fc086c136",
    "rows": 31
   },
   "raag_timing_claims": {
@@ -170,7 +185,7 @@
   },
   "shabad_neighbors": {
    "class": "scripture_derived",
-   "content_sha256": "436755f2d811cfc389c55fa2794bf79f7f16e701127eefc7d886621995363556",
+   "content_sha256": "cc7dff4dd5b5533b1e8f0490dc74c5777158a0f59916b9c7ed4f94659302f94e",
    "rows": 43800
   },
   "shabd_musical_markers": {
@@ -200,8 +215,8 @@
   },
   "theme_fingerprint": {
    "class": "metadata",
-   "content_sha256": "3a0be614ab6039886823e7ad0017fa9fdd93bfba94f27c667dc79cd9dcbf1625",
-   "rows": 2250
+   "content_sha256": "2bbc6309af8b22aa4d41baf4224c3ed17c7a9eafe864edee0a001a62cfc614f7",
+   "rows": 2316
   },
   "theme_network": {
    "class": "metadata",
@@ -225,12 +240,12 @@
   },
   "vaar_units": {
    "class": "scripture_derived",
-   "content_sha256": "8a08e82d1a7daacae6d37b174b61ddd6b42e120b134ba4c67b3b92215921cb2b",
+   "content_sha256": "19ccf685c6cf3fa2cc61f36dc1b75a211cdedceb62966596f832bd7a73ca06c6",
    "rows": 1426
   },
   "vaars": {
    "class": "scripture_derived",
-   "content_sha256": "603d7e6c4d00639b2cf196c022e2f09995427eb35af6e45e9b014e8f7ea00ed6",
+   "content_sha256": "fefebe7151db45507d0b33a2fab2f0dbcff49ca0e7eddaba8b0914736e58e093",
    "rows": 22
   },
   "variants": {
