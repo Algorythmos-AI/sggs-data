@@ -22,7 +22,8 @@ New tables:
   theme_fingerprint        per-author / per-raag theme emphasis (lift vs corpus baseline)
   author_analytics         per-author stylometry (MATTR, hapax, line/word structure)
   raag_analytics           per-raag aggregates + thematic profile
-  author_distinctive_terms most-distinctive EN words per author (Monroe log-odds)
+  author_distinctive_terms most-distinctive words per author (Monroe log-odds); rebuilt from the
+                           GURMUKHI by build_author_facts.py (step 7d), which runs after this builder
   shabad_neighbors         "related shabads" by theme-profile cosine (grounded in themes)
   analytics_meta           build provenance + the framing caveats (key/value)
 
