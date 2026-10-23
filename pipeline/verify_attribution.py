@@ -51,7 +51,7 @@ residual = []
 if a.oracle:
     import attribution_audit as A
     theirs, _, matched = A.align(post, A.load_oracle(a.oracle))
-    covered = [(e['start_id'], e['end_id'], e['key'], e['status']) for e in ledger]
+    covered = [(e['start_id'], e['end_id'], e['entry'], e['status']) for e in ledger]
     for r, t in zip(post, theirs):
         if r['is_header'] or t is None or t == r['author']:
             continue
@@ -96,11 +96,11 @@ if a.review_dir:
     md += ['', '## Decisions waiting on a scholar (ledger status `proposed`, nothing changed)', '']
     for e in ledger:
         if e['status'] == 'proposed':
-            md.append(f"- **{e['key']}** (ids {e['start_id']}–{e['end_id']}): {e['reason']}")
+            md.append(f"- **{e['entry']}** (ids {e['start_id']}–{e['end_id']}): {e['reason']}")
     md += ['', '## Kept on printed evidence although an independent edition differs', '']
     for e in ledger:
         if e['status'] == 'keep':
-            md.append(f"- **{e['key']}**: {e['reason']}")
+            md.append(f"- **{e['entry']}**: {e['reason']}")
     md += ['', '## Saloks signed by another Bhagat inside a collection (flagged)', '']
     for fl in flags:
         md.append(f"- Ang {fl['ang']} (id {fl['id']}): in {fl['collection']}'s saloks, signed by "
