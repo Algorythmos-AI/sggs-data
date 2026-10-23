@@ -124,7 +124,7 @@ class Corpus(unittest.TestCase):
     def test_contested_lines_are_unchanged(self):
         # proposed ledger entries change nothing until a scholar approves them
         self.assertEqual(self.who('ਕਲਿ ਕਲਵਾਲੀ ਕਾਮੁ ਮਦੁ', 553), 'Bhai Mardana')
-        self.assertEqual(self.who('ਰਾਗ ਏਕ ਸੰਗਿ ਪੰਚ ਬਰੰਗਨ', 1430), M5)
+        self.assertEqual(self.who('ਰਾਗ ਏਕ ਸੰਗਿ ਪੰਚ ਬਰੰਗਨ', 1429), M5)
 
 
 if __name__ == '__main__':
