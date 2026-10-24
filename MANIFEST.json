@@ -1,7 +1,7 @@
 {
   "name": "SGGS Knowledge Base",
-  "version": "1.1.0",
-  "built": "2026-10-23",
+  "version": "1.2.0",
+  "built": "2026-10-24",
   "source_edition": "Siri Guru Granth Sahib in Gurmukhi with Index (user PDF, 1483 pp)",
   "lines": 60658,
   "angs": 1430,
@@ -10,7 +10,7 @@
   "translations_en": 58039,
   "translation_source": "Dr. Sant Singh Khalsa English \u2014 full Granth (58,039 lines, 95.7%) via ShabadOS open database 4.8.7; aligned exact/skeleton/fuzzy with 102 documented unmatched edition-variant lines",
   "corpus_sha256": "753d2aba744a6e0a82da7275e9b409a5a0c2b8ccb2e2d9136a35171416be5b05",
-  "db_sha256": "e90eab8918cf80d0b126b2f8759273b413a86e5fa6b893b876b85460085ec6e0",
+  "db_sha256": "ff5e5de70027dbebb5162ef48df2d5358fca0fd32ebe38b101c5f788d830e66d",
   "scripture_class": "SGGS canonical text; EN translations stored separately, labeled, never scripture",
   "verification": "pipeline/reconcile.py (char-exact) + pipeline/golden_test.py + /api/verify + /api/health",
   "cross_verification": "ShabadOS corpus vs ours: 97.26% character-exact line match (independent second-source check of the extraction)",

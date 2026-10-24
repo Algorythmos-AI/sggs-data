@@ -1,5 +1,5 @@
 {
- "db_sha256": "e90eab8918cf80d0b126b2f8759273b413a86e5fa6b893b876b85460085ec6e0",
+ "db_sha256": "ff5e5de70027dbebb5162ef48df2d5358fca0fd32ebe38b101c5f788d830e66d",
  "fts_index": {
   "fts": {
    "instances": 2385214,
@@ -20,7 +20,7 @@
  },
  "schema": 1,
  "scripture_sha256": "0eff4bae60cfcf1c63ae4ac14c2ecf255a9457edc0bebaf627aa28dedb89c84f",
- "sqlite_version": "3.51.0",
+ "sqlite_version": "3.53.4",
  "t0_sha256": "2c6289f10a2fb401978f66093bcf0bc951450caa00259c5e513a5317e3acfe57",
  "tables": {
   "analytics_meta": {
@@ -160,7 +160,7 @@
   },
   "meta": {
    "class": "metadata",
-   "content_sha256": "340367de59c47ff55273aef6465dfa1376126fadb072e86029ebe642e803c558",
+   "content_sha256": "c563a7882d99556125695787180cd4618623fb0aee276e0ab0a4d5b2104bdfe9",
    "rows": 9
   },
   "raag_analytics": {
@@ -240,12 +240,12 @@
   },
   "vaar_units": {
    "class": "scripture_derived",
-   "content_sha256": "19ccf685c6cf3fa2cc61f36dc1b75a211cdedceb62966596f832bd7a73ca06c6",
-   "rows": 1426
+   "content_sha256": "ab1fd2a455b5ac48198bfc3b3c7b17765dd2221c5b61e2c9cf973d68c8c3c960",
+   "rows": 1443
   },
   "vaars": {
    "class": "scripture_derived",
-   "content_sha256": "fefebe7151db45507d0b33a2fab2f0dbcff49ca0e7eddaba8b0914736e58e093",
+   "content_sha256": "770a644ff63d90e96c33800ff37bf06992014dd47056784e4ae65c9bc8c18f03",
    "rows": 22
   },
   "variants": {
