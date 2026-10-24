@@ -21,10 +21,18 @@ FIRST line is is_header/pada_total=0 just like a section header), so we combine 
      header ("…ਬਾਣੀ…", "…ਘਰੁ…", "ਰਾਗੁ…") — which is what ends Basant Ki Vaar.
 
   3. Units (line level, within member comps): a "ਪਉੜੀ" label opens a pauri; a
-     "ਸਲੋਕੁ/ਸਲੋਕ/ਮਃ/ਮਹਲਾ" label opens a salok. Any other line (incl. a salok's
-     pada_total=0 opening line) is verse and accrues to the open unit. When a Vaar has
-     NO pauri labels at all (Basant: 3 pauris bundled as numbered stanzas), each numbered
-     stanza (closing ॥N॥) is a pauri. Never emits a zero-line unit.
+     "ਸਲੋਕੁ/ਸਲੋਕ/ਮਃ/ਮਹਲਾ/ਡਖਣੇ/ਡਖਣਾ/ਮਰਦਾਨਾ" label opens a salok. A label carries no ॥N॥
+     verse number and is either a header or a short rubric (≤3 words — the print's
+     unflagged "ਮਰਦਾਨਾ ੧ ॥"). Any other line (incl. a salok's pada_total=0 opening line)
+     is verse and accrues to the open unit. When a Vaar has NO pauri labels at all
+     (Basant: 3 pauris bundled as numbered stanzas), each numbered stanza (closing ॥N॥)
+     is a pauri. Never emits a zero-line unit.
+
+  4. The heading run (title line(s), the ੴ invocation, a ਧੁਨੀ rubric) is never a unit —
+     a ਧੁਨੀ line printed before the first label is heading even when not flagged as a
+     header (Ramkali M3, line 40605). The title is the heading's non-ੴ line(s), verbatim.
+     The final pauri ends with its own composition: lines after it (the Bhagat bani that
+     follows some Vaars) are never part of the Vaar.
 
 The result is asserted against the canonical 22-Vaar roster (by Ang) before commit.
 
@@ -49,7 +57,7 @@ CANON_ANGS = [83, 137, 300, 318, 462, 508, 517, 548, 585, 642, 705, 785,
 # Malar). A Vaar ends only when the comp_type leaves this set (→ a following shabad).
 IN_SET = {'ਸਲੋਕ', 'ਸਲੋਕੁ', 'ਪਉੜੀ', 'ਵਾਰ', 'ਡਖਣੇ', 'ਅਨੰਦੁ',
           'ਰੁਤੀ', 'ਕੁਚਜੀ', 'ਵਣਜਾਰਾ', 'ਗੁਣਵੰਤੀ', 'ਸਦੁ'}
-SALOK_LBL = ('ਸਲੋਕੁ', 'ਸਲੋਕ', 'ਮਃ ', 'ਮਹਲਾ ')
+SALOK_LBL = ('ਸਲੋਕੁ', 'ਸਲੋਕ', 'ਮਃ ', 'ਮਹਲਾ ', 'ਡਖਣੇ', 'ਡਖਣਾ', 'ਮਰਦਾਨਾ')
 NUM_MARK = re.compile(r'॥\s*([੦-੯]+)')
 
 
@@ -65,6 +73,20 @@ def is_vaar_title(t):
         return False
     return ('ਕੀ ਵਾਰ' in t or 'ਵਾਰ ਮਹਲ' in t or 'ਵਾਰ ਸਲੋਕਾ' in t
             or 'ਸਲੋਕਾ ਨਾਲਿ' in t or 'ਧੁਨੀ' in t or 'ਧੁਨਿ' in t)
+
+
+def is_dhuni_rubric(t):
+    """The tune instruction a Vaar's heading carries ('… ਕੀ ਧੁਨੀ ॥'). Never a verse: no ॥N॥."""
+    return ('ਧੁਨੀ' in (t or '') or 'ਧੁਨਿ' in (t or '')) and not NUM_MARK.search(t or '')
+
+
+def is_salok_label(l):
+    """A printed salok label (ਸਲੋਕ ਮਃ ੧ ॥, ਮਃ ੩ ॥, ਡਖਣੇ ਮਃ ੫ ॥, ਮਰਦਾਨਾ ੧ ॥ …). It never carries a
+    ॥N॥ verse number; it is a header, or a short unflagged rubric of at most three words."""
+    t = (l['gurmukhi'] or '').strip()
+    if not t.startswith(SALOK_LBL) or NUM_MARK.search(t):
+        return False
+    return bool((l['pada_total'] or 0) == 0 and l['is_header']) or len(t.split()) <= 3
 
 
 def is_section_intro(t):
@@ -97,11 +119,28 @@ def line_kind(l):
         return 'skip'
     if is_pauri_label(t):                       # incl. ਪਵੜੀ variant, regardless of header/pada
         return 'pauri-label'
-    if (l['pada_total'] or 0) == 0 and l['is_header'] and t.startswith(SALOK_LBL):
+    if is_salok_label(l):
         return 'salok-label'
     if l['is_header'] and t.split() and t.split()[0].rstrip('॥') in _RAAG_NAMES:
         return 'skip'                           # raag/title heading pulled in by the regroup
     return 'verse'
+
+
+def heading_title(lines):
+    """The Vaar's printed title: the heading run's line(s) that are not the ੴ invocation,
+    verbatim, joined by a space (Asa: 'ਆਸਾ ਮਹਲਾ ੧ ॥ ਵਾਰ ਸਲੋਕਾ ਨਾਲਿ …'). The heading run is the
+    title composition's leading header lines and any ਧੁਨੀ rubric, up to the first unit label
+    or verse. Only the final danda is trimmed, as before."""
+    run = []
+    for l in lines:
+        t = (l['gurmukhi'] or '').strip()
+        if is_pauri_label(t) or is_salok_label(l):
+            break
+        if not (l['is_header'] or is_dhuni_rubric(t)):
+            break
+        run.append(t)
+    words = [t for t in run if not t.startswith('ੴ')]
+    return ' '.join(words).strip().rstrip('॥').strip()
 
 
 def closes_stanza(t):
@@ -198,7 +237,12 @@ def main():
                 units.append(mk_unit(cur['kind'], cur['lines']))
             cur = None
 
+        seen_label = False
         for l, k in zip(member_lines, kinds):
+            if k in ('pauri-label', 'salok-label'):
+                seen_label = True
+            elif not seen_label and is_dhuni_rubric(l['gurmukhi']):
+                continue                         # heading rubric, never a salok (Ramkali M3)
             if k == 'pauri-label':
                 flush(); cur = dict(kind='pauri', lines=[]); cur_default = False
             elif k == 'salok-label':
@@ -218,6 +262,11 @@ def main():
         last_p = max((i for i, u in enumerate(units) if u['kind'] == 'pauri'), default=None)
         if last_p is not None:
             units = units[:last_p + 1]
+            # ...and the final pauri ends with its own composition: the comps that follow it
+            # (Bhagat bani of the same raag, typed ਵਾਰ/ਸਲੋਕ) used to be swallowed as its verse.
+            lp = units[-1]
+            keep = [l for l in member_lines if l['id'] in set(lp['line_ids']) and l['comp_id'] == lp['cid']]
+            units[-1] = mk_unit('pauri', keep)
         built.append((t, vraag, units))
 
     con.execute("DROP TABLE IF EXISTS vaars")
@@ -253,7 +302,7 @@ def main():
         cross = int(any(mahala(a) != mahala(pauri_author) for a in salok_auths)) if pauri_author else 0
         angs = [u['ang'] for u in units] + [t['ang']]
         a0, a1 = min(angs), max(angs)
-        title = (t['header'] or '').strip().rstrip('॥').strip()
+        title = heading_title(t['lines'])
         con.execute("INSERT INTO vaars VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                     (vid, raag, roman, a0, a1, len(P), len(S), pauri_author,
                      json.dumps(salok_auths, ensure_ascii=False), cross, title or f"Vaar · {roman}"))
