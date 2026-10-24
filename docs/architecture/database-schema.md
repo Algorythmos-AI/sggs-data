@@ -64,5 +64,7 @@ opens.
 
 ## Gotchas
 - `comp_type` is known-mislabeled in places; it is suppressed at the display layer. Prefer `comp_id`/`section`.
-- Japji (385 lines) has `author = null` in the source, so author filters for Guru Nanak miss it.
+- `author` comes from the printed evidence (headings, ਮਃ labels, pen-names, shabad numbering) via the
+  attribution post-pass; see [attribution.md](attribution.md). Japji is Guru Nanak Dev Ji's (ledger entry
+  `japji`); contested attributions (Mardana, Raagmala, Bhatt splits, Surdas) are recorded, not changed.
 - `line_neighbors` is built with a nondeterministic random projection — its row *order* varies across rebuilds (its content is what matters).

@@ -114,12 +114,13 @@ cur.executemany('INSERT OR IGNORE INTO canon_tokens VALUES(?)', [(t,) for t in s
 con.commit(); con.close()
 print('aux indexes built')
 EOF
-echo "── 7/8 Insight Engine: analytics + semantic neighbors + resonance + vaars (additive; never alters scripture)"
+echo "── 7/8 Insight Engine: analytics + semantic neighbors + resonance + vaars + author facts (additive; never alters scripture)"
 ANALYTICS_DB="$WORK/sggs_full.db"
 python3 pipeline/ml_analytics_builder.py --db "$TMPDB" --out "$ANALYTICS_DB"   # theme_network, fingerprints, author/raag analytics, shabad_neighbors, analytics_meta
 python3 pipeline/build_semantic_vectors_lite.py --db "$ANALYTICS_DB"           # line_neighbors (tfidf-randproj-lite)
 python3 pipeline/build_resonance.py --db "$ANALYTICS_DB"                       # author_resonance (uses line_neighbors)
 python3 pipeline/build_vaars.py --db "$ANALYTICS_DB"                           # vaars + vaar_units (22 Vaars, detected by title header)
+python3 pipeline/build_author_facts.py --db "$ANALYTICS_DB"                   # author_facts / author_mentions / author_dialogues + Gurmukhi distinctive terms
 
 echo "── 7b/8 raag-timing knowledge layer (additive NEW tables only; scripture untouched)"
 # --skip-baseline is sanctioned ONLY here: the fresh build is already gated by
