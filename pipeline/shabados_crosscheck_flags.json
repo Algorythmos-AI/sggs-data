@@ -1,0 +1,69 @@
+{
+  "_doc": "Reviewed authorship cases where this dataset's verse authors deliberately differ from the ShabadOS database (4.8.7). crosscheck_authors.py fails a rebuild on any verse disagreement NOT covered here (by id range or Ang range). Adding an entry is a scholarly decision: say why, keep it pending until a scholar signs (gate G3).",
+  "cross_check": "ShabadOS database 4.8.7, sha256 d8e071347bd5485cc6aa2533c1f51347a16ed1724b4d8abaa4939520257074c2 (Algorythmos-AI/sggs-source release shabados-database-4.8.7) -- evidence only, never a source of corpus data",
+  "flags": [
+    {
+      "key": "mardana-saloks",
+      "ids": [
+        24461,
+        24475
+      ],
+      "current": "Bhai Mardana",
+      "note": "Headings read ਸਲੋਕੁ ਮਰਦਾਨਾ ੧ (Ang 553). Many read the ੧ as Guru Nanak, addressing Mardana; ShabadOS credits Guru Nanak Dev Ji. Left unchanged for the scholar."
+    },
+    {
+      "key": "raagmala",
+      "ang": [
+        1429,
+        1430
+      ],
+      "current": "Guru Arjan Dev Ji (M5)",
+      "note": "Raagmala's authorship is debated; the M5 label is carried forward from Mundavani's ਮਹਲਾ ੫, and ShabadOS credits Poet Alam. Neither is settled -- left unchanged; the scholar decides whether it needs its own label."
+    },
+    {
+      "key": "gauri-kabir-naal-ralai",
+      "ids": [
+        14916,
+        14926
+      ],
+      "current": "Guru Arjan Dev Ji (M5)",
+      "note": "Heading ਗਉੜੀ ਕਬੀਰ ਜੀ ਕੀ ਨਾਲਿ ਰਲਾਇ ਲਿਖਿਆ ਮਹਲਾ ੫ (Ang 326). The print's ਮਹਲਾ ੫ is kept; ShabadOS credits Kabir."
+    },
+    {
+      "key": "bhairo-na-ham-hindu",
+      "ids": [
+        48614,
+        48626
+      ],
+      "current": "Guru Arjan Dev Ji (M5)",
+      "note": "Heading ਭੈਰਉ ਮਹਲਾ ੫, closing ਕਹੁ ਕਬੀਰ ਇਹੁ ਕੀਆ ਵਖਾਨਾ (Ang 1136). The print's ਮਹਲਾ ੫ is kept; ShabadOS credits Kabir."
+    },
+    {
+      "key": "sarang-m5-surdas",
+      "ids": [
+        53936,
+        53943
+      ],
+      "current": "Guru Arjan Dev Ji (M5)",
+      "note": "Heading ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ (Ang 1253). The print's ਮਹਲਾ ੫ is kept; ShabadOS credits Surdas."
+    },
+    {
+      "key": "bhatt-internal",
+      "ang": [
+        1389,
+        1409
+      ],
+      "current": "per bhatt_attribution.json",
+      "note": "ShabadOS splits some Swaiyye differently (The Bhatts->Gayand 42 lines, Kalsahar->Jalap 6, Sal->Bhikha 6, Mathura->Haribans 5). bhatt_attribution.json is a prior SME-audited table and is not changed here."
+    },
+    {
+      "key": "surdas-tuk",
+      "ids": [
+        53935,
+        53935
+      ],
+      "current": "Bhagat Namdev Ji",
+      "note": "The single tuk ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ (Ang 1253) before ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ. No signature is printed, so the evidence-led attribution (#13) keeps the preceding author; ShabadOS and the tradition credit Bhagat Surdas Ji. Scholar's decision."
+    }
+  ]
+}
