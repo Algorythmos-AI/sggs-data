@@ -227,6 +227,15 @@ _attr_log, _attr_flags = attribution.apply(
 print(f'attribution: {len(_attr_log)} lines re-attributed from printed evidence, '
       f'{len(_attr_flags)} flagged for scholarly review')
 
+# ---- post-pass 5: approved structural decisions (section boundaries, a printed label that
+#      opens a composition) from the structure ledger. Changes section / is_header / comp_id /
+#      line_no only; a new composition takes an id above every id issued, so none moves.
+import structure
+_struct_log = structure.apply(
+    records, structure.load_ledger(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                 'structure_ledger.json')), comp_seq)
+print(f'structure: {len(_struct_log)} field changes from approved structure-ledger entries')
+
 with open(OUT, 'w', encoding='utf-8') as f:
     for r in records:
         f.write(json.dumps(r, ensure_ascii=False) + '\n')

@@ -116,6 +116,9 @@ class Corpus(unittest.TestCase):
             ('ਆਦਿ ਸਚੁ ਜੁਗਾਦਿ ਸਚੁ', 1, 'Guru Nanak Dev Ji (M1)'),
             ('ਵਰਤ ਨ ਰਹਉ ਨ ਮਹ ਰਮਦਾਨਾ', 1136, M5),
             ('ਸੂਰਦਾਸ ਮਨੁ ਪ੍ਰਭਿ ਹਥਿ ਲੀਨੋ', 1253, M5),
+            # held for G3 (A-07, A-11): applied by approved ledger entries
+            ('ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ', 1253, 'Bhagat Surdas Ji'),
+            ('ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ', 524, 'Bhagat Kabir Ji'),
         ]
         for needle, ang, want in cases:
             with self.subTest(ang=ang, line=needle):
@@ -125,6 +128,7 @@ class Corpus(unittest.TestCase):
         # proposed ledger entries change nothing until a scholar approves them
         self.assertEqual(self.who('ਕਲਿ ਕਲਵਾਲੀ ਕਾਮੁ ਮਦੁ', 553), 'Bhai Mardana')
         self.assertEqual(self.who('ਰਾਗ ਏਕ ਸੰਗਿ ਪੰਚ ਬਰੰਗਨ', 1429), M5)
+        self.assertEqual(self.who('ਸੁਧੁ ਕੀਚੇ ਰਾਗੁ ਗਉੜੀ ਭਗਤਾਂ ਕੀ ਬਾਣੀ', 323), M5)
 
 
 if __name__ == '__main__':

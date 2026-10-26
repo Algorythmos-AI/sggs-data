@@ -35,8 +35,47 @@
    "end_id": 53935,
    "from": "Bhagat Namdev Ji",
    "to": "Bhagat Surdas Ji",
+   "status": "approved",
+   "reason": "Ang 1253: the single line ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥ follows Bhagat Parmanand Ji's shabad and precedes ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥; it is traditionally Bhagat Surdas Ji's one line in the Granth. No heading or signature is printed with it here. The tag Bhagat Namdev Ji is a bleed: Namdev's last shabad closes at Ang 1253 (ਨਾਮਦੇਵ ਜਾ ਕੇ ਜੀਅ ਐਸੀ ਤੈਸੋ ਤਾ ਕੈ ਪ੍ਰੇਮ ਪ੍ਰਗਾਸ ॥੨॥੩॥) and Bhagat Parmanand Ji's shabad stands between it and this line. Proposed for G3 as Bhagat Surdas Ji, as ShabadOS 4.8.7 files it (shabad 5FC, writer Bhagat Surdas Ji). Author only: the line stays in composition 4846 with the shabad before it, as BaniDB/STTM groups it (shabad id 4531).",
+   "g3": {
+    "item": "A-07",
+    "decision": null,
+    "reviewer": null,
+    "date": null
+   },
+   "hold": "Applied in the held draft PR so the rebuild proves its exact effect; the PR merges only after the G3 scholar records the decision in `g3` (approve / change / reject)."
+  },
+  {
+   "entry": "bhagat-run-heading-ang524",
+   "start_id": 23470,
+   "end_id": 23470,
+   "from": "Guru Arjan Dev Ji (M5)",
+   "to": "Bhagat Kabir Ji",
+   "status": "approved",
+   "reason": "Ang 524: the heading ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ opens Gujri's Bhagat Bani; the first composition under it is ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕਾ ਚਉਪਦਾ ਘਰੁ ੨ ਦੂਜਾ ॥. Eleven of the twelve such headings already carry the run's first Bhagat; this one kept Guru Arjan Dev Ji's name because it starts with ਸੁਧੁ, the closing rubric of Gujri ki Vaar M5, which attribution.py never re-attributes. ShabadOS 4.8.7 sets ਸੁਧੁ at the end of the Vaar's last pauri and files the heading under Bhagat Kabir Ji (shabad 6AM).",
+   "review": "G3 A-11 asks what any Bhagat-run heading should carry (the run's first Bhagat, or no author); this entry follows the convention of the other eleven until that ruling. The line itself mixes the Vaar's closing ਸੁਧੁ with the new heading (text is never split).",
+   "g3": {
+    "item": "A-11 / Ang 524",
+    "decision": null,
+    "reviewer": null,
+    "date": null
+   },
+   "hold": "Applied in the held draft PR so the rebuild proves its exact effect; the PR merges only after the G3 scholar records the decision in `g3` (approve / change / reject)."
+  },
+  {
+   "entry": "bhagat-run-heading-ang323",
+   "start_id": 14771,
+   "end_id": 14771,
+   "from": "Guru Arjan Dev Ji (M5)",
+   "to": "Bhagat Kabir Ji",
    "status": "proposed",
-   "reason": "Ang 1253: the single line ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥ follows Bhagat Parmanand Ji's shabad and precedes ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥; it is traditionally Bhagat Surdas Ji's one line in the Granth. No heading or signature is printed with it here. Unchanged pending scholarly review."
+   "reason": "Ang 323: ਸੁਧੁ ਕੀਚੇ ਰਾਗੁ ਗਉੜੀ ਭਗਤਾਂ ਕੀ ਬਾਣੀ has the same shape as the Ang 524 heading (a Vaar's closing ਸੁਧੁ run into a Bhagat-run heading) and still carries Guru Arjan Dev Ji's name; the first composition under it is ਗਉੜੀ ਗੁਆਰੇਰੀ ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕੇ ਚਉਪਦੇ ੧੪ ॥. Not in the G3 1.4.9 list; recorded so the scholar rules on both together. Changes nothing.",
+   "g3": {
+    "item": "A-11 / Ang 323",
+    "decision": null,
+    "reviewer": null,
+    "date": null
+   }
   },
   {
    "entry": "raagmala",

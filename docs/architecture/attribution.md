@@ -40,8 +40,8 @@ A heading that names a Mahalla always wins over a pen-name in the verse (Ang 326
 
 | Status | Meaning |
 |---|---|
-| `approved` | Applied by rule E (Japji → Guru Nanak Dev Ji; Ramkali Sadu → Baba Sundar Ji). |
-| `proposed` | Recorded for scholarly review, changes nothing: Bhai Mardana's saloks (Ang 553), Raagmala, the per-Bhatt splits, Surdas's single line (Ang 1253), saloks signed by other Bhagats inside Kabir's collection. |
+| `approved` | Applied by rule E (Japji → Guru Nanak Dev Ji; Ramkali Sadu → Baba Sundar Ji; held for G3 in dataset 1.3.0: Surdas's single line, Ang 1253, and the Bhagat-run heading on Ang 524). An entry approved at G3 records the ruling in its `g3` field. |
+| `proposed` | Recorded for scholarly review, changes nothing: Bhai Mardana's saloks (Ang 553), Raagmala, the per-Bhatt splits, saloks signed by other Bhagats inside Kabir's collection, the Bhagat-run heading on Ang 323. |
 | `keep` | Our tag stands on printed evidence although the independent edition differs (Angs 326, 1136, 1253). |
 
 ## The gate (`pipeline/verify_attribution.py`)
@@ -62,3 +62,18 @@ with its printed heading and its first and last verse, verbatim, for human revie
 The independent edition (`database.sqlite`, pinned by `pipeline/shabados.SHA256SUMS`) is a
 cross-check only: it is never copied into the corpus, never shipped and never cited.
 `pipeline/attribution_audit.py` aligns it line by line to produce the diff.
+
+## Structure decisions (`pipeline/structure_ledger.json`)
+
+Where a line belongs (its `section`) and where a composition begins (`is_header`, `comp_id`) are
+read from the print by `build_corpus.py`. The few places the detectors miss are reviewed ledger
+entries applied by `pipeline/structure.py` (post-pass 5), never detector changes, because a new
+heading found by the detector would renumber every later composition.
+
+| Kind | Effect |
+|---|---|
+| `section` | Lines `start_id`–`end_id` move from section `from` to `to` (Salok Bhagat Kabir Ji, Ang 1364; Salok Sheikh Farid Ji, Ang 1377). |
+| `opens` | A printed label stored as a verse becomes the heading of its own composition, issued an id above every id the build has issued (Ang 695: `ਸ੍ਰੀ ਸੈਣੁ ॥`, `ਪੀਪਾ ॥`, `ਧੰਨਾ ॥` → 5381–5383). |
+
+The same status rules apply: only `approved` entries change anything. Each entry states the value it
+expects (`from`); the build stops if the corpus no longer matches.

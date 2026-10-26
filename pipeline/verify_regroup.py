@@ -30,7 +30,10 @@ EXPECT_DISTINCT_NEW = EXPECT_DISTINCT_OLD - EXPECT_FOLDED   # 4706
 # current DB carries 4527 distinct comps. The two-DB mode above still proves the
 # v1.1.0 regroup from a pre-regroup DB; --invariants gates the current DB.
 EXPECT_DEMOTED = 179          # 233 demoted lines, 54 of which had already been folded into a run
-EXPECT_DISTINCT_CURRENT = EXPECT_DISTINCT_NEW - EXPECT_DEMOTED   # 4527
+# Dataset 1.3.0: three printed Bhagat labels on Ang 695 open their own compositions
+# (structure_ledger.json, kind 'opens'), issued as new ids 5381-5383 above every burned id.
+EXPECT_OPENED = 3
+EXPECT_DISTINCT_CURRENT = EXPECT_DISTINCT_NEW - EXPECT_DEMOTED + EXPECT_OPENED   # 4530
 RUBRICS = {'ਜੁਮਲਾ', 'ਦੁਤੁਕੇ', 'ਏਹੁ ਸਲੋਕੁ ਆਦਿ ਅੰਤਿ ਪੜਣਾ'}
 IGNORE_COLS = {'comp_id', 'line_no'}
 # derived/analytics tables that legitimately differ after a regroup rebuild
