@@ -1,9 +1,8 @@
 # Held for G3: four attribution and structure fixes (dataset 1.3.0)
 
-**Build status: provisional.** The corpus is rebuilt from the PDF and proven: reconcile is char-exact,
-the golden suite passes, and scripture is byte-identical. The full database rebuild (analytics, Vaar and
-voice tables, and the committed `db/sggs.sqlite`) is waiting for free disk. `proofs.md` says exactly what
-has run so far.
+**Build status: complete.** The database is rebuilt from the PDF through every gate. Reconcile is
+char-exact, the golden suite and the ShabadOS gate pass, scripture is byte-identical and `make ci`
+passes. `proofs.md` has the outputs.
 
 **Status: HELD. The G3 scholar's sign-off is required.** The fixes are applied in a draft pull request so
 that the rebuild can prove their exact effect. Nothing reaches readers until the scholar has ruled on each
@@ -293,11 +292,13 @@ status **proposed**, so it **changes nothing** until you rule on it.
 - **Reconcile:** the corpus equals the PDF, character for character (1,643,385 characters).
 - **Golden suite:** passes.
 - **`diff_scripture.py`:** of the `lines` columns, only `author`, `section`, `is_header`, `comp_id` and
-  `line_no` change. In the full build, the columns derived from these may follow: `source_category` rolls
-  up `author`, and `stanza_index` and `pada_total` are counted per composition.
+  `line_no` change, plus three columns derived from them: `source_category` (line 23470, Gurus to Bhagats)
+  and `stanza_index`/`pada_total` (the three new heading lines).
 - **`scripture_sha256` and `t0_sha256`:** unchanged.
-- **Main `fts` index:** unchanged.
+- **Main `fts` and `fts_en` indexes:** unchanged. The verse-only `fts_tri` and `fts_shabad` lose the
+  three label lines and regroup the split composition.
 - **ShabadOS gate:** passes, and agreement rises by one line.
+- **`vaars`, `vaar_units`, `banis`, translations:** content-identical (`compare_builds.py`).
 
 **What moves downstream.** `downstream.md` lists every count that changes, for the platform and iOS
 bumps. The headline numbers:
