@@ -1,12 +1,24 @@
 # Held for G3: four attribution and structure fixes (dataset 1.3.0)
 
 **Build status: complete.** The database is rebuilt from the PDF through every gate. Reconcile is
-char-exact, the golden suite and the ShabadOS gate pass, scripture is byte-identical and `make ci`
-passes. `proofs.md` has the outputs.
+char-exact, the golden suite and the ShabadOS gate pass, and scripture is byte-identical. `make ci` passes
+every gate except `g3-release`, which fails by design until the rulings are recorded. `proofs.md` has the
+outputs. The audit reproduced the rebuild byte for byte (`AUDIT-REPORT.md` § 3).
 
-**Status: HELD. The G3 scholar's sign-off is required.** The fixes are applied in a draft pull request so
-that the rebuild can prove their exact effect. Nothing reaches readers until the scholar has ruled on each
-item below and the pull request is merged. Merging is the approval.
+**Status: HELD. The G3 scholar's sign-off is required. No ruling has been given.** The fixes are applied
+in a draft pull request, as `held` ledger entries, so that the rebuild can prove their exact effect.
+**Merging is not the approval:** the approval is the reviewer's own ruling, recorded in each entry's `g3`
+block (`SIGN-OFF.md`). The CI check `g3_gate.py --release-check` fails until it is recorded.
+
+**Read with the audit (2026-10-27).** An independent audit re-checked this pack against the print and the
+sources, and corrects several statements below. The corrected statements are marked *[corrected]*.
+
+- `DECISIONS.md`: one decision record per item, with each question kept separate.
+- `EVIDENCE-LEDGER.md`: every claim, its source and where it was found.
+- `CONTRADICTIONS.md`: where the sources agree and where they differ.
+- `RISKS.md`: technical risks.
+- `AUDIT-REPORT.md`: what was checked, how, and the results.
+- `SIGN-OFF.md`: the blank form for the reviewer.
 
 **What changes.** Only facts *about* lines change: who the dataset credits a line to (`author`), which
 part of the Granth it is filed under (`section`), whether it is a heading (`is_header`), and which
@@ -35,9 +47,9 @@ with a decision line in the form the G3 1.4.9 pack uses: **Approve** (ship as in
 | # | G3 1.4.9 item | Ang | In one line |
 |---|---|---|---|
 | 1 | A-07 | 1253 | The single line before `ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ` is credited to Bhagat Surdas Ji, not Bhagat Namdev Ji. |
-| 2 | A-08 | 1363–1385 | Salok Bhagat Kabir Ji and Salok Sheikh Farid Ji become their own sections, out of `ਚਉਬੋਲੇ`. |
+| 2 | A-08 | 1363–1384 | Salok Bhagat Kabir Ji and Salok Sheikh Farid Ji become their own sections, out of `ਚਉਬੋਲੇ`. |
 | 3 | A-10 | 695 | The three Bhagat labels become headings, so Sain, Pipa and Dhanna each have their own composition. |
-| 4 | A-11 (Ang 524) | 524 | The Bhagat-run heading of Gujri is credited to the run's first Bhagat, as the other eleven are. |
+| 4 | A-11 (Ang 524) | 524 | The Bhagat-run heading of Gujri is credited to the run's first Bhagat, as 11 of the other 12 do (Ang 323's is still open). |
 
 ---
 
@@ -116,7 +128,7 @@ Surdas where the Gurus usually sign ਨਾਨਕ. It also notes that some schola
    not lost.
 
 **The change in this pull request.** The ledger entry `surdas-line` (`pipeline/attribution_ledger.json`)
-moves from `proposed` to `approved`:
+moves from `proposed` to `held` (applied in this draft; no ruling yet):
 
 | line | field | 1.2.0 | 1.3.0 |
 |---|---|---|---|
@@ -134,7 +146,7 @@ ledger kind and an explicit exception to the structural invariant. 2(c) cannot b
 
 ---
 
-## 2 · A-08 · Salok Bhagat Kabir Ji and Salok Sheikh Farid Ji, Angs 1363–1385
+## 2 · A-08 · Salok Bhagat Kabir Ji and Salok Sheikh Farid Ji, Angs 1363–1384
 
 **What the print shows.**
 
@@ -212,10 +224,14 @@ shabad (17 lines).
 Every id up to 5380 has been issued (5377–5380 were burned in v1.1.4). The only ids free for these shabads
 are therefore above that. A search of sggs-platform and gurbani-soul-ios found no code that orders by
 `comp_id`: readers order by line id. A saved link to composition 2749 now opens Trilochan's shabad alone.
-A saved *line* still opens its own shabad.
+*[corrected]* A saved *line* does **not** open its own shabad on its own: the iOS app and the web store the
+line's composition id with it, so a saved Sain, Pipa or Dhanna line reopens composition 2749
+(`RISKS.md` C-1).
 
 **Open choices.** The label becomes the heading of its shabad. This is ShabadOS's reading for two of the
-three labels, and the same reading the dataset already gives to every other bare label such as `ਨਾਮਦੇਵ ॥`.
+three labels. *[corrected]* It is **not** how the dataset treats `ਨਾਮਦੇਵ ॥` (line 50285): that label is still
+a verse inside Bhagat Ravidas Ji's composition 4426, the same defect, unfixed (`DECISIONS.md` A-10). The print
+runs all three labels on inline, so its layout does not settle heading versus verse.
 The alternative is to leave the labels as verses and the grouping as it is.
 
 **Decision 3 (A-10):** ☐ Approve (fix as in this pull request) · ☐ Change: ______ · ☐ Reject (leave as one composition)
@@ -234,17 +250,19 @@ The alternative is to leave the labels as verses and the grouping as it is.
 > — Sri Guru Granth Sahib Ji · Ang 524
 
 Line 23470 holds two things. Its first word, `ਸੁਧੁ`, is the rubric that closes the Vaar. The rest is the
-heading of the Bhagat Bani. The corpus never splits a printed line.
+heading of the Bhagat Bani. *[corrected]* In the print they are **not** one line: `ਸੁਧੁ` is the last word of
+the Vaar's final printed line, and the heading is a separate centred line. The corpus record joins them,
+and it does the same on Angs 323, 517 and 654 (`DECISIONS.md` A-11, reading (d)).
 
-**The dataset today (1.2.0).** Line 23470 is credited to **Guru Arjan Dev Ji (M5)**. The other eleven
-Bhagat-run headings (`… ਬਾਣੀ ਭਗਤਾ ਕੀ`) carry the first Bhagat of their run (the table in the G3 1.4.9 pack,
+**The dataset today (1.2.0).** Line 23470 is credited to **Guru Arjan Dev Ji (M5)**. *[corrected]* Of the
+other twelve Bhagat-run headings, eleven (`… ਬਾਣੀ ਭਗਤਾ ਕੀ`) carry the first Bhagat of their run (the table in the G3 1.4.9 pack,
 section 6). This one was skipped because the attribution pass never re-credits a line that starts with
 `ਸੁਧੁ`, since that word closes the composition before it.
 
 **ShabadOS 4.8.7** puts `ਸੁਧੁ` at the end of the Vaar's last line and files the heading under **Bhagat
 Kabir Ji** (`6AM`, BaniDB 2006).
 
-**The change in this pull request.** The ledger entry `bhagat-run-heading-ang524` (approved, held):
+**The change in this pull request.** The ledger entry `bhagat-run-heading-ang524` (`held`; no ruling yet):
 
 | line | field | 1.2.0 | 1.3.0 |
 |---|---|---|---|
@@ -252,11 +270,11 @@ Kabir Ji** (`6AM`, BaniDB 2006).
 
 **Where the choices differ.**
 
-- (a) **The run's first Bhagat.** This pull request takes this option, which matches the other eleven
-  headings and ShabadOS.
+- (a) **The run's first Bhagat.** This pull request takes this option, which matches 11 of the other 12
+  headings, and ShabadOS.
 - (b) **Keep Guru Arjan Dev Ji**, because the line opens with the closing rubric of his Vaar.
-- (c) **No author on any Bhagat-run heading.** This is A-11's second option. It would change all twelve
-  headings, so it would be a separate entry.
+- (c) **No author on any Bhagat-run heading.** This is A-11's second option. *[corrected]* It would change 13
+  headings (14 counting Suhi line 33831), so it would be a separate entry.
 
 **A twin outside the G3 list.** Line 14771 on Ang 323, `{g14771}`, has the same shape: the closing rubric of
 Gauri ki Vaar (Mahalla 5), run into Gauri's Bhagat-run heading. It is still Guru Arjan Dev Ji's, and
@@ -270,20 +288,27 @@ status **proposed**, so it **changes nothing** until you rule on it.
 
 ## After your ruling
 
-- **All four approved as written.** Record your initials and the date in each entry's `g3` field. The
-  pull request then merges as it is, and the dataset becomes 1.3.0. sggs-platform and gurbani-soul-ios
-  then each take one dataset bump.
-- **Any Change or Reject.** An engineer edits that ledger entry (its value, or its status to `rejected`)
-  and reruns the gated rebuild. The same proofs run again before merge.
+The reviewer replies with the form in `SIGN-OFF.md`. An engineer then records his ruling exactly as given:
+the reply goes into `rulings/` in this folder, and each entry's `g3` block gets the decision, reviewer, date,
+scope, evidence path and entry hash, with its status moved to `approved` or `rejected`
+(`SIGN-OFF.md`, "How a ruling is recorded").
+
+- **Change.** The entry is edited first, then the reviewer confirms the edited entry.
+- **Change or Reject.** The gated rebuild runs again, and the pack is regenerated.
+
+Only when `python3 pipeline/g3_gate.py --release-check` passes can the dataset become 1.3.0. Then
+sggs-platform and gurbani-soul-ios each take one dataset bump.
 
 ## Technical section
 
 **Mechanism.** No database is edited by hand. All changes come from the build:
 
 - `pipeline/attribution_ledger.json`, rule E of `pipeline/attribution.py`. This existing path applies an
-  entry only when its status is `approved`.
+  entry only when `pipeline/g3_gate.py` lets it through: owner-approved, a complete G3 ruling, or `held`
+  in a draft that the release check keeps from shipping.
 - `pipeline/structure_ledger.json` with the new `pipeline/structure.py` (post-pass 5 of `build_corpus.py`).
-  It changes `section`, `is_header`, `comp_id` and `line_no` only, and only for approved entries. Every
+  It changes `section`, `is_header`, `comp_id` and `line_no` only, and only for entries the gate lets
+  through. Every
   entry states the value it expects to find, and the build stops if the corpus no longer matches. A new
   composition takes an id above every id the build has issued.
 

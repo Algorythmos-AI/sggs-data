@@ -1,0 +1,25 @@
+KILLED    reviewer check removed               errors=2
+KILLED    future-date check removed            failures=2
+KILLED    decision check removed               failures=3
+KILLED    scope check removed                  failures=1
+KILLED    evidence check removed               failures=1
+KILLED    entry_sha256 binding removed         failures=1
+KILLED    fixture-reviewer refusal removed     failures=1
+KILLED    unknown status accepted              failures=1, errors=5
+KILLED    owner allowlist bypassed             failures=1
+KILLED    held with filled ruling accepted     failures=2
+KILLED    held counted as released             failures=2
+KILLED    APPLIED includes proposed            failures=2
+KILLED    structure needs no g3                failures=1
+KILLED    rule E skips the gate                failures=1
+SURVIVED  structure pass skips the gate        all pass
+SURVIVED  attribution load_ledger unvalidated  all pass
+--- after adding loader/structure tests
+KILLED    structure pass skips the gate        failures=1
+KILLED    attribution load_ledger unvalidated  failures=1
+KILLED    structure load_ledger unvalidated    failures=1
+--- ledger/artifact binding and pack staleness
+KILLED    held entry flipped to proposed (corpus unchanged)  failures=1
+KILLED    G3 entry edited without regenerating the pack    failures=1
+KILLED    DB rebuilt (MANIFEST db_sha256) without regenerating the pack  failures=1
+KILLED    scripture quote misquoted by one matra (ੁ dropped)  failures=1
