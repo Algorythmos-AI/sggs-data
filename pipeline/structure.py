@@ -8,7 +8,8 @@ set inside the previous Bhagat's composition). Fixing those by changing a detect
 every later composition, so each one is a reviewed ledger entry instead.
 
 This pass changes `section`, `is_header`, `comp_id` and `line_no` ONLY -- never text, markers or
-author -- and only for entries whose status is 'approved'. Every entry states what it expects to
+author -- and only for entries g3_gate.py lets through: a complete G3 ruling (`approved`), or `held` in
+a draft that the release check keeps from shipping. Every entry states what it expects to
 find (`from`); if the corpus no longer matches, the build fails rather than apply an entry to lines
 it was not written for.
 
@@ -19,7 +20,7 @@ Kinds:
            is issued above every id the build has ever issued (`issued`), so no existing comp_id
            moves and no vacated (burned) id is reused.
 """
-import json, os
+import g3_gate
 
 
 class LedgerMismatch(Exception):
@@ -27,7 +28,7 @@ class LedgerMismatch(Exception):
 
 
 def load_ledger(path):
-    return json.load(open(path, encoding='utf-8'))['entries'] if os.path.exists(path) else []
+    return g3_gate.load('structure', path)
 
 
 def apply(records, ledger, issued):
@@ -35,7 +36,7 @@ def apply(records, ledger, issued):
     build issued (build_corpus's comp_seq), burned ids included."""
     log = []
     by_id = {r['id']: r for r in records}
-    approved = [e for e in ledger if e.get('status') == 'approved']
+    approved = g3_gate.check(ledger, 'structure')
 
     def rows(e):
         out = [by_id.get(i) for i in range(e['start_id'], e['end_id'] + 1)]

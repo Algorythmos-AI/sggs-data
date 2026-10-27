@@ -48,6 +48,11 @@ jobs:
           else
             python3 pipeline/ledger_check.py --base "$BASE"
           fi
+      - name: G3 gate — ledgers valid; no held or unruled G3 entry may reach main
+        # Fails while any G3-governed ledger entry is `held` or has no recorded ruling. A held
+        # draft PR is red here by design until the scholar's ruling is recorded. Green CI is not a
+        # G3 approval, and this check must never be bypassed by an admin merge.
+        run: python3 pipeline/g3_gate.py --release-check
       - name: Dataset fingerprint — DB content == audit/dataset-fingerprint.json
         run: python3 pipeline/sggs_integrity.py db/sggs.sqlite --compare audit/dataset-fingerprint.json
       - name: Data-quality contract — shape, comp_id gaps, headers, script separation, references, review rows

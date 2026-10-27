@@ -116,7 +116,7 @@ class Corpus(unittest.TestCase):
             ('ਆਦਿ ਸਚੁ ਜੁਗਾਦਿ ਸਚੁ', 1, 'Guru Nanak Dev Ji (M1)'),
             ('ਵਰਤ ਨ ਰਹਉ ਨ ਮਹ ਰਮਦਾਨਾ', 1136, M5),
             ('ਸੂਰਦਾਸ ਮਨੁ ਪ੍ਰਭਿ ਹਥਿ ਲੀਨੋ', 1253, M5),
-            # held for G3 (A-07, A-11): applied by approved ledger entries
+            # held for G3 (A-07, A-11): applied by `held` ledger entries; no ruling yet
             ('ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ', 1253, 'Bhagat Surdas Ji'),
             ('ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ', 524, 'Bhagat Kabir Ji'),
         ]

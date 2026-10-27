@@ -18,16 +18,24 @@ def recs(spec):
     return out
 
 
-def opens(a, b, frm, to, status='approved'):
+PENDING = {'item': 'T', 'decision': None, 'reviewer': None, 'date': None}
+
+
+def opens(a, b, frm, to, status='held'):
+    # held: applied without a ruling, as in a draft PR (test_g3_gate covers complete rulings)
     return {'entry': f'opens-{a}', 'kind': 'opens', 'start_id': a, 'end_id': b, 'from': frm, 'to': to,
-            'status': status}
+            'status': status, 'g3': dict(PENDING)}
+
+
+def section(a, b, frm, to):
+    return {'entry': f'section-{a}', 'kind': 'section', 'start_id': a, 'end_id': b, 'from': frm,
+            'to': to, 'status': 'held', 'g3': dict(PENDING)}
 
 
 class Kinds(unittest.TestCase):
     def test_section_moves_only_the_range(self):
         r = recs([(1, 1, 'X'), (1, 0, 'X'), (2, 1, 'X'), (2, 0, 'X')])
-        S.apply(r, [{'entry': 's', 'kind': 'section', 'start_id': 3, 'end_id': 4, 'from': 'X', 'to': 'Y',
-                     'status': 'approved'}], issued=2)
+        S.apply(r, [section(3, 4, 'X', 'Y')], issued=2)
         self.assertEqual([x['section'] for x in r], ['X', 'X', 'Y', 'Y'])
 
     def test_labels_open_compositions_above_every_issued_id(self):
@@ -66,8 +74,7 @@ class Refusals(unittest.TestCase):
     def test_the_expected_section_must_match(self):
         r = recs([(1, 1, 'X'), (1, 0, 'Z')])
         with self.assertRaises(S.LedgerMismatch):
-            S.apply(r, [{'entry': 's', 'kind': 'section', 'start_id': 1, 'end_id': 2, 'from': 'X',
-                         'to': 'Y', 'status': 'approved'}], issued=1)
+            S.apply(r, [section(1, 2, 'X', 'Y')], issued=1)
 
     def test_no_tail_is_left_behind(self):
         # moving lines 2-3 out of comp 7 would leave line 4 as a body line of 7 after them
@@ -86,14 +93,14 @@ class Ledger(unittest.TestCase):
         for e in S.load_ledger(os.path.join(ROOT, 'pipeline', 'structure_ledger.json')):
             with self.subTest(entry=e['entry']):
                 self.assertIn(e['kind'], ('section', 'opens'))
-                self.assertIn(e['status'], ('approved', 'proposed', 'rejected'))
+                self.assertIn(e['status'], ('approved', 'held', 'proposed', 'rejected'))
                 self.assertLessEqual(e['start_id'], e['end_id'])
                 self.assertTrue(e['evidence'] and e['reason'])
                 self.assertIn('item', e['g3'])
 
 
 class Corpus(unittest.TestCase):
-    """The committed corpus carries the approved structure-ledger entries."""
+    """The committed corpus carries every structure-ledger entry a build applies (approved or held)."""
     @classmethod
     def setUpClass(cls):
         cls.by_id = {}
@@ -104,7 +111,7 @@ class Corpus(unittest.TestCase):
 
     def test_approved_entries_hold(self):
         for e in self.ledger:
-            if e['status'] != 'approved':
+            if e['status'] not in ('approved', 'held'):
                 continue
             rows = [self.by_id[i] for i in range(e['start_id'], e['end_id'] + 1)]
             with self.subTest(entry=e['entry']):

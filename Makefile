@@ -3,7 +3,7 @@
 PIPELINE_PY ?= /usr/bin/python3
 PDF ?= ../Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf
 
-.PHONY: crosscheck-authors help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
+.PHONY: g3-gate g3-release crosscheck-authors help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
 help: ## list targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-20s\033[0m %s\n",$$1,$$2}'
 
@@ -13,7 +13,7 @@ doctor: ## check the local toolchain (PyMuPDF/numpy/scipy interpreter, git-lfs, 
 	@test -f db/sggs.sqlite && head -c 16 db/sggs.sqlite | grep -q "SQLite format 3" && echo "db: real SQLite" || echo "  db/sggs.sqlite missing or an LFS pointer — run: git lfs pull"
 	@test -f "$(PDF)" && echo "pdf: present" || echo "  source PDF not at $(PDF) (needed only for reconcile/rebuild)"
 
-ci: verify guard ledger-check fingerprint quality test-data ## run the gates CI runs (no PDF needed)
+ci: verify guard ledger-check g3-release fingerprint quality test-data ## run the gates CI runs (no PDF needed)
 	@echo "make ci: PASS"
 
 test-data: ## data-integrity tests: install safety, fingerprints, editorial ledger, reproducibility
@@ -25,6 +25,12 @@ verify: ## structural regroup invariants on the current DB
 guard: ## pre-existing tables byte-identical to the committed baseline (+ bani registry invariants)
 	python3 pipeline/timing/guard_scripture.py
 	python3 pipeline/banis/guard_banis.py
+
+g3-gate: ## G3 ledgers well-formed (status vocabulary, complete rulings); held entries allowed
+	python3 pipeline/g3_gate.py
+
+g3-release: ## G3 release check: fails while any G3 entry is held or has no recorded scholarly ruling
+	python3 pipeline/g3_gate.py --release-check
 
 ledger-check: ## editorial ledger: fix_text rules == register; scripture diffs vs main covered by new entries
 	python3 pipeline/ledger_check.py --base $$(git merge-base HEAD origin/main)
