@@ -9,7 +9,7 @@
 | State | Status |
 |---|---|
 | 1. Engineering implementation (approval gate, tests, CI wiring) | **Complete** on the local branch. Not pushed. |
-| 2. Automated validation | **Complete locally.** 112 tests pass (1 skipped: iOS app not in this repo). Every `make ci` gate passes except `g3-release`, which fails **by design**: 8 G3 entries have no ruling. Full rebuild from the PDF: pass. |
+| 2. Automated validation | **Complete locally.** 126 tests pass (1 skipped: iOS app not in this repo). `make ci` runs every gate, and all of them pass except `g3-release`, which runs last and fails **by design**: 8 G3 entries have no ruling. Full rebuild from the PDF: pass. 31 mutants and one scripture negative test: all caught (§ 4). |
 | 3. Evidence pack | **Verified** to the extent in § 2. The limits are listed there and in § 6. |
 | 4. Scholarly decision | **Pending.** No ruling has been given on A-07, A-08, A-10, A-11 or Ang 323. |
 | 5. Release readiness | **Not established.** The release check fails until the rulings are recorded. Consumer-side risks (`RISKS.md` G-4, C-1, C-2) are open. |
@@ -19,15 +19,15 @@
 
 | File | Change |
 |---|---|
-| `pipeline/g3_gate.py` (new) | One validator for both ledgers, with a closed set of statuses and a complete-ruling requirement bound to each entry's hash. Also provides `--release-check` and `--hash`. |
-| `pipeline/attribution.py`, `pipeline/structure.py` | Apply only what the gate lets through. `load_ledger()` validates the file, and a missing ledger is now an error. Rule E fails on ids that are not in the corpus. |
-| `pipeline/attribution_ledger.json`, `pipeline/structure_ledger.json` | The seven unruled G3 entries go from `approved` to `held`. Only `status` changes. |
+| `pipeline/g3_gate.py` (new) | One validator for both ledgers. It provides `--release-check` and `--hash`. It enforces:<br>• a closed set of statuses;<br>• a registry of the G3 items (`G3_ENTRIES`): an item cannot be dropped, renamed, stripped of its `g3` block or set to `keep`;<br>• owner approvals pinned by hash;<br>• a complete ruling: a reviewer of record (`REVIEWERS`), a date from 2026-10-26 to today, scope = item, the reviewer's reply as a hash-pinned, non-symlinked file in `rulings/`, and the hash of the entry's acting fields;<br>• a check that the committed corpus matches the statuses. |
+| `pipeline/attribution.py`, `pipeline/structure.py` | Apply only what the gate lets through. `load_ledger()` validates the whole ledger, and a missing ledger is now an error. Rule E fails on ids that are not in the corpus. `gate=` passes keyword arguments to the gate, for tests only. |
+| `pipeline/attribution_ledger.json`, `pipeline/structure_ledger.json` | The seven unruled G3 entries go from `approved` to `held`. Separately, the prose of `bhagat-run-heading-ang524` (`reason`, `review`) is corrected: it now says "11 of the other 12", and that the print does not join `ਸੁਧੁ` to the heading. No acting field changes. |
 | `pipeline/build_corpus.py` | Log lines only: a `HELD — not a release` banner that names the held entries. |
-| `pipeline/tests/test_g3_gate.py` (new) | 29 tests: invalid and complete rulings, statuses, the committed ledgers, and the corpus-to-status binding. |
-| `pipeline/tests/test_g3_pack.py` (new) | The pack must match the committed DB and the G3 entries, and every `` `…` *(line N)* `` quote must equal corpus line N exactly. |
+| `pipeline/tests/test_g3_gate.py` (new) | 42 tests. They cover invalid, unprovenanced and complete rulings; statuses; the registry; the owner pins; the committed ledgers and corpus; the adversarial review's stripped-ledger attack; and `main()`'s pass and fail paths. |
+| `pipeline/tests/test_g3_pack.py` (new) | 4 tests. The pack must match the committed DB and the G3 entries. `README.md` must equal its rendered template. Every `` `…` *(line N)* `` quote must equal corpus line N exactly. |
 | `pipeline/tests/test_structure.py`, `test_attribution.py` | Fixtures use `held` entries with a `g3` block, and `held` is now an allowed status. No assertion was weakened. |
 | `scripts/data/g3_attribution_pack.py` | Writes `pack-inputs.json`, recording which inputs the pack was built from. |
-| `.github/workflows/data-ci.yml`, `Makefile` | `g3_gate.py --release-check` runs in the required `integrity` job and in `make ci` (`g3-release`). |
+| `.github/workflows/data-ci.yml`, `Makefile` | `g3_gate.py --release-check` runs as the **last** step of the required `integrity` job (`if: !cancelled()`), and last in `make ci` (`g3-release`). A held PR therefore still gets every other check. |
 | `validation/attribution-g3-review/` | New: `DECISIONS.md`, `EVIDENCE-LEDGER.md`, `CONTRADICTIONS.md`, `RISKS.md`, `SIGN-OFF.md`, this report and `pack-inputs.json`. `README.md` and its template are revised. `RECOMMENDATIONS.md` (PR #18) is **not** edited; its corrections are in § 2 below. |
 
 `corpus/`, `db/`, `MANIFEST.json`, `audit/` and every Gurmukhi character are **unchanged**:
@@ -112,8 +112,8 @@
 3. **"Line 23470 holds two things … the corpus never splits a printed line"** (PR #17, A-11).
    - In the print, `ਸੁਧੁ` is the last word of the Vaar's final printed line. The Bhagat-run heading is a
      separate centred line.
-   - Both the page image and the PDF's own text lines show this, on Angs 524 and 323 and also 517
-     and 654.
+   - On Angs 524 and 323, both the page image and the PDF's own text lines show this. On Angs 517 and
+     654, only the text lines were read.
    - It is the corpus record that joins them. At every other place `ਸੁਧੁ` is a record of its own.
    - The A-11 attribution question exists because of this join (`DECISIONS.md` A-11, reading (d)).
 
@@ -207,13 +207,16 @@
 | 9 | Composition ids (1.2.0 → 1.3.0) | `max` 5376 → 5383; distinct 4527 → 4530; the new gaps are exactly 5377–5380; no 1.2.0 id disappeared. 5381–5383 never existed in 1.2.0. 2749 now holds lines 30064–30080 only, all Bhagat Trilochan Ji's. `line_no` runs 1..N in 2749, 5381, 5382 and 5383. |
 | 10 | `python3 pipeline/g3_gate.py --release-check` | **Exit 1**, with 8 G3 entries listed: 7 held and 1 proposed. This is expected and correct. |
 | 11 | `uvx ruff@0.9.10 check .`; `gitleaks detect --no-git -c .gitleaks.toml` | Both clean. |
+| 12 | After the adversarial-review fixes: `build_corpus.py` again, through the revised gate (`SOURCE_DATE_EPOCH=1793005527`, `/usr/bin/python3` 3.9.6) | Corpus `0e228fea…`: **identical**; the HELD banner names the 7 entries. The full DB rebuild (rows 1–3) was **not** re-run for this revision. The DB build reads the corpus, not the ledgers (`RISKS.md`, the agent C finding on Q2), so the corpus identity is what this revision could change. |
+| 13 | `make -k ci` | Every gate passes: verify, guard, ledger-check, fingerprint `identical`, quality, and 126 tests. `g3-release` runs last and fails by design (8 entries). |
 
 **Differences explained** (all have a cause; none is unexplained):
 
 - **`word_freq` and `variants`.** The row counts are unchanged. The frequencies of `ਸ੍ਰੀ`, `ਸੈਣੁ`, `ਪੀਪਾ`
   and `ਧੰਨਾ` each drop by 1, because the three label lines became headings and headings are not counted.
-  `downstream.md`'s "`word_freq` loses the 3 label words" is imprecise: **four** words lose one count
-  each, and no row is lost. It is corrected here; the generated `downstream.md` is left as generated.
+  `downstream.md`'s table shows this correctly. The README's summary line ("`word_freq` loses the 3
+  label words") was imprecise: **four** words lose one count each, and no row is lost. It is corrected in
+  `README.template.md`, and the README is regenerated from it.
 - **`sources`, `meta`, `timing_migrations` and `analytics_meta`** hold build dates and the version.
 - **`fts_shabad`, `fts_tri`, the analytics tables and the neighbour tables** are derived from the changed
   `author`, `comp_id` and `is_header` values.
@@ -227,33 +230,57 @@
 
 ## 4 · Do the tests actually catch failures? Mutation and negative tests
 
-Each check was deliberately broken in a throwaway copy, and the test suite was then run. Every
-mutation and negative test listed below was **caught**.
+`audit-tools/mutate.py <repo> <scratch>` reproduces every row below from the repository alone. It works
+on a copy-on-write clone: it applies each deliberate break, runs the gate, pack, structure and
+attribution tests, and restores the file. The output is `audit-tools/mutation.out`.
 
-| # | Deliberate break | Caught by |
-|---|---|---|
-| 1 | Reviewer check removed | test_g3_gate (2 errors) |
-| 2 | Future-date check removed | 2 failures |
-| 3 | Decision-value check removed | 3 failures |
-| 4 | Scope check removed | 1 failure |
-| 5 | Evidence-file check removed | 1 failure |
-| 6 | `entry_sha256` binding removed | 1 failure |
-| 7 | Refusal of the fixture reviewer removed | 1 failure |
-| 8 | Unknown statuses accepted | 1 failure, 5 errors |
-| 9 | Owner-approval allowlist bypassed | 1 failure |
-| 10 | Held entry with a filled ruling accepted | 2 failures |
-| 11 | Held entries not counted as outstanding | 2 failures |
-| 12 | `proposed` treated as applied | 2 failures |
-| 13 | Structure entries allowed without `g3` | 1 failure |
-| 14 | Rule E bypasses the gate | 1 failure |
-| 15 | Structure pass bypasses the gate | **First run: survived.** Test added (`test_the_structure_pass_refuses_an_incomplete_approval`), then 1 failure. |
-| 16 | `attribution.load_ledger` unvalidated | **First run: survived.** Test added (`test_both_ledger_loaders_validate`), then 1 failure. |
-| 17 | `structure.load_ledger` unvalidated | 1 failure |
-| 18 | Held entry flipped to `proposed` with the corpus not rebuilt | `test_the_committed_corpus_is_what_the_ledger_statuses_say` |
-| 19 | G3 entry edited without regenerating the pack | `test_generated_for_these_g3_entries` |
-| 20 | DB rebuilt without regenerating the pack | `test_generated_from_the_committed_db` |
-| 21 | A pack quote with one matra dropped (`ਸੰਗੁ` → `ਸੰਗ`) | `test_every_cited_line_is_quoted_verbatim` |
-| N1 | One scripture code point flipped in a DB copy (line 30081, U+0A38 → U+0A36) | `diff_scripture.py` exit 1 ("gurmukhi changed in 1 rows"); `sggs_integrity --compare` exit 1 (`scripture_sha256`, `t0_sha256`, `tables.lines`); the independent diff exits FAIL. |
+**Final run: 31 mutants plus one scripture negative test, all caught (0 survived).** The tests were
+earlier made to catch mutants that had survived:
+
+- **First pass.** The structure pass and `attribution.load_ledger` could bypass the gate without any
+  test failing. `test_the_structure_pass_refuses_an_incomplete_approval` and
+  `test_both_ledger_loaders_validate` were added.
+- **After the adversarial review's fixes.** The owner-approval allowlist (mutant 11) and the corpus
+  check inside the CLI (mutant 21) went unnoticed. `test_a_new_entry_cannot_be_approved_without_a_ruling`
+  and `test_the_cli_checks_the_corpus_not_only_the_ledgers` were added.
+
+The previous runs are kept in git history; this table is the current run.
+
+```
+ 1 KILLED    reviewer-of-record check removed                     failures=8
+ 2 KILLED    future-date check removed                            failures=1
+ 3 KILLED    minimum-date check removed                           failures=1
+ 4 KILLED    decision check removed                               failures=3
+ 5 KILLED    scope check removed                                  failures=1
+ 6 KILLED    evidence location check removed                      failures=2, errors=10
+ 7 KILLED    symlink refusal removed                              failures=1
+ 8 KILLED    ruling-file hash check removed                       failures=1
+ 9 KILLED    entry_sha256 binding removed                         failures=1
+10 KILLED    unknown statuses accepted                            failures=1, errors=5
+11 KILLED    owner-approval allowlist bypassed                    failures=1
+12 KILLED    G3 item may be `keep`                                errors=1
+13 KILLED    held/proposed with a filled ruling accepted          failures=2
+14 KILLED    held not counted as outstanding                      failures=2
+15 KILLED    `proposed` treated as applied                        failures=5
+16 KILLED    structure entries allowed without g3                 failures=1
+17 KILLED    registered G3 entry may lose its g3 block            failures=4
+18 KILLED    registered G3 entry may be missing                   errors=2
+19 KILLED    owner-approved pin not checked                       failures=1
+20 KILLED    unregistered g3 entries accepted                     failures=1
+21 KILLED    release check skips the corpus                       failures=1
+22 KILLED    non-integer ids accepted                             failures=3
+23 KILLED    rule E bypasses the gate                             failures=1
+24 KILLED    structure pass bypasses the gate                     failures=1
+25 KILLED    attribution.load_ledger unvalidated                  failures=1
+26 KILLED    structure.load_ledger unvalidated                    failures=1
+27 KILLED    held entry flipped to proposed, corpus not rebuilt   failures=5
+28 KILLED    G3 entry edited without regenerating the pack        failures=1
+29 KILLED    DB rebuilt without regenerating the pack             failures=1
+30 KILLED    a pack quote misquoted by one matra                  failures=1
+31 KILLED    README.md hand-edited (stale against its template)   failures=1
+N1 KILLED    one scripture code point flipped (U+0A38->U+0A36, line 30081)   diff_scripture exit 1, fingerprint exit 1
+0 survived
+```
 
 **Test quality findings:**
 
@@ -262,6 +289,27 @@ mutation and negative test listed below was **caught**.
 - **The previous ledger shape test** accepted `approved` without looking at `g3`. **The previous
   "approved entries hold" test** silently skipped every other status. Both are replaced or extended.
 
+## 4b · The adversarial review and what changed because of it
+
+A fresh-context reviewer was given only the diff and the pack, and asked to find reasons to reject
+them. It made 13 findings. Each one, and what was done:
+
+| # | Finding (severity) | Done |
+|---|---|---|
+| 1 | The G3 step failed before six other `integrity` checks, and `make ci` stopped at it, so a held PR lost its fingerprint, guard and regroup checks (high) | **Fixed.** The step is last, with `if: !cancelled()`; `g3-release` is last in `make ci`. |
+| 2 | `--release-check` checked only the ledgers. Stripping `g3` blocks, or setting G3 entries to `keep`, passed with the held DB still committed (high) | **Fixed.** There is a registry of G3 items, `keep` is refused for a G3 item, and the CLI checks the corpus against the statuses. Tests cover the stripped-ledger attack and the corpus check. |
+| 3 | A ruling's shape was checked, not its provenance: blank form as evidence, reviewer "x", a 1900 date, symlinks, a zero-width-space fixture name (high) | **Fixed.** Reviewer of record, minimum date, evidence must be the reply file in `rulings/` (regular, not a symlink, sha256-pinned). Each case is tested. |
+| 4 | "Never bypassed by an admin merge" is unenforced; the `data-v*` tag ruleset does not restrict **creation** (high) | **Documented, not closable here.** The workflow comment now says it is unenforced against admins. `RISKS.md` G-2 and G-10. |
+| 5 | Owner approvals were bound by name only (medium) | **Fixed.** Pinned by `entry_sha256`. |
+| 6 | The ruling hash covered prose, including two statements the pack shows are false (medium) | **Fixed.** The hash covers acting fields only, and the false prose in the Ang 524 entry is corrected. |
+| 7 | Two ruling forms that disagreed; "Prepared … by: Kanwaljit Singh" readable as his act (medium) | **Fixed.** SIGN-OFF.md is the only form, with every option aligned to DECISIONS.md. The reviewer line is marked "designated". The user's template line is kept, with a note that it records nothing. |
+| 8 | The dataset attributes the other two `ਸੁਧੁ` joins inconsistently (medium) | **Added** to DECISIONS A-11 and CONTRADICTIONS. |
+| 9 | "SOS = BaniDB except 13" was checked one way only (low-medium) | **Relabelled.** The 16 absent STTM ids are listed as unexamined. |
+| 10 | Angs 517 and 654 were said to be image-checked (low) | **Corrected:** text layer only. |
+| 11 | Mutation evidence was inconsistent and partly not reproducible (low) | **Fixed.** `mutate.py` now reproduces all 31 mutants plus N1. |
+| 12 | Test gaps: no success path, no `apply` with a full ruling, wall-clock dependence (low) | **Fixed.** `main()` success path and both passes run with a complete fixture ruling; "today" is UTC + 1 day. |
+| 13 | README staleness not enforced; the README's word_freq line was wrong (low) | **Fixed.** A render test, and the line corrected in the template. |
+
 ## 5 · Residual risks
 
 See `RISKS.md`. The ones that cannot be closed from this repository:
@@ -269,6 +317,7 @@ See `RISKS.md`. The ones that cannot be closed from this repository:
 - **G-2: admin bypass.** It can be closed only by changing the ruleset's bypass.
 - **G-3: PR-editable CI.** It needs a required workflow or a second code owner.
 - **G-4: consumers pin any commit.** It needs a sggs-platform and gurbani-soul-ios change.
+- **G-10: `data-v*` tags can be created on any commit.** It needs a tag-creation rule.
 - **C-1: saved links to composition 2749.** It needs an app change.
 - **C-2: section names.** It needs the A-08 naming ruling and an app change.
 
@@ -291,16 +340,21 @@ See `RISKS.md`. The ones that cannot be closed from this repository:
    (`g3_gate.py --hash <entry>`), runs `--release-check`, and rebuilds if any item is changed.
 3. **The owner decides:**
    - whether to push this branch and open it as a draft PR into `fix/attribution-g3-held`;
-   - whether to change the `protect-main` bypass (G-2);
+   - whether to change the `protect-main` bypass (G-2) and add a creation rule for `data-v*` tags (G-10);
    - whether to open consumer issues for G-4, C-1 and C-2.
 
 ## Appendix A · The independent diff script
 
-`tools/independent_diff.py` (kept outside the repo, so it shares no code with the pipeline). It is run
-as:
+`audit-tools/independent_diff.py` in this folder. It imports nothing from the pipeline (stdlib only), so
+it does not share the code it checks. It is run as:
 
 ```
 python3 independent_diff.py <1.2.0.sqlite> <1.3.0.sqlite> pipeline/attribution_ledger.json pipeline/structure_ledger.json
 ```
 
-It is reproduced in `audit-tools/independent_diff.py` in this folder.
+Also in `audit-tools/`:
+
+- `mutate.py`: § 4.
+- `extract_shabados.py`: the ShabadOS extraction used for the commentary rows. It needs `gurmukhiutils`
+  for display only.
+- Their outputs.

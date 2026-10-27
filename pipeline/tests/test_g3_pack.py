@@ -41,6 +41,25 @@ class PackIsCurrent(unittest.TestCase):
                     self.assertEqual(quote, by_id[int(lid)])
         self.assertGreater(n, 10, 'expected the pack to cite lines in the `…` *(line N)* form')
 
+    def test_the_readme_is_the_rendered_template(self):
+        # README.md is generated: an edit to it alone (or to the template without regenerating) is stale
+        import shutil, sqlite3, tempfile
+        sys.path.insert(0, os.path.join(ROOT, 'scripts', 'data'))
+        import g3_attribution_pack as P
+        tmp = tempfile.mkdtemp()
+        try:
+            shutil.copy(os.path.join(PACK, 'README.template.md'), tmp)
+            post = sqlite3.connect(f"file:{os.path.join(ROOT, 'db', 'sggs.sqlite')}?mode=ro", uri=True)
+            try:
+                P.readme(post, tmp)
+            finally:
+                post.close()
+            with open(os.path.join(tmp, 'README.md'), encoding='utf-8') as a, \
+                    open(os.path.join(PACK, 'README.md'), encoding='utf-8') as b:
+                self.assertEqual(a.read(), b.read(), 'README.md is stale: run scripts/data/g3_attribution_pack.py')
+        finally:
+            shutil.rmtree(tmp)
+
     def test_generated_for_these_g3_entries(self):
         now = {e['entry']: G.entry_sha256(e) for k in G.LEDGERS for e in G.read(G.LEDGERS[k]) if e.get('g3')}
         self.assertEqual(self.stamp['g3_entries'], dict(sorted(now.items())),

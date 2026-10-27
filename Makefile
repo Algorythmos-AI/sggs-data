@@ -13,7 +13,7 @@ doctor: ## check the local toolchain (PyMuPDF/numpy/scipy interpreter, git-lfs, 
 	@test -f db/sggs.sqlite && head -c 16 db/sggs.sqlite | grep -q "SQLite format 3" && echo "db: real SQLite" || echo "  db/sggs.sqlite missing or an LFS pointer — run: git lfs pull"
 	@test -f "$(PDF)" && echo "pdf: present" || echo "  source PDF not at $(PDF) (needed only for reconcile/rebuild)"
 
-ci: verify guard ledger-check g3-release fingerprint quality test-data ## run the gates CI runs (no PDF needed)
+ci: verify guard ledger-check fingerprint quality test-data g3-release ## run the gates CI runs (no PDF needed; g3-release last)
 	@echo "make ci: PASS"
 
 test-data: ## data-integrity tests: install safety, fingerprints, editorial ledger, reproducibility

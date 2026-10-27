@@ -52,8 +52,8 @@
    "from": "Guru Arjan Dev Ji (M5)",
    "to": "Bhagat Kabir Ji",
    "status": "held",
-   "reason": "Ang 524: the heading ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ opens Gujri's Bhagat Bani; the first composition under it is ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕਾ ਚਉਪਦਾ ਘਰੁ ੨ ਦੂਜਾ ॥. Eleven of the twelve such headings already carry the run's first Bhagat; this one kept Guru Arjan Dev Ji's name because it starts with ਸੁਧੁ, the closing rubric of Gujri ki Vaar M5, which attribution.py never re-attributes. ShabadOS 4.8.7 sets ਸੁਧੁ at the end of the Vaar's last pauri and files the heading under Bhagat Kabir Ji (shabad 6AM).",
-   "review": "G3 A-11 asks what any Bhagat-run heading should carry (the run's first Bhagat, or no author); this entry follows the convention of the other eleven until that ruling. The line itself mixes the Vaar's closing ਸੁਧੁ with the new heading (text is never split).",
+   "reason": "Ang 524: the heading ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ opens Gujri's Bhagat Bani; the first composition under it is ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕਾ ਚਉਪਦਾ ਘਰੁ ੨ ਦੂਜਾ ॥. Eleven of the other twelve such headings already carry the run's first Bhagat (13 in all; Ang 323's, line 14771, is the other exception); this one kept Guru Arjan Dev Ji's name because it starts with ਸੁਧੁ, the closing rubric of Gujri ki Vaar M5, which attribution.py never re-attributes. ShabadOS 4.8.7 sets ਸੁਧੁ at the end of the Vaar's last pauri and files the heading under Bhagat Kabir Ji (shabad 6AM).",
+   "review": "G3 A-11 asks what any Bhagat-run heading should carry (the run's first Bhagat, or no author); this entry follows the convention of those eleven until that ruling. The record mixes the Vaar's closing ਸੁਧੁ with the new heading; in the print ਸੁਧੁ ends the Vaar's last printed line and the heading is a separate centred line, so the join is the corpus's, not the print's (validation/attribution-g3-review/DECISIONS.md, A-11).",
    "g3": {
     "item": "A-11 / Ang 524",
     "decision": null,

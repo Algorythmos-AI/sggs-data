@@ -10,7 +10,7 @@ it means for the data, and the conclusion. The **label** column uses the categor
 |---|---|---|---|
 | PRINT | The source PDF of record, *Siri Guru Granth Sahib in Gurmukhi with Index* (1,483 pages) | sha256 `294a0b99…d5175` (= `validation/reconcile-attestation.json`). Edition: typeset, run-on; the edition statement was not established. | Page images rendered with PyMuPDF and read; the PDF's own text lines read (`page.get_text('dict')`). PDF page *n* is 1-based; the Ang number printed at the head of each page was read. |
 | SOS | ShabadOS database | 4.8.7, sha256 `d8e071347bd5…74c2` (= `pipeline/shabados.SHA256SUMS`) | Direct SQL (`audit-tools/extract_shabados.py`) |
-| BDB | BaniDB / SikhiToTheMax shabad ids | As carried in SOS `shabads.sttm_id` | Through SOS only. **Not independent of SOS for grouping**: the two agree everywhere except 13 refinements. |
+| BDB | BaniDB / SikhiToTheMax shabad ids | As carried in SOS `shabads.sttm_id` | Through SOS only. **Not independent of SOS for grouping**: SOS carries BDB's ids and splits 13 of them (S9). |
 | SS | Prof. Sahib Singh, *Sri Guru Granth Sahib Darpan* | **As transcribed in SOS 4.8.7** (`translations`, source 6; `additional_information.note`). The edition is not stated, and 128 notes are cut off at 1,000 characters. | SQL. No printed Darpan was consulted. |
 | FK | *Faridkot Teeka* | **As transcribed in SOS 4.8.7** (source 5). Introductions sit after `☬` on the line **before** the text they introduce. | SQL. No printed Teeka was consulted. |
 | EoS | *The Encyclopaedia of Sikhism*, ed. Harbans Singh, Punjabi University, Patiala | Per volume, read from each volume's own imprint page: see § EoS | archive.org page images |
@@ -30,7 +30,7 @@ it means for the data, and the conclusion. The **label** column uses the categor
 | P8 | Ang 695: closes ॥੬॥੧॥ ॥੪॥੨॥ ॥੨॥੩॥ ॥੨॥੪॥; three labels run on inline | PDF 748 | Image | Four shabads in one series. The labels are not set as headings | Verified fact |
 | P9 | `ਸੁਧੁ` ends the Vaar's last printed line; `ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ` is a separate centred line | PDF 577; text line `…॥੨੧॥੧॥੨॥ ਸੁਧੁ` | Image + PDF text lines | The corpus joins them in line 23470 (A-11 reading d) | Verified fact |
 | P10 | `ਸੁਧੁ ਕੀਚੇ` ends the Vaar's last printed line; the heading is separate | PDF 376; text line `…॥੨੧॥੧॥ ਸੁਧੁ ਕੀਚੇ` | Image + PDF text lines | Same join, in line 14771 | Verified fact |
-| P11 | The same join on Angs 517 and 654 | PDF 570, 707 (text lines) | PDF text lines | Lines 23136 and 28417 begin with `ਸੁਧੁ` too | Verified fact |
+| P11 | The same join on Angs 517 and 654 | PDF 570, 707 | **PDF text lines only; the images were not read** | Lines 23136 and 28417 begin with `ਸੁਧੁ` too; 28417 is credited to Kabir and 23136 to Guru Arjan Dev Ji | Verified fact (from the text layer) |
 | P12 | Every other `ਸੁਧੁ` rubric is its own record | DS: `gurmukhi = 'ਸੁਧੁ'` / `'ਸੁਧੁ ॥'` | SQL | The four joined lines are exceptions | Verified fact |
 
 ## ShabadOS 4.8.7 and BaniDB
@@ -45,7 +45,7 @@ it means for the data, and the conclusion. The **label** column uses the categor
 | S6 | Ang 695: shabads `R0X`/`LB4`/`E2C`/`37J` = STTM 2639–2642. Label types: `ਸ੍ਰੀ ਸੈਣੁ ॥` Sirlekh, `ਪੀਪਾ ॥` Pankti, `ਧੰਨਾ ॥` Sirlekh | SOS | SQL | Four shabads; label types inconsistent | Verified fact |
 | S7 | `ਸੁਧੁ` (524) and `ਸੁਧੁ ਕੀਚੇ` (323) sit on the Vaar's last line, under Guru Arjan Dev Ji. The headings are `6AM`/2006 and `ALC`/1285 under Bhagat Kabir Ji, typed Pankti | SOS | SQL | Agrees with the print's placement of the rubric | Verified fact |
 | S8 | SOS carries six translation/commentary sources for the Granth; Bhai Vir Singh and Jaggi are not among them | SOS `translation_sources` | SQL | Corrects PR #18's source list | Verified fact |
-| S9 | SOS and BDB group identically except 13 STTM ids that SOS splits; A-07 (4531) is one of them | SOS `shabads.sttm_id` | SQL | They are one source family for grouping | Verified fact |
+| S9 | 13 STTM ids are each split by SOS across two or more shabads; A-07 (4531) is one of them. Checked in one direction only: 16 STTM ids in 1–5540 are absent from SOS's Granth shabads (171, 470, 755, 1668, 1671, 1675, 2032, 2039, 2071, 3226, 3372, 3444, 3518, 3635, 4762, 4861), and these were not examined (they may be SOS merges or BaniDB gaps) | SOS `shabads.sttm_id` | SQL | SOS carries BDB's ids, so for grouping the two are treated as one source family | Verified fact for the 13 splits; **Interpretation** that they are otherwise identical |
 
 ## Commentary (as transcribed in ShabadOS 4.8.7)
 

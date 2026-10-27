@@ -150,8 +150,9 @@ def _ends(r, salok):
     return len(nums) >= (1 if salok else 2)
 
 
-def apply(records, ledger=None):
-    """Mutates records' `author` in place; returns the change log."""
+def apply(records, ledger=None, gate=None):
+    """Mutates records' `author` in place; returns the change log. `gate`: keyword arguments for
+    g3_gate.check (tests only)."""
     log, flags = [], []
 
     def setauthor(r, a, rule, evidence):
@@ -290,7 +291,7 @@ def apply(records, ledger=None):
 
     # ---- E: editorial decisions the G3 gate lets through ----------------------
     by_id = {r['id']: r for r in records}
-    for e in g3_gate.check(ledger or [], 'attribution'):
+    for e in g3_gate.check(ledger or [], 'attribution', **(gate or {})):
         missing = [i for i in range(e['start_id'], e['end_id'] + 1) if i not in by_id]
         if missing:
             raise g3_gate.GateError(f"attribution:{e['entry']}: ids {missing[:5]} are not in the corpus")

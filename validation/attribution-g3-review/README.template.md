@@ -141,8 +141,7 @@ dataset and ShabadOS now agree on this line.
 If you choose 2(a), a follow-up is needed: a composition that opens with a verse, not a heading, needs a new
 ledger kind and an explicit exception to the structural invariant. 2(c) cannot be represented by grouping.
 
-**Decision 1 (A-07, line 53935):** ☐ Approve (Bhagat Surdas Ji, author only, as in this pull request) ·
-☐ Change (author: ______ · composition: ☐ (a) own ☐ (b) as now ☐ (c) note only) · ☐ Reject (keep Bhagat Namdev Ji)
+**Ruling:** record it in `SIGN-OFF.md`, the only ruling form. This section is evidence, not a form.
 
 ---
 
@@ -182,7 +181,7 @@ ShabadOS files them. Their `author` does not change.
 names on the full headings, so it needs the short names added either way. The boundaries are as printed,
 from heading to heading.
 
-**Decision 2 (A-08):** ☐ Approve (split as in this pull request) · ☐ Change (names or boundaries: ______) · ☐ Reject (keep one section)
+**Ruling:** record it in `SIGN-OFF.md`, the only ruling form. This section is evidence, not a form.
 
 ---
 
@@ -234,7 +233,7 @@ a verse inside Bhagat Ravidas Ji's composition 4426, the same defect, unfixed (`
 runs all three labels on inline, so its layout does not settle heading versus verse.
 The alternative is to leave the labels as verses and the grouping as it is.
 
-**Decision 3 (A-10):** ☐ Approve (fix as in this pull request) · ☐ Change: ______ · ☐ Reject (leave as one composition)
+**Ruling:** record it in `SIGN-OFF.md`, the only ruling form. This section is evidence, not a form.
 
 ---
 
@@ -281,8 +280,7 @@ Gauri ki Vaar (Mahalla 5), run into Gauri's Bhagat-run heading. It is still Guru
 ShabadOS files it under Bhagat Kabir Ji in the same way. It is recorded as `bhagat-run-heading-ang323` with
 status **proposed**, so it **changes nothing** until you rule on it.
 
-**Decision 4 (A-11, line 23470):** ☐ Approve (Bhagat Kabir Ji, as in this pull request) · ☐ Change: ______ · ☐ Reject (keep Guru Arjan Dev Ji)
-**And line 14771 (Ang 323):** ☐ The same ruling as line 23470 · ☐ Leave as it is
+**Ruling:** record it in `SIGN-OFF.md`, the only ruling form. This section is evidence, not a form.
 
 ---
 
@@ -333,6 +331,6 @@ bumps. The headline numbers:
 - 4,530 compositions (was 4,527), with `max(comp_id)` 5,383 (was 5,376).
 - 15 sections (was 13): `ਚਉਬੋਲੇ` drops from 815 lines to 24.
 - Dhanasari `n_shabads` is 108 (was 105).
-- `word_freq` loses the 3 label words.
+- `word_freq`: four words (`ਸ੍ਰੀ`, `ਸੈਣੁ`, `ਪੀਪਾ`, `ਧੰਨਾ`) each lose one count, because the label lines are now headings. No row is removed. *[corrected]*
 
 Every changed line is listed in `changes.csv`.

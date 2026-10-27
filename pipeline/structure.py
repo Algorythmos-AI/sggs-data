@@ -31,12 +31,12 @@ def load_ledger(path):
     return g3_gate.load('structure', path)
 
 
-def apply(records, ledger, issued):
+def apply(records, ledger, issued, gate=None):
     """Mutates records in place; returns the change log. `issued` is the highest comp_id the
     build issued (build_corpus's comp_seq), burned ids included."""
     log = []
     by_id = {r['id']: r for r in records}
-    approved = g3_gate.check(ledger, 'structure')
+    approved = g3_gate.check(ledger, 'structure', **(gate or {}))
 
     def rows(e):
         out = [by_id.get(i) for i in range(e['start_id'], e['end_id'] + 1)]

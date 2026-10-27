@@ -27,8 +27,8 @@ Every conclusion carries exactly one label:
   - The edition is typeset and runs text on: only principal headings are set as centred lines. Labels
     such as `ਰਹਾਉ ॥` and the bare Bhagat names run on inside the verse. **Layout in this source therefore
     cannot by itself decide whether a run-on label is a heading.**
-- **ShabadOS 4.8.7 and BaniDB.** ShabadOS carries the BaniDB/STTM shabad ids and groups lines like BaniDB,
-  apart from 13 refinements. For grouping they are **one source family**, not two.
+- **ShabadOS 4.8.7 and BaniDB.** ShabadOS carries the BaniDB/STTM shabad ids. It splits 13 of them,
+  and the reverse direction was not fully checked. For grouping they are **one source family**, not two.
 - **Sahib Singh and Faridkot.** The Darpan and the Faridkot Teeka are quoted **as transcribed in ShabadOS
   4.8.7**, which does not state their edition. Some Darpan notes are cut off at 1,000 characters there.
   No printed copy of either was consulted.
@@ -213,6 +213,13 @@ Bhagat Kabir Ji.
   - `ਸੁਧੁ ਰਾਗੁ ਸੋਰਠਿ ਬਾਣੀ ਭਗਤ ਕਬੀਰ ਜੀ ਕੀ ਘਰੁ ੧` *(line 28417)*
 - At every other place in the Granth, `ਸੁਧੁ` is a record of its own that closes its Vaar (e.g.
   `ਸੁਧੁ` *(line 6270)*).
+- **The dataset already attributes the join both ways.** Verified fact:
+  - Line 28417 carries **Bhagat Kabir Ji**, although its `ਸੁਧੁ` closes Sorath ki Vaar. The line
+    before it, 28416, is Guru Ram Das Ji's.
+  - Line 23136 carries **Guru Arjan Dev Ji**. Its `ਸੁਧੁ` closes the Gujri Vaar of Mahalla 3 (23135 is
+    Guru Amar Das Ji's), while the rest of the line heads Guru Arjan Dev Ji's own Vaar.
+  - In neither case does the rubric take its Vaar's author. That bears on readings (a) and (c) below:
+    no single convention is applied consistently today.
 
 **Verified fact** for the print. Why the extractor joins them is an engineering question, recorded in
 `AUDIT-REPORT.md`.

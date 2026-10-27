@@ -1,25 +1,34 @@
-KILLED    reviewer check removed               errors=2
-KILLED    future-date check removed            failures=2
-KILLED    decision check removed               failures=3
-KILLED    scope check removed                  failures=1
-KILLED    evidence check removed               failures=1
-KILLED    entry_sha256 binding removed         failures=1
-KILLED    fixture-reviewer refusal removed     failures=1
-KILLED    unknown status accepted              failures=1, errors=5
-KILLED    owner allowlist bypassed             failures=1
-KILLED    held with filled ruling accepted     failures=2
-KILLED    held counted as released             failures=2
-KILLED    APPLIED includes proposed            failures=2
-KILLED    structure needs no g3                failures=1
-KILLED    rule E skips the gate                failures=1
-SURVIVED  structure pass skips the gate        all pass
-SURVIVED  attribution load_ledger unvalidated  all pass
---- after adding loader/structure tests
-KILLED    structure pass skips the gate        failures=1
-KILLED    attribution load_ledger unvalidated  failures=1
-KILLED    structure load_ledger unvalidated    failures=1
---- ledger/artifact binding and pack staleness
-KILLED    held entry flipped to proposed (corpus unchanged)  failures=1
-KILLED    G3 entry edited without regenerating the pack    failures=1
-KILLED    DB rebuilt (MANIFEST db_sha256) without regenerating the pack  failures=1
-KILLED    scripture quote misquoted by one matra (ੁ dropped)  failures=1
+baseline: tests pass
+ 1 KILLED    reviewer-of-record check removed                     failures=8
+ 2 KILLED    future-date check removed                            failures=1
+ 3 KILLED    minimum-date check removed                           failures=1
+ 4 KILLED    decision check removed                               failures=3
+ 5 KILLED    scope check removed                                  failures=1
+ 6 KILLED    evidence location check removed                      failures=2, errors=10
+ 7 KILLED    symlink refusal removed                              failures=1
+ 8 KILLED    ruling-file hash check removed                       failures=1
+ 9 KILLED    entry_sha256 binding removed                         failures=1
+10 KILLED    unknown statuses accepted                            failures=1, errors=5
+11 KILLED    owner-approval allowlist bypassed                    failures=1
+12 KILLED    G3 item may be `keep`                                errors=1
+13 KILLED    held/proposed with a filled ruling accepted          failures=2
+14 KILLED    held not counted as outstanding                      failures=2
+15 KILLED    `proposed` treated as applied                        failures=5
+16 KILLED    structure entries allowed without g3                 failures=1
+17 KILLED    registered G3 entry may lose its g3 block            failures=4
+18 KILLED    registered G3 entry may be missing                   errors=2
+19 KILLED    owner-approved pin not checked                       failures=1
+20 KILLED    unregistered g3 entries accepted                     failures=1
+21 KILLED    release check skips the corpus                       failures=1
+22 KILLED    non-integer ids accepted                             failures=3
+23 KILLED    rule E bypasses the gate                             failures=1
+24 KILLED    structure pass bypasses the gate                     failures=1
+25 KILLED    attribution.load_ledger unvalidated                  failures=1
+26 KILLED    structure.load_ledger unvalidated                    failures=1
+27 KILLED    held entry flipped to proposed, corpus not rebuilt   failures=5
+28 KILLED    G3 entry edited without regenerating the pack        failures=1
+29 KILLED    DB rebuilt without regenerating the pack             failures=1
+30 KILLED    a pack quote misquoted by one matra                  failures=1
+31 KILLED    README.md hand-edited (stale against its template)   failures=1
+N1 KILLED    one scripture code point flipped (U+0A38->U+0A36, line 30081)   diff_scripture exit 1, fingerprint exit 1
+0 survived

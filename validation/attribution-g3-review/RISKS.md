@@ -27,11 +27,15 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
 - **Mitigation.** `pipeline/g3_gate.py` is the one validator, used by both passes, both
   `load_ledger()`s, the tests and CI.
   - The seven entries are now `held`.
-  - An `approved` G3 entry needs a complete ruling that is bound to the entry's hash.
-  - The release check fails while any G3 entry is held or unruled.
+  - An `approved` G3 entry needs a complete, provenanced ruling bound to the hash of what the entry
+    does.
+  - The release check fails while any G3 entry is held or unruled, and it also fails when the committed
+    corpus disagrees with the statuses.
+  - It runs **last** in the required `integrity` job, so it never skips the other checks.
 - **Verified.**
-  - 29 gate tests and 3 pack tests.
-  - 17 deliberate mutations of the gate and of its call sites, all detected (`AUDIT-REPORT.md` § 4).
+  - 42 gate tests and 4 pack tests.
+  - 31 mutants and one scripture negative test, all caught (`AUDIT-REPORT.md` § 4,
+    `audit-tools/mutate.py`).
   - A rebuild from the PDF with the gate in place reproduces the committed DB byte for byte.
 
 ### G-2 · An admin can merge past a red `integrity` (high; open, manual setting)
@@ -59,8 +63,9 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
 - **Closing it:**
   - an organization required workflow pinned to a protected ref; or
   - a second code owner on `.github/workflows/**` and `pipeline/g3_gate.py`.
-- **Detection today:** the diff shows the change, and `test_the_release_check_fails_today…` still runs
-  in the `tests` job, which a workflow edit to `integrity` does not remove.
+- **Detection today:** the diff shows the change. `test_the_release_check_fails_today…` also runs in
+  the `tests` job, but that job is defined in the same workflow file, so a pull request could edit both.
+  The only real protection is human review of the diff.
 
 ### G-4 · Consumers can pin any sggs-data commit, including this held one (critical; open, cross-repo)
 
@@ -95,20 +100,54 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
 - **Mitigation.** A new test checks every applied entry's `to` value, and every unapplied G3 entry's
   `from` value, against `corpus/sggs.jsonl`. The hash chain already ties the corpus to the DB
   (`MANIFEST`, attestation).
-- **Shown** (mutation 18). Flipping a held entry to `proposed` without rebuilding fails the test.
+- **Also enforced** by `g3_gate.py` itself (`artifact_problems`), so the release check in CI fails, not
+  only a test.
+- **Shown** (mutants 21 and 27). Flipping a held entry to `proposed` without rebuilding fails both the
+  CLI and the tests. The stripped-ledger attack from the adversarial review is a test
+  (`test_the_stripped_ledger_attack_fails_the_release_check`).
 
 ### G-7 · A ruling recorded for one version of an entry, applied to another (high; closed)
 
-- **Mitigation.** `g3.entry_sha256` is the hash of the entry minus its status, hold note and `g3`. Any
-  edit to its range, `from`, `to`, reason or evidence voids the ruling.
-- **Shown** (mutation 6).
+- **Mitigation.** `g3.entry_sha256` is the hash of what the entry *does*: its name, kind, range, `from`
+  and `to`. Any edit to those voids the ruling. Prose (reason, review) is excluded, so correcting a
+  rationale does not void a ruling, and a ruling is not bound to a rationale the pack shows is wrong.
+- **Shown** (mutant 9; `test_prose_edits_do_not_void_a_ruling`).
 
 ### G-8 · A scholar's item passed off as an owner approval by deleting its `g3` block (high; closed)
 
 - **Mitigation.**
-  - An approved attribution entry with no `g3` must be in `OWNER_APPROVED` (`japji`, `sadu`).
-  - Every structure entry must carry `g3`.
-- **Shown** (mutations 9 and 13).
+  - **The G3 items are a registry in code** (`G3_ENTRIES`). Each must exist with its `g3` block and
+    item, it may not be `keep`, and no other entry may carry a `g3` block.
+  - **An approved attribution entry with no `g3`** must be in `OWNER_APPROVED`, pinned by hash.
+  - **Every structure entry** must carry `g3`.
+- **Shown** (mutants 11, 12, 16, 17, 18, 19 and 20).
+
+### G-10 · A `data-v*` tag can be created on any commit (high; open, manual setting)
+
+- **Finding.** Ruleset `protect-dataset-tags` (23922942) restricts deletion, non-fast-forward and update
+  of `refs/tags/data-v*`, but **not creation**, and it has an `OrganizationAdmin` bypass. A
+  `data-v1.3.0` tag could be created on the held commit. That would also defeat G-4's proposed fix,
+  which trusts `data-v*` tags.
+- **Closing it:**
+  - add a creation rule;
+  - narrow the bypass;
+  - and in consumers, require that the tagged commit passes `g3_gate.py --release-check`.
+
+### G-11 · A ruling's provenance (high; closed in sggs-data, residual by design)
+
+- **Finding** (adversarial review). The earlier gate accepted:
+  - the blank form, or any pack file, as "evidence";
+  - any reviewer string, including a zero-width-space variant of the fixture name;
+  - a 1900 date;
+  - a symlink.
+- **Mitigation.**
+  - The reviewer must be of record (`REVIEWERS`).
+  - The date must fall between 2026-10-26 and today.
+  - The evidence must be a regular, non-symlinked file directly in `rulings/`, pinned by
+    `evidence_sha256`.
+- **Shown** (mutants 1–3, 6–8).
+- **Residual.** The gate cannot prove that the file in `rulings/` is really the reviewer's reply. That
+  rests on the engineer who records it and on review of the diff (G-2, G-3).
 
 ### G-9 · Earlier "G3" approvals were recorded as owner confirmations (medium; for the record)
 
@@ -215,7 +254,7 @@ The platform CDN caches `/api/shabad/*` for an hour (`s-maxage=3600`). After a d
 
 - **Mitigation.** `pack-inputs.json` records the DB and the G3 entries the pack was generated from.
   `test_g3_pack` fails when either moves without regeneration.
-- **Shown** (mutations 19 and 20).
+- **Shown** (mutants 28, 29 and 31). `README.md` must also equal its rendered template.
 - **Also verified:** regenerating the pack from its inputs reproduces the committed `README.md`,
   `evidence.md`, `downstream.md` and `changes.csv` byte for byte.
 
@@ -229,5 +268,6 @@ The platform CDN caches `/api/shabad/*` for an hour (`s-maxage=3600`). After a d
 
 ### P-3 · ShabadOS and BaniDB counted as two sources (medium; closed in the text)
 
-- **Finding.** ShabadOS carries the BaniDB/STTM shabad ids, and the two group lines identically
-  except in 13 places, A-07 among them. For grouping they are one lineage, and the pack counts them so.
+- **Finding.** ShabadOS carries the BaniDB/STTM shabad ids and splits 13 of them, A-07 among them.
+  The reverse direction was not fully checked (`EVIDENCE-LEDGER.md` S9). For grouping the pack counts them
+  as one lineage.
