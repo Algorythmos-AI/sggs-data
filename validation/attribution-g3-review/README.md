@@ -1,14 +1,17 @@
-# Held for G3: four attribution and structure fixes (dataset 1.3.0)
+# G3: four attribution and structure fixes (dataset 1.3.0), ruled 2026-10-28
 
 **Build status: complete.** The database is rebuilt from the PDF through every gate. Reconcile is
 char-exact, the golden suite and the ShabadOS gate pass, and scripture is byte-identical. `make ci` passes
 every gate except `g3-release`, which fails by design until the rulings are recorded. `proofs.md` has the
 outputs. The audit reproduced the rebuild byte for byte (`AUDIT-REPORT.md` § 3).
 
-**Status: HELD. The G3 scholar's sign-off is required. No ruling has been given.** The fixes are applied
-in a draft pull request, as `held` ledger entries, so that the rebuild can prove their exact effect.
-**Merging is not the approval:** the approval is the reviewer's own ruling, recorded in each entry's `g3`
-block (`SIGN-OFF.md`). The CI check `g3_gate.py --release-check` fails until it is recorded.
+**Status: RULED (2026-10-28).** Kanwaljit Singh ruled on every item by WhatsApp; the owner relayed the
+reply and it is recorded as relayed (`SIGN-OFF.md` has his answers and how each is recorded). **Where his
+ruling differs from what this page proposed, the ruling governs:** A-07 also makes the Surdas line a
+composition of its own (5,384); A-08 names the three sections as printed (ਚਉਬੋਲੇ ਮਹਲਾ ੫, ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ,
+ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ); A-11 gives the Bhagats' shared headings on Angs 524 and 323 **no author**, not Bhagat
+Kabir Ji. The `ਸੁਧੁ` question (his Q6) is not applied in 1.3.0. The sections below are the proposals as
+they were put to him.
 
 **Read with the audit (2026-10-27).** An independent audit re-checked this pack against the print and the
 sources, and corrects several statements below. The corrected statements are marked *[corrected]*.
@@ -334,8 +337,10 @@ bumps. The headline numbers:
 
 - 36 voices (was 35).
 - Sarang has 10 voices (was 9).
-- 4,530 compositions (was 4,527), with `max(comp_id)` 5,383 (was 5,376).
-- 15 sections (was 13): `ਚਉਬੋਲੇ` drops from 815 lines to 24.
+- 4,531 compositions (was 4,527), with `max(comp_id)` 5,384 (was 5,376).
+- 15 sections (was 13): `ਚਉਬੋਲੇ` (815 lines) becomes `ਚਉਬੋਲੇ ਮਹਲਾ ੫` (24), `ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ` (494) and
+  `ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ` (297).
+- Two heading lines (Angs 323 and 524) carry no author; `authors` still lists 36 named voices.
 - Dhanasari `n_shabads` is 108 (was 105).
 - `word_freq`: four words (`ਸ੍ਰੀ`, `ਸੈਣੁ`, `ਪੀਪਾ`, `ਧੰਨਾ`) each lose one count, because the label lines are now headings. No row is removed. *[corrected]*
 

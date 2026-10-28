@@ -168,14 +168,15 @@ def downstream(pre, post, out, changed):
     for au in sorted(set(la) | set(lb), key=str):
         if la.get(au) != lb.get(au):
             x, y = la.get(au, (0, 0)), lb.get(au, (0, 0))
-            md.append(f'| {au} | {x[0]} | {y[0]} | {x[1]} | {y[1]} |')
+            md.append(f'| {au if au is not None else "(no author)"} | {x[0]} | {y[0]} | {x[1]} | {y[1]} |')
 
     md += ['', 'Voices per raag (distinct authors with at least one line in the raag):', '',
            '| raag | 1.2.0 | 1.3.0 | joins | leaves |', '|---|---|---|---|---|']
     va, vb = defaultdict(set), defaultdict(set)
-    for r, au in q(pre, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL'):
+    # a line with no author (the G3 ruling on the Bhagats' shared headings) is not a voice
+    for r, au in q(pre, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL AND author IS NOT NULL'):
         va[r].add(au)
-    for r, au in q(post, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL'):
+    for r, au in q(post, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL AND author IS NOT NULL'):
         vb[r].add(au)
     for r in sorted(set(va) | set(vb)):
         if va[r] != vb[r]:

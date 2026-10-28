@@ -296,7 +296,14 @@ def apply(records, ledger=None, gate=None):
         if missing:
             raise g3_gate.GateError(f"attribution:{e['entry']}: ids {missing[:5]} are not in the corpus")
         for lid in range(e['start_id'], e['end_id'] + 1):
-            setauthor(by_id[lid], e['to'], 'E', e['reason'])
+            r = by_id[lid]
+            if e['to'] is None and r['author'] is not None:
+                # a G3 ruling that the line carries no author (a heading shared by several Bhagats)
+                log.append({'id': r['id'], 'ang': r['ang'], 'comp_id': r['comp_id'],
+                            'from': r['author'], 'to': None, 'rule': 'E', 'evidence': e['reason']})
+                r['author'] = None
+            else:
+                setauthor(r, e['to'], 'E', e['reason'])
     return log, flags
 
 

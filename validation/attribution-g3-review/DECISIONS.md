@@ -354,3 +354,12 @@ the weight of the evidence read. It is not a probability of scholarly approval.
   Vaar. Approving it would move the entry from `proposed` to `approved` and requires the gated rebuild.
 
 **Unresolved after these recommendations:** every item. Each still needs the reviewer's signed ruling.
+
+## Rulings recorded (2026-10-28)
+
+Kanwaljit Singh ruled on every item; the owner relayed his WhatsApp reply. His answers, and how each
+is recorded in the ledgers, are in `SIGN-OFF.md`. Where he differs from the engineering recommendations
+above, his ruling governs: the Bhagats' shared headings on Angs 524 and 323 carry **no author** (not
+Bhagat Kabir Ji); the three Angs 1363–1384 sections take their **printed** names; the Surdas line on
+Ang 1253 is a **composition of its own**. His direction on `ਸੁਧੁ` (Q6) is recorded and left for its own
+entry.

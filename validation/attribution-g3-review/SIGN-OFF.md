@@ -1,7 +1,27 @@
 # G3 scholarly review: SGGS dataset 1.3.0
 
-**This is a blank form. No ruling has been given.** Nothing in this repository records a decision by
-the reviewer until he gives one explicitly.
+## Recorded ruling: Kanwaljit Singh, 2026-10-28 (relayed by Sam Kalaliya via WhatsApp)
+
+Kanwaljit Singh answered the Punjabi WhatsApp form from his phone. The owner, Sam Kalaliya, relayed his
+reply and his clarification of questions 2 and 3, and attests that both are his. The reply is kept
+unchanged in `rulings/2026-10-28-kanwaljit-singh-whatsapp.txt`; it is signed by the relayer, not by the
+reviewer (`RISKS.md` G-14). The reply carries no date of its own; 2026-10-28 is the date it was relayed.
+
+| Q | Item | His answer | Recorded as |
+|---|---|---|---|
+| 1 | A-07 author, line 53935 | A: Bhagat Surdas Ji | `surdas-line` approve |
+| 2 | A-07 composition, line 53935 | A: the line stands on its own (clarified: "Ans - A"; the option text he quoted is question 1's) | new `surdas-own-shabad` (kind `stands`, composition 5384, no heading) approve |
+| 3 | A-08, Angs 1363–1384 | B: keep the Bir's order, text and Angs; headings and bookmarks at the printed headings, named as printed: ਚਉਬੋਲੇ ਮਹਲਾ ੫ / ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ / ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ | `section-salok-kabir`, `section-salok-farid` change (printed names); new `section-chaubole` approve. Only the `section` label moves; no line, order or Ang changes. |
+| 4 | A-10, Ang 695 | A: yes, each label opens its own shabad, as printed | the three `ang695-*-opens` approve |
+| 5 | A-11, Ang 524 heading | B: no author (the Bhagats' shared heading; the Kabir chaupada after it stays Kabir's) | `bhagat-run-heading-ang524` change (`to` null) |
+| 6 | A-11 (d), `ਸੁਧੁ` / `ਸੁਧੁ ਕੀਚੇ` on Angs 323, 517, 524, 654 | Y, and: join it to the Vaar's last line as printed, not to the next heading | **Not applied in 1.3.0.** It splits four line records, so it needs its own entry, scripture proofs and review (`AUDIT-TRAIL.md`, outstanding). |
+| 7 | A-11, Ang 323 heading | S: the same ruling as question 5 | `bhagat-run-heading-ang323` change (`to` null) |
+
+The form below is the one he answered, kept as it was sent.
+
+---
+
+**The form as sent (2026-10-28).**
 
 None of the following is scholarly approval:
 

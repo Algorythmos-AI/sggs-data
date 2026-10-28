@@ -1,11 +1,11 @@
 {
-  "created": "2026-10-26T09:24:19+0000",
+  "created": "2026-10-28T10:26:55+0000",
   "db_path": "<external>/pretiming.sqlite",
-  "db_file_sha256": "d2cf8891c656c32a89f56f121119e59473a8475c818ba34809c10d43b1054179",
+  "db_file_sha256": "30e34047ee87c323daeb9bb9d5d36835df44b878b5d6d8bf5f11af137879ef60",
   "corpus_path": "corpus/sggs.jsonl",
-  "corpus_sha256": "0e228fea21f1768aea9e7ec0300916f40d4503d92c86ad3c52239f178347dbaf",
-  "manifest_db_sha256_at_baseline": "003cae578902f2677ea1e18a888f91be1fa32fb1256f07c2cced7f52f7122f91",
-  "manifest_corpus_sha256_at_baseline": "0e228fea21f1768aea9e7ec0300916f40d4503d92c86ad3c52239f178347dbaf",
+  "corpus_sha256": "2e7e1ddf08b81587094ca71a49206232c6e2c3dc58fc816093201ea7894f7e35",
+  "manifest_db_sha256_at_baseline": "4e6777c54140d7c4ff76fd06b5453991daf4cabcb2c98479d216908d4c31455b",
+  "manifest_corpus_sha256_at_baseline": "2e7e1ddf08b81587094ca71a49206232c6e2c3dc58fc816093201ea7894f7e35",
   "method": "data: sha256 of newline-joined compact-JSON rows, SELECT * ORDER BY rowid (fallback: ORDER BY all columns); blobs hex; floats repr. schema: sha256 of sqlite_master.sql. virtual tables: schema hash only.",
   "backup": null,
   "tables": {
@@ -63,7 +63,7 @@
       "virtual": false,
       "schema_sha256": "c94a4b69adfc634afb8aec156e3114f775d1685b240040688eb947617f72dfae",
       "rows": 36,
-      "data_sha256": "3e6379174b72e91f57f2dd8b9d96bef1a7632d7b0a74256aed5eefc44720bb2c"
+      "data_sha256": "5e1dd4297f926e825265f8080f799deef2fb2130297847756477992d541e7cc2"
     },
     "bani_lines": {
       "class": "scripture_derived",
@@ -202,29 +202,29 @@
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "1a5ddb3063986bf6974e363c5d99b453b19361712187fbc6d6cf6f197defe313",
-      "rows": 4527,
-      "data_sha256": "e51e08a3fdd9076564d4ecd61aee198dd9cf462491821ba454b94e3922e27fdf"
+      "rows": 4528,
+      "data_sha256": "01ffd70f36dbd5edc6cd8b326f266723ad48ec8c6785eb979ee3eefad22a13f3"
     },
     "fts_shabad_data": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "094f9d028a8acd743a28d519637d78ec81d6cb7e6f2920d27cdce9b0a337ee0e",
       "rows": 226,
-      "data_sha256": "30da7dbda1573fda2cd3c56f04072cee66534ed3458e58e7419044f5ba16c57f"
+      "data_sha256": "615a72df35115e3d42cf963b2da0e2f0b1ba5d97857ee3817c6fbfd9a1face8f"
     },
     "fts_shabad_docsize": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "5230afd658db8ea49c460769df07eec61985b24132994b22cdcd3be030411588",
-      "rows": 4527,
-      "data_sha256": "388295f1a530664629903ae3b83b1ccf8fb310fbcf5968ea834beff2a7578c4b"
+      "rows": 4528,
+      "data_sha256": "74d1810ef5bf9870fce0f96dbae7a27a21ed2c4176acb7d5cfa071d5164576a6"
     },
     "fts_shabad_idx": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "01b9f9ad01e5f605bda7e373108e0060f9274f3960a76fd384e52634a950addd",
       "rows": 171,
-      "data_sha256": "a4a65fed83e3511732d683e2903109afa5071489fdbd717cd4050227eb4f32d2"
+      "data_sha256": "c78dddfcc9cf2d25a001995d1c7934a7cc29ae7735b43582e2c114ad80221921"
     },
     "fts_tri": {
       "class": "scripture_derived",
@@ -280,7 +280,7 @@
       "virtual": false,
       "schema_sha256": "c6ec1e82aa56fec8e49618f665c385dbaa36d98aa6899bb4970d7fd53ce105d6",
       "rows": 60658,
-      "data_sha256": "c7823ad23564e4023771bd48aa01cb572b9d4840dad5fdca4bec67c0df90e2d2"
+      "data_sha256": "3887cd4d18bbcb4b48a6fcfa256bb12a2f1ec911150cf06e73690b75f34ec45e"
     },
     "meta": {
       "class": "metadata",
@@ -294,7 +294,7 @@
       "virtual": false,
       "schema_sha256": "5d2f3477a9325a163ce173b10196a0b1c52477b766a40e11e9112834f2717548",
       "rows": 31,
-      "data_sha256": "7a70c19b442e5a0ceef70e8313100e566dcce9b0f469c97b9cc5c547a91f4a0e"
+      "data_sha256": "b57fd7e2c0021b0740a7e177189c972a6a70976e6e47af26fc2782569280e872"
     },
     "raags": {
       "class": "metadata",
@@ -308,14 +308,14 @@
       "virtual": false,
       "schema_sha256": "c7ac5eff02eb00d10c8f7e4349790bd440795bb82c8301d04f7eb08bd2ac162c",
       "rows": 15,
-      "data_sha256": "6e7e0a0173606f70cbc7805a1070b58b7fab1c3fa946bcedb0586c66eb9b9aa2"
+      "data_sha256": "8a8346425911fa06f9c5ae52592be44d33c193654f651cdecb026a663ed01018"
     },
     "shabad_neighbors": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "ef7f3b6422c5d6f44ee7bce42d649a2109b280d4d5444ebb35b30a503f9a1fce",
-      "rows": 43830,
-      "data_sha256": "4b40d4eed45b640d179c703b4aede195b9fae3399514d1aa51fb02b88dcbfa40"
+      "rows": 43840,
+      "data_sha256": "ac2a4e8651394630c1bce349dc49b971db07fc06b23189959ce5ddc57b91eaf1"
     },
     "sources": {
       "class": "metadata",
@@ -336,7 +336,7 @@
       "virtual": false,
       "schema_sha256": "f5b5e11d73b6551a703aaa77847ed4d5bdaa01169bf9b2e2d9995fff8be034b9",
       "rows": 2528,
-      "data_sha256": "7a743d760028da99ea20e2a16d659fea63bf5e3f46f8060feceb2490bbf97dc6"
+      "data_sha256": "4ad4bd51a4b023f9e4c226c225609ddb5e2d5e330c75ad06954c90bba5850f51"
     },
     "translations": {
       "class": "companion_text",

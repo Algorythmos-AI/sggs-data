@@ -167,7 +167,7 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
   counts. Registering the key is therefore itself a reviewed change (G-12), and the private key must be
   generated and kept by the reviewer alone.
 
-### G-12 · No reviewer key is registered yet (medium; open, by design)
+### G-12 · No signing key is registered yet (medium; closes when the owner signs)
 
 - **Finding.** `validation/attribution-g3-review/allowed_signers` does not exist. Until it does, no ruling
   can verify, so nothing can be approved: the gate fails closed (`test_no_registered_key_means_no_ruling_verifies`).

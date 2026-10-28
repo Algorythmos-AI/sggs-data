@@ -55,17 +55,19 @@ RULINGS = PACK + 'rulings/'
 STATUSES = {'attribution': {'proposed', 'held', 'approved', 'rejected', 'keep'},
             'structure': {'proposed', 'held', 'approved', 'rejected'}}
 APPLIED = {'approved', 'held'}
+KINDS = {'section', 'opens', 'stands'}                 # structure.py's entry kinds
 DECISION_FOR = {'approved': {'approve', 'change'}, 'rejected': {'reject'}}
 ACTING = ('entry', 'kind', 'start_id', 'end_id', 'from', 'to')
 RULING = ('decision', 'reviewer', 'date', 'scope', 'evidence', 'evidence_sha256', 'entry_sha256')
 RELAY = ('relayed_by', 'channel')                      # optional; both or neither
 
 # The G3 items of dataset 1.3.0 (gurbani-soul-ios docs/review/g3-1.4.9, section 6; Ang 323 added by
-# pull request #17). Adding, renaming or removing one is a reviewed code change.
+# pull request #17; surdas-own-shabad and section-chaubole added 2026-10-28 by the reviewer's ruling on
+# A-07 question 2 and A-08). Adding, renaming or removing one is a reviewed code change.
 G3_ENTRIES = {
     'attribution': {'surdas-line': 'A-07', 'bhagat-run-heading-ang524': 'A-11 / Ang 524',
                     'bhagat-run-heading-ang323': 'A-11 / Ang 323'},
-    'structure': {'section-salok-kabir': 'A-08', 'section-salok-farid': 'A-08',
+    'structure': {'surdas-own-shabad': 'A-07', 'section-chaubole': 'A-08', 'section-salok-kabir': 'A-08', 'section-salok-farid': 'A-08',
                   'ang695-sain-opens': 'A-10', 'ang695-pipa-opens': 'A-10', 'ang695-dhanna-opens': 'A-10'},
 }
 # Approved by the owner before G3 existed (Lineage v2, 2026-10-23), pinned to their content.
@@ -189,11 +191,15 @@ def problems(entries, kind, root=ROOT, today=None, allow_fixture=False, signers=
         # values open (raagmala, bhatt-splits, ...), but still names itself and its line range
         need = REQUIRED[kind] if (st in APPLIED or g3 is not None) else ('entry', 'start_id', 'end_id', 'status')
         missing = [k for k in need if e.get(k) in (None, '')]
-        if kind == 'attribution' and 'from' in missing and e.get('from', 0) is None:
-            missing.remove('from')                 # an unattributed line legitimately comes `from` null
+        for k in ('from', 'to'):
+            # an unattributed line legitimately comes `from` null; a G3 ruling may set `to` null (no author)
+            if kind == 'attribution' and k in missing and e.get(k, 0) is None:
+                missing.remove(k)
         if missing:
             say(f'missing required field(s) {missing}')
             continue
+        if kind == 'structure' and e.get('kind') not in KINDS:
+            say(f"unknown structure kind {e.get('kind')!r} (allowed: {sorted(KINDS)})")
         if type(e.get('start_id')) is not int or type(e.get('end_id')) is not int \
                 or e['start_id'] > e['end_id']:
             say('start_id/end_id must be integers with start_id <= end_id')

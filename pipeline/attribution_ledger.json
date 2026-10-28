@@ -35,46 +35,65 @@
    "end_id": 53935,
    "from": "Bhagat Namdev Ji",
    "to": "Bhagat Surdas Ji",
-   "status": "held",
-   "reason": "Ang 1253: the single line ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥ follows Bhagat Parmanand Ji's shabad and precedes ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥; it is traditionally Bhagat Surdas Ji's one line in the Granth. No heading or signature is printed with it here. The tag Bhagat Namdev Ji is a bleed: Namdev's last shabad closes at Ang 1253 (ਨਾਮਦੇਵ ਜਾ ਕੇ ਜੀਅ ਐਸੀ ਤੈਸੋ ਤਾ ਕੈ ਪ੍ਰੇਮ ਪ੍ਰਗਾਸ ॥੨॥੩॥) and Bhagat Parmanand Ji's shabad stands between it and this line. Proposed for G3 as Bhagat Surdas Ji, as ShabadOS 4.8.7 files it (shabad 5FC, writer Bhagat Surdas Ji). Author only: the line stays in composition 4846 with the shabad before it, as BaniDB/STTM groups it (shabad id 4531).",
+   "status": "approved",
+   "reason": "Ang 1253: the single line ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥ follows Bhagat Parmanand Ji's shabad and precedes ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥; it is traditionally Bhagat Surdas Ji's one line in the Granth. No heading or signature is printed with it here. The tag Bhagat Namdev Ji is a bleed: Namdev's last shabad closes at Ang 1253 (ਨਾਮਦੇਵ ਜਾ ਕੇ ਜੀਅ ਐਸੀ ਤੈਸੋ ਤਾ ਕੈ ਪ੍ਰੇਮ ਪ੍ਰਗਾਸ ॥੨॥੩॥) and Bhagat Parmanand Ji's shabad stands between it and this line. Proposed for G3 as Bhagat Surdas Ji, as ShabadOS 4.8.7 files it (shabad 5FC, writer Bhagat Surdas Ji). Author only: the line stays in composition 4846 with the shabad before it, as BaniDB/STTM groups it (shabad id 4531). G3 ruling (2026-10-28, question 2): the line stands on its own, so it also leaves composition 4846 (structure entry surdas-own-shabad).",
    "g3": {
     "item": "A-07",
-    "decision": null,
-    "reviewer": null,
-    "date": null
-   },
-   "hold": "Applied in the held draft PR so the rebuild proves its exact effect; the PR merges only after the G3 scholar records the decision in `g3` (approve / change / reject)."
+    "decision": "approve",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-07",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q1: A (Bhagat Surdas Ji).",
+    "entry_sha256": "ad080795180478dff4d17100df23b8548f6140925a373a6f0aa7234627445653"
+   }
   },
   {
    "entry": "bhagat-run-heading-ang524",
    "start_id": 23470,
    "end_id": 23470,
    "from": "Guru Arjan Dev Ji (M5)",
-   "to": "Bhagat Kabir Ji",
-   "status": "held",
-   "reason": "Ang 524: the heading ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ opens Gujri's Bhagat Bani; the first composition under it is ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕਾ ਚਉਪਦਾ ਘਰੁ ੨ ਦੂਜਾ ॥. Eleven of the other twelve such headings already carry the run's first Bhagat (13 in all; Ang 323's, line 14771, is the other exception); this one kept Guru Arjan Dev Ji's name because it starts with ਸੁਧੁ, the closing rubric of Gujri ki Vaar M5, which attribution.py never re-attributes. ShabadOS 4.8.7 sets ਸੁਧੁ at the end of the Vaar's last pauri and files the heading under Bhagat Kabir Ji (shabad 6AM).",
+   "to": null,
+   "status": "approved",
+   "reason": "Ang 524: the heading ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ opens Gujri's Bhagat Bani; the first composition under it is ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕਾ ਚਉਪਦਾ ਘਰੁ ੨ ਦੂਜਾ ॥. Eleven of the other twelve such headings already carry the run's first Bhagat (13 in all; Ang 323's, line 14771, is the other exception); this one kept Guru Arjan Dev Ji's name because it starts with ਸੁਧੁ, the closing rubric of Gujri ki Vaar M5, which attribution.py never re-attributes. ShabadOS 4.8.7 sets ਸੁਧੁ at the end of the Vaar's last pauri and files the heading under Bhagat Kabir Ji (shabad 6AM). G3 ruling (2026-10-28): the heading is shared by the Bhagats and carries no author.",
    "review": "G3 A-11 asks what any Bhagat-run heading should carry (the run's first Bhagat, or no author); this entry follows the convention of those eleven until that ruling. The record mixes the Vaar's closing ਸੁਧੁ with the new heading; in the print ਸੁਧੁ ends the Vaar's last printed line and the heading is a separate centred line, so the join is the corpus's, not the print's (validation/attribution-g3-review/DECISIONS.md, A-11).",
    "g3": {
     "item": "A-11 / Ang 524",
-    "decision": null,
-    "reviewer": null,
-    "date": null
-   },
-   "hold": "Applied in the held draft PR so the rebuild proves its exact effect; the PR merges only after the G3 scholar records the decision in `g3` (approve / change / reject)."
+    "decision": "change",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-11 / Ang 524",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q5: B (no author: the heading is shared by the Bhagats; the Kabir chaupada after it stays Bhagat Kabir Ji's).",
+    "entry_sha256": "487eba501d016d9b96e4537b780e135d6c63b780024e15c5f5e12289d2c35f80"
+   }
   },
   {
    "entry": "bhagat-run-heading-ang323",
    "start_id": 14771,
    "end_id": 14771,
    "from": "Guru Arjan Dev Ji (M5)",
-   "to": "Bhagat Kabir Ji",
-   "status": "proposed",
-   "reason": "Ang 323: ਸੁਧੁ ਕੀਚੇ ਰਾਗੁ ਗਉੜੀ ਭਗਤਾਂ ਕੀ ਬਾਣੀ has the same shape as the Ang 524 heading (a Vaar's closing ਸੁਧੁ run into a Bhagat-run heading) and still carries Guru Arjan Dev Ji's name; the first composition under it is ਗਉੜੀ ਗੁਆਰੇਰੀ ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕੇ ਚਉਪਦੇ ੧੪ ॥. Not in the G3 1.4.9 list; recorded so the scholar rules on both together. Changes nothing.",
+   "to": null,
+   "status": "approved",
+   "reason": "Ang 323: ਸੁਧੁ ਕੀਚੇ ਰਾਗੁ ਗਉੜੀ ਭਗਤਾਂ ਕੀ ਬਾਣੀ has the same shape as the Ang 524 heading (a Vaar's closing ਸੁਧੁ run into a Bhagat-run heading) and still carries Guru Arjan Dev Ji's name; the first composition under it is ਗਉੜੀ ਗੁਆਰੇਰੀ ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕੇ ਚਉਪਦੇ ੧੪ ॥. Not in the G3 1.4.9 list; recorded so the scholar rules on both together. Changes nothing. G3 ruling (2026-10-28): the heading is shared by the Bhagats and carries no author.",
    "g3": {
     "item": "A-11 / Ang 323",
-    "decision": null,
-    "reviewer": null,
-    "date": null
+    "decision": "change",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-11 / Ang 323",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q7: S (the same ruling as Q5: no author).",
+    "entry_sha256": "b0d1034eb09254ae531b535a868524c97511aed5a04c154be98f3c18c3b113b3"
    }
   },
   {

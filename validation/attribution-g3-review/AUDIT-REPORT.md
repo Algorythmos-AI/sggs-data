@@ -10,11 +10,11 @@
 | State | Status |
 |---|---|
 | 1. Engineering implementation (approval gate, signed rulings, base-branch gate, tests, CI wiring) | **Complete**, pushed to `audit/g3-hardening` (draft PR #19). |
-| 2. Automated validation | **Complete.** 140 tests pass (1 skipped: iOS app not in this repo). `make ci` runs every gate, and all of them pass except `g3-release`, which runs last and fails **by design**: 8 G3 entries have no ruling (7 held, 1 proposed). Full rebuild from the PDF, re-run 2026-10-28: byte-identical. 39 mutants and one scripture negative test: all caught (§ 4, § 8). |
-| 3. Evidence pack | **Verified** to the extent in § 2. The limits are listed there and in § 6. |
-| 4. Scholarly decision | **Pending.** No ruling has been given on A-07, A-08, A-10, A-11 or Ang 323. |
-| 5. Release readiness | **Not established.** The release check fails until the rulings are recorded. Consumer-side risks (`RISKS.md` G-4, C-1, C-2) are open. |
-| 6. Merge authorised | **No.** PR #17, #18 and #19 stay draft. Nothing was merged or released, and no remote setting was changed. `audit/g3-hardening` was pushed with the owner's authorisation (2026-10-28). |
+| 2. Automated validation | **Complete for the ruled data (2026-10-28, § 9).** Rebuilt from the PDF with the rulings applied: reconcile char-exact, golden pass, integrity gate PASS, scripture byte-identical. With the owner's signature simulated by a throwaway key in a scratch copy, all 154+ tests and every `make ci` gate pass, including `g3-release`. In the committed tree the gate fails only on the missing signature, by design. |
+| 3. Evidence pack | **Verified** to the extent in § 2, and regenerated against the ruled DB. The limits are listed there and in § 6. |
+| 4. Scholarly decision | **Given, relayed.** Kanwaljit Singh ruled on every item on 2026-10-28 by WhatsApp; the owner relayed it (`SIGN-OFF.md`, `RISKS.md` G-14). His Q6 (`ਸੁਧੁ`) is recorded but not applied in 1.3.0. |
+| 5. Release readiness | **Ready once signed.** The owner signs the reply and registers his public key; then the release check passes. Consumer-side items (`RISKS.md` G-4, C-1, C-2; iOS name for `ਚਉਬੋਲੇ ਮਹਲਾ ੫`) are open. |
+| 6. Merge authorised | **By the owner, after signing.** Nothing was merged or released by engineering, and no remote setting was changed. |
 
 ## 1 · What changed in this branch, and why
 
@@ -402,3 +402,15 @@ Also in `audit-tools/`:
 - `extract_shabados.py`: the ShabadOS extraction used for the commentary rows. It needs `gurmukhiutils`
   for display only.
 - Their outputs.
+
+## 9 · Recording the ruling (2026-10-28)
+
+| # | Command | Result |
+|---|---|---|
+| 22 | `SOURCE_DATE_EPOCH=1793005527 make rebuild PDF=…` in a scratch copy, with the ruled ledgers and the signature check stubbed (the signature never reaches the data) | Exit 0. Reconcile char-exact, golden pass, ShabadOS crosscheck PASS, integrity gate PASS. DB `4e6777c5…`, corpus `2e7e1ddf…`. |
+| 23 | Corpus field diff against the 1.3.0 draft | Exactly the ruled fields: `section` 815 (24 + 494 + 297), `author` 2 (lines 14771, 23470 → none), `comp_id` and `line_no` 1 (line 53935 → 5384). No `gurmukhi`, `text`, `translit` or marker changed. |
+| 24 | `compare_builds.py` against the 1.3.0 draft | 13 of 59 tables differ, all derived from those fields (`lines`, `sections`, `authors`, `fts_shabad*`, `shabd_*`, `shabad_neighbors`, `raag_analytics`, `theme_network`). `authors` lists 36 names; no null row. |
+| 25 | Re-baselined: `data_quality.py --write-baseline`, `rebaseline_pretiming.sh`; fingerprint from the rebuild | `make guard`, `fingerprint`, `quality`, `verify` PASS. |
+| 26 | Scratch copy with a throwaway key registered as `sam-kalaliya` and the reply signed with it (simulation only; never committed) | 154 tests OK (1 skipped). `make ci`: every gate passes; `G3 gate: ledgers and corpus agree and every G3 ruling is recorded`. |
+| 27 | `mutate.py` in the same scratch copy | See `AUDIT-TRAIL.md` (mutants re-anchored to the ruled state; two moved to fixtures). |
+

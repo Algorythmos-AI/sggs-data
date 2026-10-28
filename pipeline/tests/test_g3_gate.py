@@ -21,7 +21,12 @@ def real(kind):
 
 
 def named(kind, name):
-    return copy.deepcopy(next(e for e in real(kind) if e['entry'] == name))
+    """A committed entry as it stood before any ruling: held, its g3 block blank (fixtures rule it)."""
+    e = copy.deepcopy(next(x for x in real(kind) if x['entry'] == name))
+    if e.get('g3'):
+        e['status'] = 'held'
+        e['g3'] = {'item': e['g3']['item'], 'decision': None, 'reviewer': None, 'date': None}
+    return e
 
 
 def keypair(d, name, principal=G.FIXTURE_PRINCIPAL):
@@ -66,7 +71,7 @@ class Fixture(unittest.TestCase):
         """A complete ruling on entry e, for a fixture. The reviewer is the fixture name."""
         e = copy.deepcopy(e)
         e['status'] = status
-        e['g3'] = dict(e['g3'], decision=decision, reviewer=G.FIXTURE_REVIEWER, date='2026-10-27',
+        e['g3'] = dict(item=e['g3']['item'], decision=decision, reviewer=G.FIXTURE_REVIEWER, date='2026-10-27',
                        scope=e['g3']['item'], evidence=RULING_FILE,
                        evidence_sha256=G.file_sha256(os.path.join(self.tmp.name, RULING_FILE)),
                        entry_sha256=G.entry_sha256(e))
@@ -103,6 +108,18 @@ class CompleteRulings(Fixture):
         S.apply(r, [self.ruled(e)], issued=5380, gate=self.gate)
         self.assertEqual({x['comp_id'] for x in r[1:]}, {5381})
         self.assertEqual(r[1]['is_header'], 1)
+
+    def test_a_ruling_of_no_author_clears_the_author(self):
+        e = self.ruled(dict(self.surdas, to=None))
+        self.assertEqual(self.bad([e]), [])
+        rec = [{'id': 53935, 'ang': 1253, 'comp_id': 1, 'is_header': 0, 'text': 'x', 'markers': [],
+                'author': 'Bhagat Namdev Ji'}]
+        log, _ = A.apply(rec, [e], gate=self.gate)
+        self.assertIsNone(rec[0]['author'])
+        self.assertEqual(log[-1]['to'], None)
+
+    def test_an_unknown_structure_kind_is_refused(self):
+        self.assertRefused(dict(self.ruled(self.sain), kind='merges'), 'unknown structure kind', kind='structure')
 
     def test_change_is_an_approval_and_reject_a_rejection(self):
         self.assertEqual(self.bad([self.ruled(self.surdas, decision='change')]), [])
@@ -282,6 +299,39 @@ class RelayedRulings(Fixture):
         self.assertIn(f'relayed by {G.FIXTURE_RELAYER} via whatsapp, not signed by the reviewer', out.getvalue())
 
 
+class PendingRulings(Fixture):
+    """An entry without a ruling -- held (applied in a draft) or proposed with a g3 block -- is outstanding,
+    and the release check names both kinds. (The committed ledgers are all ruled, so this is a fixture.)"""
+    def ledgers(self):
+        held = self.surdas                                           # named(): held, ruling blank
+        prop = dict(named('attribution', 'bhagat-run-heading-ang323'), status='proposed')
+        paths = {}
+        for kind, entries in (('attribution', [held, prop] + [e for e in real('attribution') if not e.get('g3')]),
+                              ('structure', [])):
+            paths[kind] = os.path.join(self.tmp.name, f'{kind}.json')
+            with open(paths[kind], 'w', encoding='utf-8') as f:
+                json.dump({'entries': entries}, f, ensure_ascii=False)
+        return held, prop, paths
+
+    def test_held_and_proposed_are_outstanding(self):
+        held, prop, _ = self.ledgers()
+        self.assertEqual([e['entry'] for e in G.outstanding([held, prop, self.ruled(self.sain)])],
+                         ['surdas-line', 'bhagat-run-heading-ang323'])
+
+    def test_the_release_summary_names_held_and_proposed(self):
+        _, _, paths = self.ledgers()
+        orig_l, orig_a = G.ledger_problems, G.artifact_problems
+        G.ledger_problems = lambda entries, kind: []                 # the fixture drops other G3 items
+        G.artifact_problems = lambda ledgers, corpus: []
+        try:
+            with redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(G.main(['--release-check'], ledger_paths=paths), 1)
+        finally:
+            G.ledger_problems, G.artifact_problems = orig_l, orig_a
+        self.assertIn('FAIL — 2 G3 entries without a recorded scholarly ruling (1 held: applied only in this '
+                      'draft build; 1 proposed: not applied)', out.getvalue())
+
+
 class BaseBranchGate(Fixture):
     """--tree: the gate judges a pull request's data with its own code and trust anchors. A tree that
     rules every item, signs with its own key and registers that key in its own allowed_signers --
@@ -349,7 +399,8 @@ class IncompleteRulings(Fixture):
 
     def test_both_ledger_loaders_validate(self):
         for mod, kind, e in ((A, 'attribution', self.surdas), (S, 'structure', self.sain)):
-            entries = [dict(x, status='approved') if x['entry'] == e['entry'] else x for x in real(kind)]
+            # the entry approved with its ruling blanked: both loaders must refuse the ledger
+            entries = [dict(x, status='approved', g3=e['g3']) if x['entry'] == e['entry'] else x for x in real(kind)]
             p = os.path.join(self.tmp.name, f'{kind}.json')
             with open(p, 'w', encoding='utf-8') as f:
                 json.dump({'entries': entries}, f, ensure_ascii=False)
@@ -521,79 +572,87 @@ class Registry(unittest.TestCase):
         self.assertTrue(any('owner-approved entry was edited' in m for m in G.ledger_problems(att, 'attribution')))
 
 
+RULED = [  # (ledger, entry, item, decision) -- Kanwaljit Singh's ruling of 2026-10-28, relayed
+    ('attribution', 'surdas-line', 'A-07', 'approve'),
+    ('attribution', 'bhagat-run-heading-ang524', 'A-11 / Ang 524', 'change'),
+    ('attribution', 'bhagat-run-heading-ang323', 'A-11 / Ang 323', 'change'),
+    ('structure', 'section-chaubole', 'A-08', 'approve'),
+    ('structure', 'section-salok-kabir', 'A-08', 'change'),
+    ('structure', 'section-salok-farid', 'A-08', 'change'),
+    ('structure', 'ang695-sain-opens', 'A-10', 'approve'),
+    ('structure', 'ang695-pipa-opens', 'A-10', 'approve'),
+    ('structure', 'ang695-dhanna-opens', 'A-10', 'approve'),
+    ('structure', 'surdas-own-shabad', 'A-07', 'approve'),
+]
+EVIDENCE = G.RULINGS + '2026-10-28-kanwaljit-singh-whatsapp.txt'
+
+
 class CommittedLedgers(unittest.TestCase):
-    """The real ledgers and corpus as committed: valid, with every G3 item awaiting its ruling."""
+    """The real ledgers and corpus as committed: valid, every G3 item ruled by the reviewer of record
+    in one relayed WhatsApp reply, and the corpus built from exactly those rulings."""
     def test_they_validate(self):
         for kind in G.LEDGERS:
             with self.subTest(kind=kind):
                 self.assertEqual(G.problems(real(kind), kind), [])
                 self.assertEqual(G.ledger_problems(real(kind), kind), [])
 
-    def test_no_g3_ruling_is_recorded_and_none_is_approved(self):
-        for kind in G.LEDGERS:
-            for e in real(kind):
-                if not e.get('g3'):
-                    continue
-                with self.subTest(entry=e['entry']):
-                    self.assertIn(e['status'], ('held', 'proposed'))
-                    self.assertTrue(all(e['g3'].get(k) in (None, '') for k in G.RULING))
+    def test_every_g3_item_carries_the_relayed_ruling(self):
+        got = sorted((k, e['entry'], e['g3']['item'], e['g3']['decision'])
+                     for k in G.LEDGERS for e in real(k) if e.get('g3'))
+        self.assertEqual(got, sorted(RULED))
+        for k in G.LEDGERS:
+            for e in real(k):
+                if e.get('g3'):
+                    with self.subTest(entry=e['entry']):
+                        g = e['g3']
+                        self.assertEqual(e['status'], 'approved')
+                        self.assertEqual((g['reviewer'], g['date'], g['evidence']),
+                                         ('Kanwaljit Singh', '2026-10-28', EVIDENCE))
+                        self.assertEqual((g['relayed_by'], g['channel']), ('Sam Kalaliya', 'whatsapp'))
+                        self.assertEqual(g['evidence_sha256'], G.file_sha256(os.path.join(G.ROOT, EVIDENCE)))
 
-    def test_the_held_and_pending_set_is_exactly_the_g3_list(self):
-        got = sorted((e['g3']['item'], e['entry'], e['status'])
-                     for k in G.LEDGERS for e in G.outstanding(real(k)))
-        self.assertEqual(got, [
-            ('A-07', 'surdas-line', 'held'),
-            ('A-08', 'section-salok-farid', 'held'),
-            ('A-08', 'section-salok-kabir', 'held'),
-            ('A-10', 'ang695-dhanna-opens', 'held'),
-            ('A-10', 'ang695-pipa-opens', 'held'),
-            ('A-10', 'ang695-sain-opens', 'held'),
-            ('A-11 / Ang 323', 'bhagat-run-heading-ang323', 'proposed'),
-            ('A-11 / Ang 524', 'bhagat-run-heading-ang524', 'held'),
-        ])
+    def test_the_ruling_sets_what_the_reviewer_said(self):
+        att = {e['entry']: e for e in real('attribution')}
+        st = {e['entry']: e for e in real('structure')}
+        self.assertEqual(att['surdas-line']['to'], 'Bhagat Surdas Ji')                       # Q1 A
+        self.assertEqual((st['surdas-own-shabad']['kind'], st['surdas-own-shabad']['start_id']),
+                         ('stands', 53935))                                                    # Q2 A
+        self.assertEqual([st[n]['to'] for n in ('section-chaubole', 'section-salok-kabir', 'section-salok-farid')],
+                         ['ਚਉਬੋਲੇ ਮਹਲਾ ੫', 'ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ', 'ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ'])      # Q3 B, as printed
+        self.assertIsNone(att['bhagat-run-heading-ang524']['to'])                              # Q5 B
+        self.assertIsNone(att['bhagat-run-heading-ang323']['to'])                              # Q7 S
+        self.assertEqual(G.outstanding(real('attribution')) + G.outstanding(real('structure')), [])
 
     def test_the_committed_corpus_is_what_the_ledger_statuses_say(self):
         self.assertEqual(G.artifact_problems({k: real(k) for k in G.LEDGERS}, G.CORPUS), [])
 
     def test_a_status_flip_without_a_rebuild_is_caught(self):
-        att = [dict(e, status='proposed') if e['entry'] == 'surdas-line' else e for e in real('attribution')]
+        att = [dict(e, status='proposed', g3={'item': 'A-07'}) if e['entry'] == 'surdas-line' else e
+               for e in real('attribution')]
         msgs = G.artifact_problems({'attribution': att, 'structure': real('structure')}, G.CORPUS)
         self.assertTrue(any('surdas-line' in m for m in msgs), msgs)
 
-    def test_no_committed_ledger_names_a_reviewer_or_the_fixture(self):
+    def test_no_committed_ledger_names_the_fixture(self):
         for path in G.LEDGERS.values():
             with open(path, encoding='utf-8') as f:
                 text = f.read()
             self.assertNotIn(G.FIXTURE_REVIEWER, text)
             self.assertNotIn(G.FIXTURE_RELAYER, text)
-            for rev in G.REVIEWERS:
-                self.assertNotIn(rev, text)
 
-    def test_the_release_check_fails_today_and_the_plain_gate_passes(self):
+    def test_the_release_check_passes_and_says_relayed(self):
         with redirect_stdout(io.StringIO()) as out:
-            self.assertEqual(G.main([]), 0)
-            self.assertEqual(G.main(['--release-check']), 1)
+            self.assertEqual(G.main(['--release-check']), 0)
         text = out.getvalue()
-        self.assertIn('G3 release check: FAIL — 8 G3 entries without a recorded scholarly ruling '
-                      '(7 held: applied only in this draft build; 1 proposed: not applied)', text)
-        # every one of the eight, by name and status -- the CI log that reported "8" against "7 held"
-        for kind, name, st in (('attribution', 'surdas-line', 'held'),
-                               ('attribution', 'bhagat-run-heading-ang524', 'held'),
-                               ('attribution', 'bhagat-run-heading-ang323', 'proposed'),
-                               ('structure', 'section-salok-kabir', 'held'),
-                               ('structure', 'section-salok-farid', 'held'),
-                               ('structure', 'ang695-sain-opens', 'held'),
-                               ('structure', 'ang695-pipa-opens', 'held'),
-                               ('structure', 'ang695-dhanna-opens', 'held')):
-            with self.subTest(entry=name):
-                self.assertIn(f'::error::{kind}:{name} is {st}: no G3 ruling is recorded', text)
+        self.assertIn('every G3 ruling is recorded', text)
+        self.assertEqual(text.count('relayed by Sam Kalaliya via whatsapp, not signed by the reviewer'), len(RULED))
 
     def test_the_cli_checks_the_corpus_not_only_the_ledgers(self):
-        # a valid ledger (held -> proposed, ruling still blank) that no longer matches the committed
+        # a valid ledger (approved -> proposed, ruling cleared) that no longer matches the committed
         # corpus: the plain gate must fail on the artifact, not pass on the ledgers alone
         tmp = tempfile.mkdtemp()
         try:
-            att = [dict(e, status='proposed') if e['entry'] == 'surdas-line' else e for e in real('attribution')]
+            att = [dict(e, status='proposed', g3={'item': e['g3']['item']}) if e['entry'] == 'surdas-line' else e
+                   for e in real('attribution')]
             paths = {'attribution': os.path.join(tmp, 'a.json'), 'structure': G.LEDGERS['structure']}
             with open(paths['attribution'], 'w', encoding='utf-8') as f:
                 json.dump({'entries': att}, f, ensure_ascii=False)

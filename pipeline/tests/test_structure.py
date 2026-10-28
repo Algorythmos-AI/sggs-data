@@ -88,11 +88,26 @@ class Refusals(unittest.TestCase):
             S.apply(r, [opens(2, 3, 7, 11)], issued=10)
 
 
+class Stands(unittest.TestCase):
+    def test_a_trailing_verse_stands_alone_without_becoming_a_heading(self):
+        r = recs([(7, 1, None), (7, 0, None), (7, 0, None), (9, 1, None)])
+        e = dict(opens(3, 3, 7, 11), entry='stands-3', kind='stands')
+        S.apply(r, [e], issued=10)
+        self.assertEqual([(x['comp_id'], x['line_no'], x['is_header']) for x in r],
+                         [(7, 1, 1), (7, 2, 0), (11, 1, 0), (9, 1, 1)])
+
+    def test_stands_leaves_no_line_behind(self):
+        r = recs([(7, 1, None), (7, 0, None), (7, 0, None)])
+        e = dict(opens(2, 2, 7, 11), entry='stands-2', kind='stands')
+        with self.assertRaises(S.LedgerMismatch):
+            S.apply(r, [e], issued=10)
+
+
 class Ledger(unittest.TestCase):
     def test_every_entry_is_well_formed(self):
         for e in S.load_ledger(os.path.join(ROOT, 'pipeline', 'structure_ledger.json')):
             with self.subTest(entry=e['entry']):
-                self.assertIn(e['kind'], ('section', 'opens'))
+                self.assertIn(e['kind'], ('section', 'opens', 'stands'))
                 self.assertIn(e['status'], ('approved', 'held', 'proposed', 'rejected'))
                 self.assertLessEqual(e['start_id'], e['end_id'])
                 self.assertTrue(e['evidence'] and e['reason'])
@@ -119,18 +134,20 @@ class Corpus(unittest.TestCase):
                     self.assertTrue(all(r['section'] == e['to'] for r in rows))
                 else:
                     self.assertTrue(all(r['comp_id'] == e['to'] for r in rows))
-                    self.assertEqual(rows[0]['is_header'], 1)
+                    self.assertEqual(rows[0]['is_header'], 1 if e['kind'] == 'opens' else 0)
                     self.assertEqual([r['line_no'] for r in rows], list(range(1, len(rows) + 1)))
 
     def test_compositions_stay_whole(self):
-        # every comp_id is one contiguous run of ids, and opens with a heading
+        # every comp_id is one contiguous run of ids, and opens with a heading -- except a G3
+        # `stands` entry, verse that is a composition of its own with no printed heading
         first, last = {}, {}
         for i in sorted(self.by_id):
             c = self.by_id[i]['comp_id']
             first.setdefault(c, i)
             self.assertEqual(last.get(c, i - 1), i - 1, f'comp {c} is split around id {i}')
             last[c] = i
-        self.assertTrue(all(self.by_id[i]['is_header'] for i in first.values()))
+        stands = {e['start_id'] for e in self.ledger if e['kind'] == 'stands' and e['status'] in ('approved', 'held')}
+        self.assertEqual(sorted(i for i in first.values() if not self.by_id[i]['is_header']), sorted(stands))
 
 
 if __name__ == '__main__':

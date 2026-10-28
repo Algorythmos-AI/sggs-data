@@ -5,9 +5,10 @@ evidence, and what is still open. Read it instead of any chat history. Times are
 GitHub, not from memory. Append new events at the end. Never rewrite an earlier one; correct it with a
 new dated entry.
 
-**Approval status at the last entry: no G3 item has a ruling.** Every `g3` field in both ledgers is
-blank. No signing key (reviewer or relayer) is registered. A reply from Kanwaljit Singh has reached the
-owner but is not yet recorded (see the 2026-10-28 entries). Nothing in this repository records a decision by him.
+**Approval status at the last entry: every G3 item carries Kanwaljit Singh's ruling of 2026-10-28,
+relayed by the owner (Sam Kalaliya) from WhatsApp** and recorded as relayed, not as signed by the
+reviewer (`SIGN-OFF.md`, `RISKS.md` G-14). The gate accepts it only once the owner's signature over the
+reply and his public key are committed; until then the release check fails on the missing signature.
 
 ## Events
 
@@ -27,6 +28,8 @@ owner but is not yet recorded (see the 2026-10-28 entries). Nothing in this repo
 | 2026-10-28 (session) | none | Ruling forms in English and Punjabi prepared for the reviewer to answer on WhatsApp from his phone. The Punjabi form fixed the English draft's "5 questions" (there are 7) and replaced an example answer that matched the engineering recommendations with a blank one, so as not to steer him. | Owner's chat |
 | 2026-10-28 (session) | none | **A reply from Kanwaljit Singh reached the owner on WhatsApp** and was pasted into the session. **Nothing was recorded in the ledgers:** his Q2 answer is ambiguous (it carries Q1's wording), his Q3 answer needs confirming against the implementation, the reply has no closing line or date, and the record must be the WhatsApp export, not a pasted copy. A Punjabi follow-up asking only those points was prepared for the owner to send. His Q6 answer asks for a separate `ਸੁਧੁ` change, which needs its own entry and review. | Owner's chat |
 | 2026-10-28 (session) | this commit | **Owner decision:** the reviewer cannot sign on his phone, so the owner signs the WhatsApp export himself as the relayer, recorded openly as relayed. Gate: optional `g3.relayed_by` + `g3.channel`; a relayed ruling verifies the relayer's signature (`RELAYERS`, `CHANNELS`) and is reported as "relayed …, not signed by the reviewer". 10 `RelayedRulings` tests; mutants 40–44. `RISKS.md` G-12 updated and G-14 added; `SIGN-OFF.md` step 1 gains the relayed path. No relayer key is registered yet. | `RISKS.md` G-14 |
+| 2026-10-28 (session) | none | The owner relayed the reviewer's clarification: question 2 is **A** (the line stands on its own), question 3 is **B** with the printed names. The owner said he had talked to the reviewer and asked for the rulings to be recorded as given. | Owner's chat |
+| 2026-10-28 (session) | this commit | **Rulings recorded, as relayed.** Evidence: both relayed messages, unchanged, in `rulings/2026-10-28-kanwaljit-singh-whatsapp.txt`. All 10 G3 entries `approved` (Q1, Q2, Q3, Q4, Q5, Q7); two new registered entries implement his words: `surdas-own-shabad` (kind `stands`: line 53935 becomes composition 5384, no heading) and `section-chaubole` (printed name). Q5/Q7 "no author" sets `author` null on lines 23470 and 14771. Q6 (`ਸੁਧੁ`) is **not** applied: it splits scripture line records and needs its own entry and proofs. Gate: `to` may be null for attribution; structure kinds are a closed set; `verify_regroup` allows exactly one headless composition (first line 53935). Rebuilt from the PDF in a scratch copy with the signature check stubbed (the signature never reaches the data). | `SIGN-OFF.md` |
 
 ## Lessons recorded so they are not repeated
 
@@ -50,9 +53,9 @@ owner but is not yet recorded (see the 2026-10-28 entries). Nothing in this repo
 
 | Item | Owner | Where |
 |---|---|---|
-| Rulings on A-07, A-08, A-10, A-11 / Ang 524, Ang 323 | Kanwaljit Singh | `SIGN-OFF.md`, `DECISIONS.md` |
-| Register a signing key: the relayer's (owner's) for the relayed path, or the reviewer's own | Owner | `RISKS.md` G-12, G-14 |
-| Q2/Q3 confirmation, closing line and date from the reviewer; the WhatsApp export | Reviewer, via the owner | This file |
+| Sign the reply and register the relayer key (one command, `SIGN-OFF.md`) | Owner | `RISKS.md` G-12, G-14 |
+| The `ਸੁਧੁ` / `ਸੁਧੁ ਕੀਚੇ` segmentation (his Q6 direction): its own entry, proofs and review | Engineering, then the reviewer | `SIGN-OFF.md` Q6 |
+| iOS `GranthNames.sections` has no English name for `ਚਉਬੋਲੇ ਮਹਲਾ ੫`; the web's `CLOSING_FIX`/reader chip become dead code | gurbani-soul-ios, sggs-platform | `downstream.md` |
 | Make `g3-base-gate` a required check; restrict the admin bypass; a creation rule for `data-v*` tags | Owner (repository settings) | `RISKS.md` G-2, G-3, G-10 |
 | Consumers pin only released datasets; saved links to composition 2749; section names in iOS | Owner (sggs-platform, gurbani-soul-ios) | `RISKS.md` G-4, C-1, C-2 |
 | Line 50285 `ਨਾਮਦੇਵ ॥` inside Ravidas's composition; the `ਸੁਧੁ` segmentation item (d) | Needs its own entry and review | `DECISIONS.md` A-10, A-11 |

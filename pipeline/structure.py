@@ -19,6 +19,8 @@ Kinds:
            lines start_id..end_id leave composition `from` for the new composition `to`. A new id
            is issued above every id the build has ever issued (`issued`), so no existing comp_id
            moves and no vacated (burned) id is reused.
+  stands   as opens, but the lines are verse that stands as a composition of its own with no printed
+           heading or label (A-07: the single Surdas line on Ang 1253): is_header is not touched.
 """
 import g3_gate
 
@@ -60,8 +62,8 @@ def apply(records, ledger, issued, gate=None):
         for r in rs:
             change(r, 'section', e['to'], e)
 
-    # ---- opens -----------------------------------------------------------------
-    opens = [e for e in approved if e['kind'] == 'opens']
+    # ---- opens / stands ----------------------------------------------------------
+    opens = [e for e in approved if e['kind'] in ('opens', 'stands')]
     starts = {e['start_id'] for e in opens}
     used = {r['comp_id'] for r in records}
     new_ids = [e['to'] for e in opens]
@@ -76,13 +78,14 @@ def apply(records, ledger, issued, gate=None):
         bad = [r['id'] for r in rs if r['comp_id'] != e['from']]
         if bad:
             raise LedgerMismatch(f"{e['entry']}: expected comp_id {e['from']} on every line, not on ids {bad[:5]}")
-        if rs[0]['is_header']:
+        if e['kind'] == 'opens' and rs[0]['is_header']:
             raise LedgerMismatch(f"{e['entry']}: id {rs[0]['id']} is already a header")
         nxt = by_id.get(e['end_id'] + 1)
         if nxt is not None and nxt['comp_id'] == e['from'] and nxt['id'] not in starts:
             raise LedgerMismatch(f"{e['entry']}: id {nxt['id']} would be left behind in comp {e['from']} "
                                  f"after the new composition")
-        change(rs[0], 'is_header', 1, e)
+        if e['kind'] == 'opens':
+            change(rs[0], 'is_header', 1, e)
         for r in rs:
             change(r, 'comp_id', e['to'], e)
         touched |= {e['from'], e['to']}

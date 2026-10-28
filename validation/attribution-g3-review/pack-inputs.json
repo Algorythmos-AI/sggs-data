@@ -1,16 +1,18 @@
 {
   "_note": "Written by scripts/data/g3_attribution_pack.py; checked by pipeline/tests/test_g3_pack.py.",
   "pre_db_sha256": "ff5e5de70027dbebb5162ef48df2d5358fca0fd32ebe38b101c5f788d830e66d",
-  "post_db_sha256": "003cae578902f2677ea1e18a888f91be1fa32fb1256f07c2cced7f52f7122f91",
+  "post_db_sha256": "4e6777c54140d7c4ff76fd06b5453991daf4cabcb2c98479d216908d4c31455b",
   "shabados_sha256": "d8e071347bd5485cc6aa2533c1f51347a16ed1724b4d8abaa4939520257074c2",
   "g3_entries": {
     "ang695-dhanna-opens": "f067f700fc4c09a1bbfacd02cd71b1aff8548fefbc034c6a8d44c0fed59891b0",
     "ang695-pipa-opens": "6403e755bff83bde6bd875644d35e4e9d79dac18293ef432d84d4bfcc421f3de",
     "ang695-sain-opens": "3f88a48704236721217d69907e3e7e4dbdd61eaba5cd6fa6f985fce9b54c10ef",
-    "bhagat-run-heading-ang323": "d45527e291417bbe94131a89753a782fb4a4444e4e17dbc070c4ce76811dba4e",
-    "bhagat-run-heading-ang524": "9b129e217edcb7ea8b7204712bb40a715a2a21c3c6a368fb5eb741209da66a51",
-    "section-salok-farid": "4d5d1c82976bf04eb6dec8177062a03c9086c04597b142a4e9cd7f3853ed74ef",
-    "section-salok-kabir": "77bc3235f145a8fea5415abe436a77530226f109db48312756ccfce9127d7f84",
-    "surdas-line": "ad080795180478dff4d17100df23b8548f6140925a373a6f0aa7234627445653"
+    "bhagat-run-heading-ang323": "b0d1034eb09254ae531b535a868524c97511aed5a04c154be98f3c18c3b113b3",
+    "bhagat-run-heading-ang524": "487eba501d016d9b96e4537b780e135d6c63b780024e15c5f5e12289d2c35f80",
+    "section-chaubole": "d1dd51f6678185ee639cb39083e234a0be0ef49528fa7756b6efcb5ccd25963b",
+    "section-salok-farid": "802519627559b9f915efecfa3641724c992d56705d7da0cfe1bb7e67cec03eee",
+    "section-salok-kabir": "2cc3ebf51eb73bf210c87fa46907f9923a43a145ef81e72f1795c0baa16cacb0",
+    "surdas-line": "ad080795180478dff4d17100df23b8548f6140925a373a6f0aa7234627445653",
+    "surdas-own-shabad": "7a308eee17790a79a67b9af303ee71e642c91b1a7025f7af45543e866a291ca3"
   }
 }
