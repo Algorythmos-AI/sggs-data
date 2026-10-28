@@ -19,6 +19,11 @@ sources, and corrects several statements below. The corrected statements are mar
 - `RISKS.md`: technical risks.
 - `AUDIT-REPORT.md`: what was checked, how, and the results.
 - `SIGN-OFF.md`: the blank form for the reviewer.
+- `AUDIT-TRAIL.md`: what happened, when, in which commit, and what is still open.
+
+**Engineering recommendations (2026-10-28) are not rulings.** `DECISIONS.md` ends with the audit
+engineer's recommendation on each item, with its confidence and the strongest alternative. They record
+no decision and change nothing.
 
 **What changes.** Only facts *about* lines change: who the dataset credits a line to (`author`), which
 part of the Granth it is filed under (`section`), whether it is a heading (`is_header`), and which
@@ -287,7 +292,8 @@ status **proposed**, so it **changes nothing** until you rule on it.
 ## After your ruling
 
 The reviewer replies with the form in `SIGN-OFF.md`. An engineer then records his ruling exactly as given:
-the reply goes into `rulings/` in this folder, and each entry's `g3` block gets the decision, reviewer, date,
+the reply goes into `rulings/` in this folder **with his own signature** (`SIGN-OFF.md`; the gate refuses
+an unsigned reply), and each entry's `g3` block gets the decision, reviewer, date,
 scope, evidence path and entry hash, with its status moved to `approved` or `rejected`
 (`SIGN-OFF.md`, "How a ruling is recorded").
 

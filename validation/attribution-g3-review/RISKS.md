@@ -56,16 +56,28 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
 - **Until then**, the safeguard is a rule of conduct: never admin-merge a pull request whose
   `integrity` job is red because of the G3 step.
 
-### G-3 · A pull request can edit its own CI (high; open, manual setting)
+### G-3 · A pull request can edit its own CI (high; mitigated in sggs-data 2026-10-28, enforcement needs a manual setting)
 
 - **Finding.** On a `pull_request` event, GitHub runs the workflow file from the pull request's own
-  branch. A pull request could therefore delete the G3 step and pass.
-- **Closing it:**
-  - an organization required workflow pinned to a protected ref; or
-  - a second code owner on `.github/workflows/**` and `pipeline/g3_gate.py`.
-- **Detection today:** the diff shows the change. `test_the_release_check_fails_today…` also runs in
-  the `tests` job, but that job is defined in the same workflow file, so a pull request could edit both.
-  The only real protection is human review of the diff.
+  branch. A pull request could therefore delete the G3 step, edit `g3_gate.py` (add a reviewer, drop a
+  check) and pass.
+- **Mitigation (commit `581f720`).** `.github/workflows/g3-gate.yml` runs on `pull_request_target`, so
+  GitHub takes the workflow file from the **base** branch. It checks out the base branch's
+  `g3_gate.py` and trust anchors, checks out the pull request's tree as data only, and runs
+  `base/pipeline/g3_gate.py --release-check --tree pr`. A pull request cannot change the code, the
+  reviewer list, the G3 registry or the signing key it is judged by.
+  - Safety of `pull_request_target`: `contents: read`, `persist-credentials: false` on both checkouts,
+    no secrets, and nothing from the pull request's tree is executed (`python3 -I` runs the base copy;
+    the tree is read as JSON and files). `WorkflowRules` tests pin each of these.
+  - Shown: mutants 38 (the workflow runs the PR's own gate) and 39 (`pull_request` instead of
+    `pull_request_target`) are caught.
+- **Residual.**
+  - The workflow takes effect for a pull request only once it is on that pull request's **base**
+    branch. It does not run on PR #19 itself (base `fix/attribution-g3-held` lacks it); it will run on
+    pull requests into a branch that contains it.
+  - It is enforced only when the check `g3-base-gate` is **required** in the `protect-main` ruleset. That
+    is an owner setting, not changed by this audit.
+  - The `integrity` job's own G3 step stays PR-editable; it remains as the in-branch signal.
 
 ### G-4 · Consumers can pin any sggs-data commit, including this held one (critical; open, cross-repo)
 
@@ -146,8 +158,35 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
   - The evidence must be a regular, non-symlinked file directly in `rulings/`, pinned by
     `evidence_sha256`.
 - **Shown** (mutants 1–3, 6–8).
-- **Residual.** The gate cannot prove that the file in `rulings/` is really the reviewer's reply. That
-  rests on the engineer who records it and on review of the diff (G-2, G-3).
+- **Residual, closed 2026-10-28 (commit `581f720`).** Before this, the gate could not prove that the
+  file in `rulings/` was really the reviewer's reply. Now a ruling verifies only with the reviewer's own
+  SSH signature (`<reply>.sig`, namespace `sggs-g3-ruling`) against his public key in
+  `allowed_signers`, read from the gate's own (base-branch) tree. Shown: `SignedRulings` and
+  `BaseBranchGate` tests; mutants 32–35.
+- **What remains.** Whoever can change `allowed_signers` on the base branch controls whose signature
+  counts. Registering the key is therefore itself a reviewed change (G-12), and the private key must be
+  generated and kept by the reviewer alone.
+
+### G-12 · No reviewer key is registered yet (medium; open, by design)
+
+- **Finding.** `validation/attribution-g3-review/allowed_signers` does not exist. Until it does, no ruling
+  can verify, so nothing can be approved: the gate fails closed (`test_no_registered_key_means_no_ruling_verifies`).
+- **What closes it.** Kanwaljit Singh generates an SSH key on his own device (`ssh-keygen -t ed25519`),
+  sends **only the public key** to the owner, and the owner commits one line to `allowed_signers` in its
+  own pull request into the base branch:
+  `kanwaljit-singh namespaces="sggs-g3-ruling" ssh-ed25519 AAAA…`.
+  The owner confirms the key with him through a second channel before merging it.
+- **Never:** generate the key for him, hold his private key, or register a key he did not send. If he
+  cannot sign, that is a governance decision for the owner (for example a second named reviewer), made
+  openly and recorded here; it is not a reason to weaken the gate.
+
+### G-13 · The CI report read "8 entries" while the pack said "seven held" (low; closed 2026-10-28)
+
+- **Finding.** PR #19's `integrity` run 40627048618 listed 8 G3 entries without a ruling. The pack spoke
+  of "the seven held entries". Both were true and neither said why: 7 entries are `held` (applied in the
+  draft build) and 1, `bhagat-run-heading-ang323`, is `proposed` (registered for G3, not applied).
+- **Fix (commit `581f720`).** The release summary now says "8 … (7 held: applied only in this draft
+  build; 1 proposed: not applied)", and a test pins every one of the eight by name and status. Mutant 37.
 
 ### G-9 · Earlier "G3" approvals were recorded as owner confirmations (medium; for the record)
 

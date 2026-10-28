@@ -56,9 +56,14 @@ approved anything.*
 
 The gate (`pipeline/g3_gate.py`) refuses any ruling that does not meet every step below.
 
-1. **Keep his reply.** The reviewer's own reply (his email, or a signed copy of this form) is saved
-   **unchanged** as a regular file in `rulings/` in this folder. It may not be a symlink. Its sha256
-   is recorded.
+1. **Keep his reply, with his signature.** The reviewer's own reply (this form, filled in by him) is
+   saved **unchanged** as a regular file in `rulings/` in this folder. It may not be a symlink. Its
+   sha256 is recorded. **He signs it himself**, with the key registered for him in `allowed_signers`
+   (`RISKS.md` G-12):
+   `ssh-keygen -Y sign -f <his private key> -n sggs-g3-ruling <reply file>`.
+   That writes `<reply file>.sig`, which is committed next to the reply. The gate verifies it against
+   the base branch's `allowed_signers`; a reply without a valid signature counts as no ruling. Nobody
+   else signs for him, and nobody else holds his private key.
 2. **Fill the `g3` block.** For each entry his ruling covers, the engineer fills the entry's `g3`
    block:
    - `decision`: `approve`, `change` or `reject`;
@@ -71,7 +76,8 @@ The gate (`pipeline/g3_gate.py`) refuses any ruling that does not meet every ste
 
    The engineer then sets `status` to `approved` or `rejected`. A **Change** edits the entry first, so
    its hash changes, and the reviewer confirms the edited entry.
-3. **Check and rebuild.** `python3 pipeline/g3_gate.py --release-check` must pass. It also checks that
+3. **Check and rebuild.** `python3 pipeline/g3_gate.py --release-check` must pass (and, on a pull
+   request, the base-branch check `g3-base-gate`). It also checks that
    the committed corpus matches the statuses. Then the gated rebuild runs and the pack is regenerated.
 
 Never fill a `g3` field from this blank form, from a recommendation, or from anything the reviewer

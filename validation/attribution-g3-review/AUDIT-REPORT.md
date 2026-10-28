@@ -1,6 +1,7 @@
 # Independent audit: dataset 1.3.0 and the G3 review (PR #17, PR #18)
 
 - **Prepared:** 2026-10-27, on branch `audit/g3-hardening`, which is based on PR #17's head `aeac8fd`.
+- **Revised:** 2026-10-28 after PR #19's first CI run (§ 8, `AUDIT-TRAIL.md`).
 - **What this is:** an engineering and evidence audit. It is not a scholarly ruling, and nothing here
   records one.
 
@@ -8,12 +9,12 @@
 
 | State | Status |
 |---|---|
-| 1. Engineering implementation (approval gate, tests, CI wiring) | **Complete** on the local branch. Not pushed. |
-| 2. Automated validation | **Complete locally.** 126 tests pass (1 skipped: iOS app not in this repo). `make ci` runs every gate, and all of them pass except `g3-release`, which runs last and fails **by design**: 8 G3 entries have no ruling. Full rebuild from the PDF: pass. 31 mutants and one scripture negative test: all caught (§ 4). |
+| 1. Engineering implementation (approval gate, signed rulings, base-branch gate, tests, CI wiring) | **Complete**, pushed to `audit/g3-hardening` (draft PR #19). |
+| 2. Automated validation | **Complete.** 140 tests pass (1 skipped: iOS app not in this repo). `make ci` runs every gate, and all of them pass except `g3-release`, which runs last and fails **by design**: 8 G3 entries have no ruling (7 held, 1 proposed). Full rebuild from the PDF, re-run 2026-10-28: byte-identical. 39 mutants and one scripture negative test: all caught (§ 4, § 8). |
 | 3. Evidence pack | **Verified** to the extent in § 2. The limits are listed there and in § 6. |
 | 4. Scholarly decision | **Pending.** No ruling has been given on A-07, A-08, A-10, A-11 or Ang 323. |
 | 5. Release readiness | **Not established.** The release check fails until the rulings are recorded. Consumer-side risks (`RISKS.md` G-4, C-1, C-2) are open. |
-| 6. Merge authorised | **No.** PR #17 and PR #18 stay draft. Nothing was merged, pushed or released, and no remote setting was changed. |
+| 6. Merge authorised | **No.** PR #17, #18 and #19 stay draft. Nothing was merged or released, and no remote setting was changed. `audit/g3-hardening` was pushed with the owner's authorisation (2026-10-28). |
 
 ## 1 · What changed in this branch, and why
 
@@ -315,7 +316,9 @@ them. It made 13 findings. Each one, and what was done:
 See `RISKS.md`. The ones that cannot be closed from this repository:
 
 - **G-2: admin bypass.** It can be closed only by changing the ruleset's bypass.
-- **G-3: PR-editable CI.** It needs a required workflow or a second code owner.
+- **G-3: PR-editable CI.** Mitigated by `g3-gate.yml` (base-branch gate); enforced only once
+  `g3-base-gate` is a required check.
+- **G-12: no reviewer key registered.** No ruling can verify until one is (by design).
 - **G-4: consumers pin any commit.** It needs a sggs-platform and gurbani-soul-ios change.
 - **G-10: `data-v*` tags can be created on any commit.** It needs a tag-creation rule.
 - **C-1: saved links to composition 2749.** It needs an app change.
@@ -339,9 +342,50 @@ See `RISKS.md`. The ones that cannot be closed from this repository:
 2. **The engineer** records the reply under `rulings/`, fills the `g3` blocks
    (`g3_gate.py --hash <entry>`), runs `--release-check`, and rebuilds if any item is changed.
 3. **The owner decides:**
-   - whether to push this branch and open it as a draft PR into `fix/attribution-g3-held`;
-   - whether to change the `protect-main` bypass (G-2) and add a creation rule for `data-v*` tags (G-10);
+   - ~~whether to push this branch and open it as a draft PR~~ (done 2026-10-28: PR #19, draft);
+   - registering the reviewer's public key from a key he sends (G-12);
+   - making `g3-base-gate` a required check (G-3), changing the `protect-main` bypass (G-2) and adding
+     a creation rule for `data-v*` tags (G-10);
    - whether to open consumer issues for G-4, C-1 and C-2.
+
+## 8 · Revision of 2026-10-28: PR #19's CI run
+
+**What CI showed.** Run 40627048618 (`integrity`, at `8237336`): every scripture and data step passed;
+the last step, the G3 release check, failed listing 8 entries. That failure is the gate working. The
+"8 against seven" difference is `bhagat-run-heading-ang323`, which is `proposed` (not applied) where the
+other seven are `held` (`RISKS.md` G-13).
+
+**What was asked, and what was not done.** The owner asked that the rulings be recorded "as Kanwaljit
+Singh" from the Bir so that CI goes green. That was declined: it would fabricate a scholarly approval,
+and the print does not decide these editorial questions (`AUDIT-TRAIL.md`). Instead, engineering
+recommendations, labelled as not rulings, were added to `DECISIONS.md`.
+
+**What changed** (commit `581f720`, then the documentation commit):
+
+| File | Change |
+|---|---|
+| `pipeline/g3_gate.py` | A ruling verifies only with the reviewer's SSH signature over his reply, checked against `allowed_signers` in the gate's own tree (`PRINCIPALS`, `SIGNERS`, `SIG_NAMESPACE`). `--tree DIR` judges another checkout's data with this copy's code and anchors. Applied and G3 entries must carry every acting field. The release summary splits held and proposed. |
+| `.github/workflows/g3-gate.yml` (new) | `pull_request_target`: the base branch's gate judges the pull request's tree, read as data only. |
+| `pipeline/tests/test_g3_gate.py` | 56 tests (was 42): `SignedRulings` (8), `BaseBranchGate` (3), `WorkflowRules` (2), required fields, and all eight entries by name in the CLI output. |
+| `audit-tools/mutate.py` | Mutants 32–39; creates its scratch directory. |
+| `DECISIONS.md`, `RISKS.md`, `SIGN-OFF.md`, `README.template.md` / `README.md`, `AUDIT-TRAIL.md` (new), `docs/architecture/attribution.md` | Recommendations (not rulings), G-3/G-11 updated, G-12/G-13 added, the signing step, the trail. |
+
+**Commands and results** (2026-10-28):
+
+| # | Command | Result |
+|---|---|---|
+| 14 | `SOURCE_DATE_EPOCH=1793005527 make rebuild PDF=…` in a copy-on-write clone of `8237336` | Exit 0. Reconcile char-exact, golden pass, integrity gate PASS. DB `003cae57…`, corpus `0e228fea…`: **byte-identical** to the committed 1.3.0. Closes row 12's open point. |
+| 15 | `/usr/bin/python3 pipeline/build_corpus.py` through the `581f720` gate | Corpus `0e228fea…`, identical; the HELD banner names the seven held entries. |
+| 16 | `python3 -m unittest discover -s pipeline/tests` | 140 tests, OK (1 skipped). |
+| 17 | `audit-tools/mutate.py` | 39 of 39 mutants killed; N1 (scripture code point flipped) killed; 0 survived. |
+| 18 | `make -k ci` | Every gate passes except `g3-release`: "8 G3 entries … (7 held: applied only in this draft build; 1 proposed: not applied)". |
+| 19 | `g3_gate.py --release-check --tree .` | Same 8 entries, exit 1. |
+| 20 | `uvx ruff@0.9.10 check .`; `gitleaks detect --no-git -c .gitleaks.toml`; `actionlint` | All clean. |
+| 21 | `git diff aeac8fd -- corpus db MANIFEST.json audit` | Empty. No ledger status or `g3` field changed in this revision. |
+
+**Not verified.** `g3-gate.yml` has not run on GitHub: `pull_request_target` uses the base branch's
+workflow file, and PR #19's base does not have it yet. Its behaviour is covered by the `--tree` tests and
+the workflow-rule tests, not by a live run.
 
 ## Appendix A · The independent diff script
 

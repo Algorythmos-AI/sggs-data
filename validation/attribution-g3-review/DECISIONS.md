@@ -271,3 +271,86 @@ question (d) should be opened as its own item.
 **For the reviewer:** "Same ruling as A-11", "Separate ruling required" or "Leave unchanged". The
 evidence for treating the rubric as not part of the Bani is **stronger here than at Ang 524**, because
 Sahib Singh's note is specific to this Vaar.
+
+---
+
+## Engineering recommendations: NOT rulings (2026-10-28)
+
+**These are not rulings and they record no decision.** They are the audit engineer's reading of the
+evidence above, written down so that the reviewer can see a reasoned starting point and argue with it.
+They were made at the owner's request after the PR #19 CI run (`AUDIT-TRAIL.md`, 2026-10-28). Nothing
+in any ledger changes because of them. A ruling exists only when Kanwaljit Singh gives one himself, in
+his own words, signed with his own key (`SIGN-OFF.md`).
+
+**How to read them.** The print is the primary evidence, but it is evidence, not authority. It settles
+what is printed and where (layout, line breaks, numbering, headings). It does **not** settle authorship
+of an unsigned line, composition boundaries or section naming. Those are editorial judgements, and the
+recommendations below say so. "Confidence" is the engineer's confidence that the recommendation matches
+the weight of the evidence read. It is not a probability of scholarly approval.
+
+| Item | Recommendation (engineering, not a ruling) | Confidence | Strongest alternative |
+|---|---|---|---|
+| A-07, Q-author (line 53935) | **Approve** `surdas-line`: credit Bhagat Surdas Ji. | Moderate–high | Unattributed (the print names no one). |
+| A-07, Q-composition | **No change in this release.** Keep the current grouping and open it as its own item if the reviewer prefers (a). | Low | (a) its own composition. |
+| A-08, split | **Approve** both entries: three sections. | High | none supported by any source read |
+| A-08, names | The **short names**, as the ledger has them. | Moderate | The printed headings. |
+| A-10 | **Approve** all three entries. Fix the saved-link consequence (C-1) before any release that carries it. | High (four shabads); moderate (heading) | Keep one composition and record the four shabads another way (no mechanism exists today). |
+| A-11 / Ang 524 | **Approve** `bhagat-run-heading-ang524` (Bhagat Kabir Ji) for consistency, **and** open the `ਸੁਧੁ` segmentation question (d) as its own item. | Low–moderate | (b) no author for the heading. |
+| Ang 323 | **Same ruling as A-11.** | Moderate | Separate ruling. |
+
+### A-07: reasons
+
+- **Author.** Every source read that names an author for line 53935 names Surdas: EoS IV p. 288, Sahib
+  Singh's note, Faridkot's gloss and ShabadOS. No source read supports Bhagat Namdev Ji, the 1.2.0 tag;
+  that tag is a pipeline carry-over, and is a Verified fact of the dataset, not of any source. The
+  print's own evidence (a separate printed line, and the empty slot in the running count ੬ → ੮) agrees
+  with the line standing apart from Parmanand's shabad.
+- **Why not "high".** The commentaries were read only as transcribed in ShabadOS, which shares a lineage
+  with BaniDB, so this is one source family plus the EoS, not several independent witnesses (P-2, P-3).
+  A printed Darpan or Faridkot would raise the confidence.
+- **Composition.** Option (a) matches the print and the count best, but the dataset's rule that every
+  composition opens with a heading would have to bend. Option (c) has commentary support but is printed
+  against. This needs a scholar's judgement and a design change, so it is recommended as a separate item,
+  not as part of this release.
+
+### A-08: reasons
+
+- **Split.** The boundaries are printed facts: each collection has its own centred heading, its own `ੴ`
+  and its own numbering. ShabadOS matches line for line (24 / 494 / 297), and EoS IV p. 240 lists them
+  as separate divisions. No source read supports one section.
+- **Names.** The neighbouring post-raag sections drop the author designation from their printed
+  headings: `ਸਲੋਕ ਸਹਸਕ੍ਰਿਤੀ` (printed with `ਮਹਲਾ ੧`), and `ਫੁਨਹੇ` and `ਚਉਬੋਲੇ` (each printed with `ਮਹਲਾ ੫`);
+  verified in the DB, 2026-10-28. Dropping `ਜੀਉ ਕੇ` / `ਕੇ` is the closest parallel, not an identical
+  rule, because those words are possessives, not a Mahalla. The printed forms are equally defensible.
+  Whichever is chosen, iOS `GranthNames` must match it (C-2).
+
+### A-10: reasons
+
+- **Four shabads.** The print numbers them as one running series and each is signed. Every source read
+  treats them as four. This is the best-supported conclusion in the pack.
+- **Heading.** The print runs the labels on, so layout cannot decide it, and ShabadOS is inconsistent.
+  The dataset can represent four compositions only by making each label its composition's heading, so
+  approving the split means approving that. Confidence is therefore lower for the heading question than
+  for the four-shabad question.
+- **Before release.** A saved Sain, Pipa or Dhanna line would reopen Trilochan's shabad (C-1). Line
+  50285 (`ਨਾਮਦੇਵ ॥` inside Ravidas's composition 4426) is the same defect and needs its own entry.
+
+### A-11 / Ang 524 and Ang 323: reasons
+
+- **The question exists only because of the join.** In the print, `ਸੁਧੁ` (Ang 524) and `ਸੁਧੁ ਕੀਚੇ`
+  (Ang 323) end the Vaar's last printed line, and the heading is a separate centred line. The corpus
+  joins them into one record. Splitting the record would change the `gurmukhi` field and therefore needs
+  its own logged scripture-record entry and a scholar's review. It is not proposed here.
+- **Why Kabir, for now.** All 11 other Bhagat-run headings (13 in all; 14 with Suhi line 33831) carry their run's first Bhagat, and
+  ShabadOS files both heading lines under Kabir. Approving makes the dataset consistent with its own
+  convention, which is what readers and the apps' "voices" filters rely on. It does not claim that Kabir
+  wrote the heading.
+- **Why the confidence is low.** The heading names the Bhagats collectively. Option (b), no author, is
+  the more literal reading, and Sahib Singh's note that these rubrics stand outside the Kartarpur Bir's
+  margin supports treating the rubric as no part of the Bani. If the reviewer prefers (b), it should be
+  applied to all 13 (or 14) headings together, not to one.
+- **Ang 323.** Same structure, same heading type, so the same ruling keeps the dataset consistent. The
+  evidence that the rubric is not Bani is stronger here, because Sahib Singh's note is specific to this
+  Vaar. Approving it would move the entry from `proposed` to `approved` and requires the gated rebuild.
+
+**Unresolved after these recommendations:** every item. Each still needs the reviewer's signed ruling.
