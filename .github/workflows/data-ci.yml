@@ -60,6 +60,14 @@ jobs:
         run: python3 pipeline/timing/test_timing_layer.py
       - name: Guard — Nitnem bani registry invariants
         run: python3 pipeline/banis/guard_banis.py
+      # LAST in this job, so a held PR still gets every check above it. Fails while any G3 ledger
+      # entry is `held` or has no recorded ruling, or the committed corpus disagrees with the ledger
+      # statuses. A held draft PR is red here by design. Green CI is not a G3 approval. NOT enforced
+      # against an org admin: ruleset protect-main lets OrganizationAdmin bypass required checks
+      # (validation/attribution-g3-review/RISKS.md G-2) -- never admin-merge a red G3 step.
+      - name: G3 gate — no held or unruled G3 entry may reach main
+        if: ${{ !cancelled() }}
+        run: python3 pipeline/g3_gate.py --release-check
   tests:
     runs-on: ubuntu-latest
     steps:

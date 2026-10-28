@@ -55,15 +55,6 @@
       ],
       "current": "per bhatt_attribution.json",
       "note": "ShabadOS splits some Swaiyye differently (The Bhatts->Gayand 42 lines, Kalsahar->Jalap 6, Sal->Bhikha 6, Mathura->Haribans 5). bhatt_attribution.json is a prior SME-audited table and is not changed here."
-    },
-    {
-      "key": "surdas-tuk",
-      "ids": [
-        53935,
-        53935
-      ],
-      "current": "Bhagat Namdev Ji",
-      "note": "The single tuk ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ (Ang 1253) before ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ. No signature is printed, so the evidence-led attribution (#13) keeps the preceding author; ShabadOS and the tradition credit Bhagat Surdas Ji. Scholar's decision."
     }
   ]
 }

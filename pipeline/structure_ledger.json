@@ -1,0 +1,173 @@
+{
+ "_note": "Structural editorial decisions (section boundaries; a printed label that opens a composition) -- never text, never author. Applied by pipeline/structure.py (build_corpus post-pass 5) only when status is 'approved'. Each entry states what it expects to find (`from`); the build fails if the corpus no longer matches. Evidence quotes the print verbatim, copied from the corpus by script.",
+ "entries": [
+  {
+   "entry": "section-chaubole",
+   "kind": "section",
+   "start_id": 58273,
+   "end_id": 58296,
+   "from": "ਚਉਬੋਲੇ",
+   "to": "ਚਉਬੋਲੇ ਮਹਲਾ ੫",
+   "status": "approved",
+   "evidence": "Ang 1363, line 58273, printed heading: ਚਉਬੋਲੇ ਮਹਲਾ ੫",
+   "reason": "The G3 ruling on A-08 names the three collections as printed; the Chaubole keep their lines and order and take their printed heading as the section name.",
+   "g3": {
+    "item": "A-08",
+    "decision": "approve",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-08",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q3: B (keep order, text and Angs; headings and bookmarks at the printed headings, named as printed: ਚਉਬੋਲੇ ਮਹਲਾ ੫).",
+    "entry_sha256": "d1dd51f6678185ee639cb39083e234a0be0ef49528fa7756b6efcb5ccd25963b"
+   }
+  },
+  {
+   "entry": "section-salok-kabir",
+   "kind": "section",
+   "start_id": 58297,
+   "end_id": 58790,
+   "from": "ਚਉਬੋਲੇ",
+   "to": "ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ",
+   "status": "approved",
+   "evidence": "Ang 1364, line 58297, printed heading: ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ",
+   "reason": "The collection opens with its own printed heading and runs to the line before the next collection's heading (Ang 1377). The post-raag section detector reads a title only with a Mahalla or ੴ on the same line, so the whole collection stayed in the preceding section. The canonical name is the pipeline's own section list (sggs_pipeline.SECTIONS).",
+   "g3": {
+    "item": "A-08",
+    "decision": "change",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-08",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q3: B (named as printed: ਸਲੋਕ ਭਗਤ ਕਬੀਰ ਜੀਉ ਕੇ).",
+    "entry_sha256": "2cc3ebf51eb73bf210c87fa46907f9923a43a145ef81e72f1795c0baa16cacb0"
+   }
+  },
+  {
+   "entry": "section-salok-farid",
+   "kind": "section",
+   "start_id": 58791,
+   "end_id": 59087,
+   "from": "ਚਉਬੋਲੇ",
+   "to": "ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ",
+   "status": "approved",
+   "evidence": "Ang 1377, line 58791, printed heading: ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ",
+   "reason": "As section-salok-kabir: the collection runs from its printed heading to the line before the Swaiyye invocation (Ang 1385, line 59088).",
+   "g3": {
+    "item": "A-08",
+    "decision": "change",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-08",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q3: B (named as printed: ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ).",
+    "entry_sha256": "802519627559b9f915efecfa3641724c992d56705d7da0cfe1bb7e67cec03eee"
+   }
+  },
+  {
+   "entry": "ang695-sain-opens",
+   "kind": "opens",
+   "start_id": 30081,
+   "end_id": 30091,
+   "from": 2749,
+   "to": 5381,
+   "status": "approved",
+   "evidence": "Ang 695, line 30081, printed label: ਸ੍ਰੀ ਸੈਣੁ ॥ -- closing line 30091: ਸੈਨੁ ਭਣੈ ਭਜੁ ਪਰਮਾਨੰਦੇ ॥੪॥੨॥",
+   "reason": "A bare Bhagat label opens the next shabad; each shabad closes with its own number in the Dhanasari Bhagat series (Trilochan ॥੬॥੧॥, Sain ॥੪॥੨॥, Pipa ॥੨॥੩॥, Dhanna ॥੨॥੪॥). It was stored as a verse, so four Bhagats' shabads shared Trilochan's composition 2749. The label becomes the heading of its own composition; 5381 is issued above every id the build has issued (5380), so no comp_id moves.",
+   "g3": {
+    "item": "A-10",
+    "decision": "approve",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-10",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q4: A.",
+    "entry_sha256": "3f88a48704236721217d69907e3e7e4dbdd61eaba5cd6fa6f985fce9b54c10ef"
+   }
+  },
+  {
+   "entry": "ang695-pipa-opens",
+   "kind": "opens",
+   "start_id": 30092,
+   "end_id": 30098,
+   "from": 2749,
+   "to": 5382,
+   "status": "approved",
+   "evidence": "Ang 695, line 30092, printed label: ਪੀਪਾ ॥ -- closing line 30098: ਪੀਪਾ ਪ੍ਰਣਵੈ ਪਰਮ ਤਤੁ ਹੈ ਸਤਿਗੁਰੁ ਹੋਇ ਲਖਾਵੈ ॥੨॥੩॥",
+   "reason": "A bare Bhagat label opens the next shabad; each shabad closes with its own number in the Dhanasari Bhagat series (Trilochan ॥੬॥੧॥, Sain ॥੪॥੨॥, Pipa ॥੨॥੩॥, Dhanna ॥੨॥੪॥). It was stored as a verse, so four Bhagats' shabads shared Trilochan's composition 2749. The label becomes the heading of its own composition; 5382 is issued above every id the build has issued (5380), so no comp_id moves.",
+   "g3": {
+    "item": "A-10",
+    "decision": "approve",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-10",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q4: A.",
+    "entry_sha256": "6403e755bff83bde6bd875644d35e4e9d79dac18293ef432d84d4bfcc421f3de"
+   }
+  },
+  {
+   "entry": "ang695-dhanna-opens",
+   "kind": "opens",
+   "start_id": 30099,
+   "end_id": 30109,
+   "from": 2749,
+   "to": 5383,
+   "status": "approved",
+   "evidence": "Ang 695, line 30099, printed label: ਧੰਨਾ ॥ -- closing line 30109: ਜਨੁ ਧੰਨਾ ਲੇਵੈ ਮੰਗੀ ॥੨॥੪॥",
+   "reason": "A bare Bhagat label opens the next shabad; each shabad closes with its own number in the Dhanasari Bhagat series (Trilochan ॥੬॥੧॥, Sain ॥੪॥੨॥, Pipa ॥੨॥੩॥, Dhanna ॥੨॥੪॥). It was stored as a verse, so four Bhagats' shabads shared Trilochan's composition 2749. The label becomes the heading of its own composition; 5383 is issued above every id the build has issued (5380), so no comp_id moves.",
+   "g3": {
+    "item": "A-10",
+    "decision": "approve",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-10",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q4: A.",
+    "entry_sha256": "f067f700fc4c09a1bbfacd02cd71b1aff8548fefbc034c6a8d44c0fed59891b0"
+   }
+  },
+  {
+   "entry": "surdas-own-shabad",
+   "kind": "stands",
+   "start_id": 53935,
+   "end_id": 53935,
+   "from": 4846,
+   "to": 5384,
+   "status": "approved",
+   "evidence": "Ang 1253, line 53935: ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥ -- after Bhagat Parmanand Ji's shabad (closing ॥੩॥੧॥੬॥, line 53934), before ਸਾਰੰਗ ਮਹਲਾ ੫ ਸੂਰਦਾਸ ॥ (line 53936)",
+   "reason": "The G3 ruling on A-07 (question 2) is that the line stands on its own, not in Bhagat Parmanand Ji's composition 4846. It has no printed heading, so it becomes a composition of its own without one (kind stands: is_header unchanged); 5384 is issued above every id the build has issued, so no comp_id moves.",
+   "g3": {
+    "item": "A-07",
+    "decision": "approve",
+    "reviewer": "Kanwaljit Singh",
+    "date": "2026-10-28",
+    "scope": "A-07",
+    "evidence": "validation/attribution-g3-review/rulings/2026-10-28-kanwaljit-singh-whatsapp.txt",
+    "evidence_sha256": "fb17af97f57db2c1bb00b93bc1f8e026df9be54c1af8b877bc0b638d561be3e4",
+    "relayed_by": "Sam Kalaliya",
+    "channel": "whatsapp",
+    "note": "Q2: A (the line stands on its own); the relayed clarification marks \"Ans - A\".",
+    "entry_sha256": "7a308eee17790a79a67b9af303ee71e642c91b1a7025f7af45543e866a291ca3"
+   }
+  }
+ ]
+}

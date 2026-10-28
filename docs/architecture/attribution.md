@@ -40,11 +40,22 @@ A heading that names a Mahalla always wins over a pen-name in the verse (Ang 326
 
 | Status | Meaning |
 |---|---|
-| `approved` | Applied by rule E (Japji → Guru Nanak Dev Ji; Ramkali Sadu → Baba Sundar Ji). |
-| `proposed` | Recorded for scholarly review, changes nothing: Bhai Mardana's saloks (Ang 553), Raagmala, the per-Bhatt splits, Surdas's single line (Ang 1253), saloks signed by other Bhagats inside Kabir's collection. |
+| `approved` | Applied by rule E (Japji → Guru Nanak Dev Ji; Ramkali Sadu → Baba Sundar Ji, owner-approved before G3). A G3 entry is `approved` only with a complete, signed ruling in its `g3` field (`pipeline/g3_gate.py`). |
+| `held` | A G3 entry applied **only** in a held draft build, so its effect can be proved; never releasable (`g3_gate.py --release-check` fails). Dataset 1.3.0: Surdas's single line, Ang 1253, and the Bhagat-run heading on Ang 524. |
+| `proposed` | Recorded for scholarly review, changes nothing: Bhai Mardana's saloks (Ang 553), Raagmala, the per-Bhatt splits, saloks signed by other Bhagats inside Kabir's collection, the Bhagat-run heading on Ang 323. |
 | `keep` | Our tag stands on printed evidence although the independent edition differs (Angs 326, 1136, 1253). |
 
-## The gate (`pipeline/verify_attribution.py`)
+## The G3 approval gate (`pipeline/g3_gate.py`)
+
+Every ledger load, both build passes and CI go through one validator. It enforces a closed status set,
+the registry of G3 items, owner approvals pinned by hash, complete rulings (reviewer of record, date,
+scope, the reviewer's own reply as a file **signed with his registered SSH key**, and a hash binding the
+ruling to what the entry does), and that the committed corpus matches the statuses. On a pull request,
+`.github/workflows/g3-gate.yml` runs the **base branch's** gate against the pull request's tree, so a
+pull request cannot change the rules it is judged by. Records: `validation/attribution-g3-review/`
+(`AUDIT-TRAIL.md`, `RISKS.md`, `SIGN-OFF.md`).
+
+## The verification gate (`pipeline/verify_attribution.py`)
 
 ```bash
 python3 pipeline/verify_attribution.py <pre.jsonl> corpus/sggs.jsonl --oracle database.sqlite \
@@ -62,3 +73,18 @@ with its printed heading and its first and last verse, verbatim, for human revie
 The independent edition (`database.sqlite`, pinned by `pipeline/shabados.SHA256SUMS`) is a
 cross-check only: it is never copied into the corpus, never shipped and never cited.
 `pipeline/attribution_audit.py` aligns it line by line to produce the diff.
+
+## Structure decisions (`pipeline/structure_ledger.json`)
+
+Where a line belongs (its `section`) and where a composition begins (`is_header`, `comp_id`) are
+read from the print by `build_corpus.py`. The few places the detectors miss are reviewed ledger
+entries applied by `pipeline/structure.py` (post-pass 5), never detector changes, because a new
+heading found by the detector would renumber every later composition.
+
+| Kind | Effect |
+|---|---|
+| `section` | Lines `start_id`–`end_id` move from section `from` to `to` (Salok Bhagat Kabir Ji, Ang 1364; Salok Sheikh Farid Ji, Ang 1377). |
+| `opens` | A printed label stored as a verse becomes the heading of its own composition, issued an id above every id the build has issued (Ang 695: `ਸ੍ਰੀ ਸੈਣੁ ॥`, `ਪੀਪਾ ॥`, `ਧੰਨਾ ॥` → 5381–5383). |
+
+The same status rules apply: only `approved` entries change anything. Each entry states the value it
+expects (`from`); the build stops if the corpus no longer matches.

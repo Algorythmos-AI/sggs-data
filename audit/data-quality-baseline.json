@@ -1,14 +1,14 @@
 {
  "comp_id": {
-  "count": 4527,
-  "gaps": 849,
-  "gaps_sha256": "d552aab9718fa465864f174289cb625f626a99412760e3ab02e79cd7caa01cf1",
-  "max": 5376,
+  "count": 4531,
+  "gaps": 853,
+  "gaps_sha256": "79047de93a855bc36e59af91d161f2d8680e1ca65dcc34771ec207a34b6bd994",
+  "max": 5384,
   "null": 0
  },
  "headers": {
-  "count": 5147,
-  "ids_sha256": "ba310222ec7a02f92e2678053e3fb01053cf5ca94f421f6f7f02f697533316e4"
+  "count": 5150,
+  "ids_sha256": "119ed469cae2a9d3bb35d53bfabe9755f705621243170e4daaf08293dd7770e1"
  },
  "review_rows": {
   "empty_translit_norm": [

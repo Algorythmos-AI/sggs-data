@@ -116,6 +116,10 @@ class Corpus(unittest.TestCase):
             ('ਆਦਿ ਸਚੁ ਜੁਗਾਦਿ ਸਚੁ', 1, 'Guru Nanak Dev Ji (M1)'),
             ('ਵਰਤ ਨ ਰਹਉ ਨ ਮਹ ਰਮਦਾਨਾ', 1136, M5),
             ('ਸੂਰਦਾਸ ਮਨੁ ਪ੍ਰਭਿ ਹਥਿ ਲੀਨੋ', 1253, M5),
+            # G3 ruling of 2026-10-28 (A-07 Q1; A-11 Q5 and Q7: the Bhagats' shared heading has no author)
+            ('ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ', 1253, 'Bhagat Surdas Ji'),
+            ('ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ', 524, None),
+            ('ਸੁਧੁ ਕੀਚੇ ਰਾਗੁ ਗਉੜੀ ਭਗਤਾਂ ਕੀ ਬਾਣੀ', 323, None),
         ]
         for needle, ang, want in cases:
             with self.subTest(ang=ang, line=needle):
