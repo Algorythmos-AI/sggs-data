@@ -8,7 +8,8 @@ set inside the previous Bhagat's composition). Fixing those by changing a detect
 every later composition, so each one is a reviewed ledger entry instead.
 
 This pass changes `section`, `is_header`, `comp_id` and `line_no` ONLY -- never text, markers or
-author -- and only for entries whose status is 'approved'. Every entry states what it expects to
+author -- and only for entries g3_gate.py lets through: a complete G3 ruling (`approved`), or `held` in
+a draft that the release check keeps from shipping. Every entry states what it expects to
 find (`from`); if the corpus no longer matches, the build fails rather than apply an entry to lines
 it was not written for.
 
@@ -18,8 +19,10 @@ Kinds:
            lines start_id..end_id leave composition `from` for the new composition `to`. A new id
            is issued above every id the build has ever issued (`issued`), so no existing comp_id
            moves and no vacated (burned) id is reused.
+  stands   as opens, but the lines are verse that stands as a composition of its own with no printed
+           heading or label (A-07: the single Surdas line on Ang 1253): is_header is not touched.
 """
-import json, os
+import g3_gate
 
 
 class LedgerMismatch(Exception):
@@ -27,15 +30,15 @@ class LedgerMismatch(Exception):
 
 
 def load_ledger(path):
-    return json.load(open(path, encoding='utf-8'))['entries'] if os.path.exists(path) else []
+    return g3_gate.load('structure', path)
 
 
-def apply(records, ledger, issued):
+def apply(records, ledger, issued, gate=None):
     """Mutates records in place; returns the change log. `issued` is the highest comp_id the
     build issued (build_corpus's comp_seq), burned ids included."""
     log = []
     by_id = {r['id']: r for r in records}
-    approved = [e for e in ledger if e.get('status') == 'approved']
+    approved = g3_gate.check(ledger, 'structure', **(gate or {}))
 
     def rows(e):
         out = [by_id.get(i) for i in range(e['start_id'], e['end_id'] + 1)]
@@ -59,8 +62,8 @@ def apply(records, ledger, issued):
         for r in rs:
             change(r, 'section', e['to'], e)
 
-    # ---- opens -----------------------------------------------------------------
-    opens = [e for e in approved if e['kind'] == 'opens']
+    # ---- opens / stands ----------------------------------------------------------
+    opens = [e for e in approved if e['kind'] in ('opens', 'stands')]
     starts = {e['start_id'] for e in opens}
     used = {r['comp_id'] for r in records}
     new_ids = [e['to'] for e in opens]
@@ -75,13 +78,14 @@ def apply(records, ledger, issued):
         bad = [r['id'] for r in rs if r['comp_id'] != e['from']]
         if bad:
             raise LedgerMismatch(f"{e['entry']}: expected comp_id {e['from']} on every line, not on ids {bad[:5]}")
-        if rs[0]['is_header']:
+        if e['kind'] == 'opens' and rs[0]['is_header']:
             raise LedgerMismatch(f"{e['entry']}: id {rs[0]['id']} is already a header")
         nxt = by_id.get(e['end_id'] + 1)
         if nxt is not None and nxt['comp_id'] == e['from'] and nxt['id'] not in starts:
             raise LedgerMismatch(f"{e['entry']}: id {nxt['id']} would be left behind in comp {e['from']} "
                                  f"after the new composition")
-        change(rs[0], 'is_header', 1, e)
+        if e['kind'] == 'opens':
+            change(rs[0], 'is_header', 1, e)
         for r in rs:
             change(r, 'comp_id', e['to'], e)
         touched |= {e['from'], e['to']}

@@ -45,18 +45,22 @@ opens.
 - The run adopts its **last** heading's `comp_id` → **no body line's `comp_id`
   ever changes**, so saved bookmarks, deep links, and analytics keyed on `comp_id`
   stay valid.
-- Vacated ids become **permanent gaps**: distinct compositions **4,530**,
-  `max(comp_id)` **5,383** (the v1.1.4 build demoted 233 verses mis-flagged as headings and
+- Vacated ids become **permanent gaps**: distinct compositions **4,531**,
+  `max(comp_id)` **5,384** (the v1.1.4 build demoted 233 verses mis-flagged as headings and
   burned the ids they had opened, up to 5,380; dataset 1.3.0 issued 5,381–5,383 to the three
-  shabads on Ang 695 that a printed Bhagat label opens; `pipeline/tests/test_docs_facts.py`
+  shabads on Ang 695 that a printed Bhagat label opens, and 5,384 to the single Surdas line on
+  Ang 1253, which the G3 ruling of 2026-10-28 makes a composition of its own; `pipeline/tests/test_docs_facts.py`
   holds these numbers to the database).
 - The one sanctioned exception to "no body line's `comp_id` changes" is an **approved
   `opens` entry** in `pipeline/structure_ledger.json` (`pipeline/structure.py`, post-pass 5):
   a printed label that was stored as a verse becomes the heading of its own composition, and
   its shabad's lines move to a new id above every id ever issued. Each entry is reviewed at G3;
-  the old id keeps the shabad it opened with (Ang 695: 2749 is Bhagat Trilochan Ji's alone). `comp_id` 1 is a gap (Mool Mantar folds into Japji, `comp_id` 2).
+  the old id keeps the shabad it opened with (Ang 695: 2749 is Bhagat Trilochan Ji's alone). A
+  `stands` entry moves verse to a new id in the same way without making it a heading (Ang 1253: the
+  Surdas line, 5,384). `comp_id` 1 is a gap (Mool Mantar folds into Japji, `comp_id` 2).
   `/api/shabad/{gap}` → 404.
-- Every composition's first line is a heading; no heading follows a body line.
+- Every composition's first line is a heading, except composition 5,384 (the single Surdas line,
+  which has no printed heading); no heading follows a body line.
 - Exactly **3** header-only compositions remain — the closing rubrics `ਜੁਮਲਾ`,
   `ਦੁਤੁਕੇ`, `ਏਹੁ ਸਲੋਕੁ ਆਦਿ ਅੰਤਿ ਪੜਣਾ` (`TRAILING_RUBRICS`), which belong to the
   *preceding* unit and are flagged for scholarly review.

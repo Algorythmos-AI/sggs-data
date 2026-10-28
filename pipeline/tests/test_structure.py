@@ -18,16 +18,24 @@ def recs(spec):
     return out
 
 
-def opens(a, b, frm, to, status='approved'):
+PENDING = {'item': 'T', 'decision': None, 'reviewer': None, 'date': None}
+
+
+def opens(a, b, frm, to, status='held'):
+    # held: applied without a ruling, as in a draft PR (test_g3_gate covers complete rulings)
     return {'entry': f'opens-{a}', 'kind': 'opens', 'start_id': a, 'end_id': b, 'from': frm, 'to': to,
-            'status': status}
+            'status': status, 'g3': dict(PENDING)}
+
+
+def section(a, b, frm, to):
+    return {'entry': f'section-{a}', 'kind': 'section', 'start_id': a, 'end_id': b, 'from': frm,
+            'to': to, 'status': 'held', 'g3': dict(PENDING)}
 
 
 class Kinds(unittest.TestCase):
     def test_section_moves_only_the_range(self):
         r = recs([(1, 1, 'X'), (1, 0, 'X'), (2, 1, 'X'), (2, 0, 'X')])
-        S.apply(r, [{'entry': 's', 'kind': 'section', 'start_id': 3, 'end_id': 4, 'from': 'X', 'to': 'Y',
-                     'status': 'approved'}], issued=2)
+        S.apply(r, [section(3, 4, 'X', 'Y')], issued=2)
         self.assertEqual([x['section'] for x in r], ['X', 'X', 'Y', 'Y'])
 
     def test_labels_open_compositions_above_every_issued_id(self):
@@ -66,8 +74,7 @@ class Refusals(unittest.TestCase):
     def test_the_expected_section_must_match(self):
         r = recs([(1, 1, 'X'), (1, 0, 'Z')])
         with self.assertRaises(S.LedgerMismatch):
-            S.apply(r, [{'entry': 's', 'kind': 'section', 'start_id': 1, 'end_id': 2, 'from': 'X',
-                         'to': 'Y', 'status': 'approved'}], issued=1)
+            S.apply(r, [section(1, 2, 'X', 'Y')], issued=1)
 
     def test_no_tail_is_left_behind(self):
         # moving lines 2-3 out of comp 7 would leave line 4 as a body line of 7 after them
@@ -81,19 +88,34 @@ class Refusals(unittest.TestCase):
             S.apply(r, [opens(2, 3, 7, 11)], issued=10)
 
 
+class Stands(unittest.TestCase):
+    def test_a_trailing_verse_stands_alone_without_becoming_a_heading(self):
+        r = recs([(7, 1, None), (7, 0, None), (7, 0, None), (9, 1, None)])
+        e = dict(opens(3, 3, 7, 11), entry='stands-3', kind='stands')
+        S.apply(r, [e], issued=10)
+        self.assertEqual([(x['comp_id'], x['line_no'], x['is_header']) for x in r],
+                         [(7, 1, 1), (7, 2, 0), (11, 1, 0), (9, 1, 1)])
+
+    def test_stands_leaves_no_line_behind(self):
+        r = recs([(7, 1, None), (7, 0, None), (7, 0, None)])
+        e = dict(opens(2, 2, 7, 11), entry='stands-2', kind='stands')
+        with self.assertRaises(S.LedgerMismatch):
+            S.apply(r, [e], issued=10)
+
+
 class Ledger(unittest.TestCase):
     def test_every_entry_is_well_formed(self):
         for e in S.load_ledger(os.path.join(ROOT, 'pipeline', 'structure_ledger.json')):
             with self.subTest(entry=e['entry']):
-                self.assertIn(e['kind'], ('section', 'opens'))
-                self.assertIn(e['status'], ('approved', 'proposed', 'rejected'))
+                self.assertIn(e['kind'], ('section', 'opens', 'stands'))
+                self.assertIn(e['status'], ('approved', 'held', 'proposed', 'rejected'))
                 self.assertLessEqual(e['start_id'], e['end_id'])
                 self.assertTrue(e['evidence'] and e['reason'])
                 self.assertIn('item', e['g3'])
 
 
 class Corpus(unittest.TestCase):
-    """The committed corpus carries the approved structure-ledger entries."""
+    """The committed corpus carries every structure-ledger entry a build applies (approved or held)."""
     @classmethod
     def setUpClass(cls):
         cls.by_id = {}
@@ -104,7 +126,7 @@ class Corpus(unittest.TestCase):
 
     def test_approved_entries_hold(self):
         for e in self.ledger:
-            if e['status'] != 'approved':
+            if e['status'] not in ('approved', 'held'):
                 continue
             rows = [self.by_id[i] for i in range(e['start_id'], e['end_id'] + 1)]
             with self.subTest(entry=e['entry']):
@@ -112,18 +134,20 @@ class Corpus(unittest.TestCase):
                     self.assertTrue(all(r['section'] == e['to'] for r in rows))
                 else:
                     self.assertTrue(all(r['comp_id'] == e['to'] for r in rows))
-                    self.assertEqual(rows[0]['is_header'], 1)
+                    self.assertEqual(rows[0]['is_header'], 1 if e['kind'] == 'opens' else 0)
                     self.assertEqual([r['line_no'] for r in rows], list(range(1, len(rows) + 1)))
 
     def test_compositions_stay_whole(self):
-        # every comp_id is one contiguous run of ids, and opens with a heading
+        # every comp_id is one contiguous run of ids, and opens with a heading -- except a G3
+        # `stands` entry, verse that is a composition of its own with no printed heading
         first, last = {}, {}
         for i in sorted(self.by_id):
             c = self.by_id[i]['comp_id']
             first.setdefault(c, i)
             self.assertEqual(last.get(c, i - 1), i - 1, f'comp {c} is split around id {i}')
             last[c] = i
-        self.assertTrue(all(self.by_id[i]['is_header'] for i in first.values()))
+        stands = {e['start_id'] for e in self.ledger if e['kind'] == 'stands' and e['status'] in ('approved', 'held')}
+        self.assertEqual(sorted(i for i in first.values() if not self.by_id[i]['is_header']), sorted(stands))
 
 
 if __name__ == '__main__':

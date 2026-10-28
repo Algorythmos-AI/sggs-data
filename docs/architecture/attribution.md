@@ -40,11 +40,22 @@ A heading that names a Mahalla always wins over a pen-name in the verse (Ang 326
 
 | Status | Meaning |
 |---|---|
-| `approved` | Applied by rule E (Japji → Guru Nanak Dev Ji; Ramkali Sadu → Baba Sundar Ji; held for G3 in dataset 1.3.0: Surdas's single line, Ang 1253, and the Bhagat-run heading on Ang 524). An entry approved at G3 records the ruling in its `g3` field. |
+| `approved` | Applied by rule E (Japji → Guru Nanak Dev Ji; Ramkali Sadu → Baba Sundar Ji, owner-approved before G3). A G3 entry is `approved` only with a complete, signed ruling in its `g3` field (`pipeline/g3_gate.py`). |
+| `held` | A G3 entry applied **only** in a held draft build, so its effect can be proved; never releasable (`g3_gate.py --release-check` fails). Dataset 1.3.0: Surdas's single line, Ang 1253, and the Bhagat-run heading on Ang 524. |
 | `proposed` | Recorded for scholarly review, changes nothing: Bhai Mardana's saloks (Ang 553), Raagmala, the per-Bhatt splits, saloks signed by other Bhagats inside Kabir's collection, the Bhagat-run heading on Ang 323. |
 | `keep` | Our tag stands on printed evidence although the independent edition differs (Angs 326, 1136, 1253). |
 
-## The gate (`pipeline/verify_attribution.py`)
+## The G3 approval gate (`pipeline/g3_gate.py`)
+
+Every ledger load, both build passes and CI go through one validator. It enforces a closed status set,
+the registry of G3 items, owner approvals pinned by hash, complete rulings (reviewer of record, date,
+scope, the reviewer's own reply as a file **signed with his registered SSH key**, and a hash binding the
+ruling to what the entry does), and that the committed corpus matches the statuses. On a pull request,
+`.github/workflows/g3-gate.yml` runs the **base branch's** gate against the pull request's tree, so a
+pull request cannot change the rules it is judged by. Records: `validation/attribution-g3-review/`
+(`AUDIT-TRAIL.md`, `RISKS.md`, `SIGN-OFF.md`).
+
+## The verification gate (`pipeline/verify_attribution.py`)
 
 ```bash
 python3 pipeline/verify_attribution.py <pre.jsonl> corpus/sggs.jsonl --oracle database.sqlite \

@@ -1,0 +1,56 @@
+lines: 60658 -> 60658; id order identical: True
+  author               2 rows  (ids 23470..53935)
+  comp_id             29 rows  (ids 30081..30109)
+  is_header            3 rows  (ids 30081..30099)
+  line_no             29 rows  (ids 30081..30109)
+  pada_total           3 rows  (ids 30081..30099)
+  section            791 rows  (ids 58297..59087)
+  source_category      1 rows  (ids 23470..23470)
+  stanza_index         3 rows  (ids 30081..30099)
+text columns code-point and byte identical: True
+predicted from the ledgers: {'author': 2, 'comp_id': 29, 'is_header': 3, 'line_no': 29, 'section': 791}
+  derived/other column source_category: 1 rows -> [23470]
+      id 23470: 'Gurus' -> 'Bhagats'  (ang 524, comp 2044->2044)
+  derived/other column stanza_index: 3 rows -> [30081, 30092, 30099]
+      id 30081: 1 -> 0  (ang 695, comp 2749->5381)
+      id 30092: 1 -> 0  (ang 695, comp 2749->5382)
+      id 30099: 1 -> 0  (ang 695, comp 2749->5383)
+  derived/other column pada_total: 3 rows -> [30081, 30092, 30099]
+      id 30081: 4 -> 0  (ang 695, comp 2749->5381)
+      id 30092: 2 -> 0  (ang 695, comp 2749->5382)
+      id 30099: 2 -> 0  (ang 695, comp 2749->5383)
+tables only in old: []; only in new: []
+  analytics_meta                   rows      12 ->      12   b409f667f814e8a7 -> d74a1a2208092116
+  author_analytics                 rows      35 ->      36   acb18e510292c609 -> 8c13895315021f45
+  author_distinctive_terms         rows     195 ->     195   2ae14b4bb08ce252 -> 518b80b87c9fcb53
+  author_facts                     rows      35 ->      36   480719e97583ea89 -> da8b384ba5c8cf27
+  author_resonance                 rows     670 ->     679   d032bf2bee61f8f8 -> ce19cf43dfa1fcce
+  authors                          rows      35 ->      36   f10d7ddbd9829b3e -> 32922718cc0672a3
+  fts_shabad                       rows    4524 ->    4527   6352620ed9d0f903 -> 7d458897651af6bc
+  fts_shabad_content               rows    4524 ->    4527   5ce1b08772c5cfc0 -> 9a232cf93420e74f
+  fts_shabad_data                  rows     227 ->     226   699fb2531d0a8c68 -> 927730fa46e4714c
+  fts_shabad_docsize               rows    4524 ->    4527   858f190536cb22f9 -> 7d1e90444ca1c12b
+  fts_shabad_idx                   rows     173 ->     171   72d2ecdf6a59f2ff -> f4c2f239e5457ac1
+  fts_tri                          rows   55511 ->   55508   adbfed5249398bcd -> c1a6d1f34f5ccfe6
+  fts_tri_content                  rows   55511 ->   55508   027d6163adc73f98 -> 2ec58ea5ed26a265
+  fts_tri_data                     rows    1576 ->    1576   ff465557949b20b9 -> a6791d539a46ee98
+  fts_tri_docsize                  rows   55511 ->   55508   0b4cc4202492d130 -> dddb8055830cdc44
+  fts_tri_idx                      rows    1153 ->    1154   d8a6636f7711b366 -> 547fb99e4c468ba3
+  line_neighbors                   rows  532227 ->  532212   5a81e5fe2103a8e8 -> af0966080491808b
+  lines                            rows   60658 ->   60658   8f48324d70429fc7 -> 52cc5206b704ec27
+  meta                             rows       9 ->       9   3e1cc10e5e61a416 -> 50951f386a4e7230
+  raag_analytics                   rows      31 ->      31   aed2484ecc920f94 -> ae593bf67913769f
+  raags                            rows      31 ->      31   bfefe127543351fd -> 4eb45e3f452cc0bc
+  sections                         rows      13 ->      15   ba01cfaa39c2280e -> bc9d9d7c945adc28
+  shabad_neighbors                 rows   43800 ->   43830   35892b91845947ea -> 57fb1f11fba23c8f
+  shabd_musical_markers            rows    4527 ->    4530   d0025c31dc903104 -> 3ab6f3f59cec57ed
+  shabd_raag_map                   rows    4527 ->    4530   25ac246229b128a9 -> 7e46383f5e61cfad
+  shabd_structural_form            rows    4527 ->    4530   b6df34c5404a07e9 -> 2015c6f1288cf821
+  sources                          rows       2 ->       2   0a9b412d597b76d1 -> a0101f68089ddda7
+  theme_fingerprint                rows    2315 ->    2316   851b36d26c98491d -> d90e433e9853b7bb
+  theme_network                    rows    2528 ->    2528   235b7e2f5268d451 -> 5669ebde368a32ea
+  timing_migrations                rows       1 ->       1   83d33d3b864068aa -> 6094e428ff8e9910
+  variants                         rows   79840 ->   79840   eba826fdfd25b76d -> 360e697a75fe8202
+  word_freq                        rows   29312 ->   29312   c8d3552fd72b5ee2 -> ea94fcc8443b6de6
+32 of 59 common tables differ in content
+RESULT: PASS (every lines change is predicted by an applied ledger entry or listed as derived)

@@ -5,7 +5,9 @@
 
 Writes OUTDIR/evidence.md (the printed lines, the current and new dataset values, and the ShabadOS
 4.8.7 record for every line an item touches), OUTDIR/changes.csv (every changed `lines` field) and
-OUTDIR/downstream.md (every count a consumer will see move), and renders OUTDIR/README.md from
+OUTDIR/downstream.md (every count a consumer will see move), OUTDIR/pack-inputs.json (the hashes of the
+inputs it was built from; pipeline/tests/test_g3_pack.py fails when the DB or a G3 entry moves on without
+the pack being regenerated), and renders OUTDIR/README.md from
 OUTDIR/README.template.md: {gID} becomes line ID's Gurmukhi and {lastID} the last number printed in its
 markers. Every Gurmukhi run left in the README must occur in the corpus, or the script fails. Every Gurmukhi quote is copied from the
 database by this script, never typed. ShabadOS is evidence only: lines are aligned on first letters
@@ -16,6 +18,7 @@ from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'pipeline'))
 import crosscheck_authors as X  # noqa: E402
+import g3_gate  # noqa: E402
 
 COLS = ['ang', 'comp_id', 'line_no', 'is_header', 'section', 'author', 'source_category']
 TYPES = {1: 'Manglacharan (invocation)', 2: 'Sirlekh (heading)', 3: 'Rahao', 4: 'Pankti (verse)'}
@@ -165,14 +168,15 @@ def downstream(pre, post, out, changed):
     for au in sorted(set(la) | set(lb), key=str):
         if la.get(au) != lb.get(au):
             x, y = la.get(au, (0, 0)), lb.get(au, (0, 0))
-            md.append(f'| {au} | {x[0]} | {y[0]} | {x[1]} | {y[1]} |')
+            md.append(f'| {au if au is not None else "(no author)"} | {x[0]} | {y[0]} | {x[1]} | {y[1]} |')
 
     md += ['', 'Voices per raag (distinct authors with at least one line in the raag):', '',
            '| raag | 1.2.0 | 1.3.0 | joins | leaves |', '|---|---|---|---|---|']
     va, vb = defaultdict(set), defaultdict(set)
-    for r, au in q(pre, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL'):
+    # a line with no author (the G3 ruling on the Bhagats' shared headings) is not a voice
+    for r, au in q(pre, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL AND author IS NOT NULL'):
         va[r].add(au)
-    for r, au in q(post, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL'):
+    for r, au in q(post, 'SELECT DISTINCT raag, author FROM lines WHERE raag IS NOT NULL AND author IS NOT NULL'):
         vb[r].add(au)
     for r in sorted(set(va) | set(vb)):
         if va[r] != vb[r]:
@@ -226,6 +230,27 @@ def readme(post, out):
     open(os.path.join(out, 'README.md'), 'w', encoding='utf-8').write(s)
 
 
+def sha256(p):
+    h = hashlib.sha256()
+    with open(p, 'rb') as f:
+        for ch in iter(lambda: f.read(1 << 20), b''):
+            h.update(ch)
+    return h.hexdigest()
+
+
+def stamp(pre_p, post_p, sos_p, out):
+    """The inputs this pack was generated from. A ruling recorded later (status/g3 only) keeps an
+    entry's hash; any edit to what an entry changes, or a rebuilt DB, makes the pack stale."""
+    entries = {e['entry']: g3_gate.entry_sha256(e)
+               for kind in g3_gate.LEDGERS for e in g3_gate.read(g3_gate.LEDGERS[kind]) if e.get('g3')}
+    data = {'_note': 'Written by scripts/data/g3_attribution_pack.py; checked by pipeline/tests/test_g3_pack.py.',
+            'pre_db_sha256': sha256(pre_p), 'post_db_sha256': sha256(post_p),
+            'shabados_sha256': sha256(sos_p), 'g3_entries': dict(sorted(entries.items()))}
+    with open(os.path.join(out, 'pack-inputs.json'), 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write('\n')
+
+
 def main():
     if len(sys.argv) != 5:
         sys.exit(__doc__)
@@ -236,6 +261,7 @@ def main():
     changed = changes(pre, post, out)
     downstream(pre, post, out, changed)
     readme(post, out)
+    stamp(pre_p, post_p, sos_p, out)
     print(f'wrote {out}/evidence.md, changes.csv, downstream.md ({sum(changed.values())} field changes: {dict(changed)})')
 
 

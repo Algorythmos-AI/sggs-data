@@ -1,0 +1,46 @@
+name: g3-gate
+# The G3 release check, judged by the BASE branch. Under pull_request_target this workflow file, the
+# gate code (pipeline/g3_gate.py) and its trust anchors (the G3 registry, the reviewer of record and
+# his signing key in validation/attribution-g3-review/allowed_signers) all come from the base branch,
+# so a pull request cannot weaken, edit or skip the check it is judged by, and cannot register a key
+# to sign its own "ruling". The pull request's tree is checked out as DATA ONLY: nothing from it is
+# executed, no secret is used, and the token is read-only and not persisted.
+#
+# A change to the gate or its anchors therefore lands in its own reviewed pull request first, and only
+# then judges later ones. To enforce this, make the `g3-base-gate` check required in the ruleset that
+# protects main (an owner setting; see validation/attribution-g3-review/RISKS.md G-3).
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited]
+permissions:
+  contents: read
+concurrency:
+  group: g3-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  g3-base-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Base branch (trusted code and anchors)
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+          persist-credentials: false
+      - name: Pull request tree (data only, never executed)
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version-file: base/.python-version
+      - name: G3 release check (base gate, pull request data)
+        run: |
+          if [ ! -f base/pipeline/g3_gate.py ]; then
+            echo "::error::the base branch has no G3 gate, so nothing can judge this pull request"
+            exit 1
+          fi
+          python3 -I base/pipeline/g3_gate.py --release-check --tree pr

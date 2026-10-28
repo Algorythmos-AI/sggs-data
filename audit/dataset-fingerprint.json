@@ -1,5 +1,5 @@
 {
- "db_sha256": "003cae578902f2677ea1e18a888f91be1fa32fb1256f07c2cced7f52f7122f91",
+ "db_sha256": "4e6777c54140d7c4ff76fd06b5453991daf4cabcb2c98479d216908d4c31455b",
  "fts_index": {
   "fts": {
    "instances": 2385214,
@@ -11,7 +11,7 @@
   },
   "fts_shabad": {
    "instances": 384510,
-   "sha256": "556c1d58832fe34898086e96cfe905b021839d514954803c6e2bb172dde1cce3"
+   "sha256": "be7eeaf39a1adff8de5025e226fcb5a24ed3bb45c9d391e635c8047a5d95fe7b"
   },
   "fts_tri": {
    "instances": 2137639,
@@ -60,7 +60,7 @@
   },
   "authors": {
    "class": "metadata",
-   "content_sha256": "3e6379174b72e91f57f2dd8b9d96bef1a7632d7b0a74256aed5eefc44720bb2c",
+   "content_sha256": "5e1dd4297f926e825265f8080f799deef2fb2130297847756477992d541e7cc2",
    "rows": 36
   },
   "bani_lines": {
@@ -125,13 +125,13 @@
   },
   "fts_shabad_content": {
    "class": "scripture_derived",
-   "content_sha256": "e51e08a3fdd9076564d4ecd61aee198dd9cf462491821ba454b94e3922e27fdf",
-   "rows": 4527
+   "content_sha256": "01ffd70f36dbd5edc6cd8b326f266723ad48ec8c6785eb979ee3eefad22a13f3",
+   "rows": 4528
   },
   "fts_shabad_docsize": {
    "class": "scripture_derived",
-   "content_sha256": "388295f1a530664629903ae3b83b1ccf8fb310fbcf5968ea834beff2a7578c4b",
-   "rows": 4527
+   "content_sha256": "74d1810ef5bf9870fce0f96dbae7a27a21ed2c4176acb7d5cfa071d5164576a6",
+   "rows": 4528
   },
   "fts_tri_config": {
    "class": "scripture_derived",
@@ -155,7 +155,7 @@
   },
   "lines": {
    "class": "scripture",
-   "content_sha256": "c7823ad23564e4023771bd48aa01cb572b9d4840dad5fdca4bec67c0df90e2d2",
+   "content_sha256": "3887cd4d18bbcb4b48a6fcfa256bb12a2f1ec911150cf06e73690b75f34ec45e",
    "rows": 60658
   },
   "meta": {
@@ -165,7 +165,7 @@
   },
   "raag_analytics": {
    "class": "metadata",
-   "content_sha256": "7a70c19b442e5a0ceef70e8313100e566dcce9b0f469c97b9cc5c547a91f4a0e",
+   "content_sha256": "b57fd7e2c0021b0740a7e177189c972a6a70976e6e47af26fc2782569280e872",
    "rows": 31
   },
   "raag_timing_claims": {
@@ -180,18 +180,18 @@
   },
   "sections": {
    "class": "metadata",
-   "content_sha256": "6e7e0a0173606f70cbc7805a1070b58b7fab1c3fa946bcedb0586c66eb9b9aa2",
+   "content_sha256": "8a8346425911fa06f9c5ae52592be44d33c193654f651cdecb026a663ed01018",
    "rows": 15
   },
   "shabad_neighbors": {
    "class": "scripture_derived",
-   "content_sha256": "4b40d4eed45b640d179c703b4aede195b9fae3399514d1aa51fb02b88dcbfa40",
-   "rows": 43830
+   "content_sha256": "ac2a4e8651394630c1bce349dc49b971db07fc06b23189959ce5ddc57b91eaf1",
+   "rows": 43840
   },
   "shabd_musical_markers": {
    "class": "metadata",
-   "content_sha256": "5f39946d225665d1f71a477682ae69599cdb36b3f5cfa36702911519df36a4ea",
-   "rows": 4530
+   "content_sha256": "a97c35d51221685cd8aeb1b4b2eaf94e50f0a43e948d106fb936fb218261a9da",
+   "rows": 4531
   },
   "shabd_poetic_genre": {
    "class": "metadata",
@@ -200,13 +200,13 @@
   },
   "shabd_raag_map": {
    "class": "metadata",
-   "content_sha256": "b8a776b68e1fbd8398a4fa0b0f7b316af6b9a8ac6d3a58323584a9b56e82c78d",
-   "rows": 4530
+   "content_sha256": "b4082c10e631b771ed02896f870abd6db0ce11f70e8c34fb85a4ed9d5c422523",
+   "rows": 4531
   },
   "shabd_structural_form": {
    "class": "metadata",
-   "content_sha256": "ad57dcaa61bfe842c1f9b7ae2ba35fc46c725221e23eaa85704dd803a3b7068e",
-   "rows": 4530
+   "content_sha256": "9e7d9c177f9342f024c82d7e3d98f150e1b98fca8bb43164bf4adff5a7d39df5",
+   "rows": 4531
   },
   "sources": {
    "class": "metadata",
@@ -220,7 +220,7 @@
   },
   "theme_network": {
    "class": "metadata",
-   "content_sha256": "7a743d760028da99ea20e2a16d659fea63bf5e3f46f8060feceb2490bbf97dc6",
+   "content_sha256": "4ad4bd51a4b023f9e4c226c225609ddb5e2d5e330c75ad06954c90bba5850f51",
    "rows": 2528
   },
   "timing_migrations": {

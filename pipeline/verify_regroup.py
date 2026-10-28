@@ -33,7 +33,12 @@ EXPECT_DEMOTED = 179          # 233 demoted lines, 54 of which had already been 
 # Dataset 1.3.0: three printed Bhagat labels on Ang 695 open their own compositions
 # (structure_ledger.json, kind 'opens'), issued as new ids 5381-5383 above every burned id.
 EXPECT_OPENED = 3
-EXPECT_DISTINCT_CURRENT = EXPECT_DISTINCT_NEW - EXPECT_DEMOTED + EXPECT_OPENED   # 4530
+# The G3 ruling of 2026-10-28 (A-07, question 2): the single Surdas line on Ang 1253 stands as a
+# composition of its own (structure_ledger.json, kind 'stands', new id 5384). It has no printed heading,
+# so it is the one composition whose first line is verse. Any other headless composition still fails.
+EXPECT_STANDS = 1
+HEADLESS_FIRST_IDS = {53935}
+EXPECT_DISTINCT_CURRENT = EXPECT_DISTINCT_NEW - EXPECT_DEMOTED + EXPECT_OPENED + EXPECT_STANDS   # 4531
 RUBRICS = {'ਜੁਮਲਾ', 'ਦੁਤੁਕੇ', 'ਏਹੁ ਸਲੋਕੁ ਆਦਿ ਅੰਤਿ ਪੜਣਾ'}
 IGNORE_COLS = {'comp_id', 'line_no'}
 # derived/analytics tables that legitimately differ after a regroup rebuild
@@ -87,7 +92,7 @@ def invariants_only(db_p):
     bad_first = hab = 0; header_only = []
     for c, ls in cl.items():
         ls.sort(key=lambda r: r[idx['id']])
-        if not ls[0][idx['is_header']]:
+        if not ls[0][idx['is_header']] and ls[0][idx['id']] not in HEADLESS_FIRST_IDS:
             bad_first += 1
         prefix = True
         for r in ls:

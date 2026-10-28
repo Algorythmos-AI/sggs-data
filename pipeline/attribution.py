@@ -17,12 +17,14 @@ Rules, each tied to what the print shows:
      is signed in its own verse with exactly one Bhagat's pen-name and never "ਨਾਨਕ"
   S  in a Bhagat's salok collection ("ਸਲੋਕ ਸੇਖ ਫਰੀਦ ਕੇ"), a "ਮਃ ੫ ॥" label covers ONE
      salok -- up to its numbered close -- and the collection's author resumes after it
-  E  editorial decisions from attribution_ledger.json (owner/scholar approved), e.g. Japji
+  E  editorial decisions from attribution_ledger.json, e.g. Japji: only entries g3_gate.py lets
+     through (owner-approved, a complete G3 ruling, or `held` in a draft that cannot release)
 
 A heading that names a Mahalla always wins over C (Ang 326: "ਗਉੜੀ ਕਬੀਰ ਜੀ ਕੀ ਨਾਲਿ ਰਲਾਇ
 ਲਿਖਿਆ ਮਹਲਾ ੫" stays Guru Arjan Dev Ji's although the verse names Kabir).
 """
-import json, os, re
+import re
+import g3_gate
 
 M = {'੧': 'Guru Nanak Dev Ji (M1)', '੨': 'Guru Angad Dev Ji (M2)', '੩': 'Guru Amar Das Ji (M3)',
      '੪': 'Guru Ram Das Ji (M4)', '੫': 'Guru Arjan Dev Ji (M5)', '੯': 'Guru Tegh Bahadur Ji (M9)'}
@@ -148,8 +150,9 @@ def _ends(r, salok):
     return len(nums) >= (1 if salok else 2)
 
 
-def apply(records, ledger=None):
-    """Mutates records' `author` in place; returns the change log."""
+def apply(records, ledger=None, gate=None):
+    """Mutates records' `author` in place; returns the change log. `gate`: keyword arguments for
+    g3_gate.check (tests only)."""
     log, flags = [], []
 
     def setauthor(r, a, rule, evidence):
@@ -286,17 +289,23 @@ def apply(records, ledger=None):
                 for r in rows:
                     setauthor(r, a, 'V', 'opens: ' + body[0]['text'])
 
-    # ---- E: approved editorial decisions -------------------------------------
+    # ---- E: editorial decisions the G3 gate lets through ----------------------
     by_id = {r['id']: r for r in records}
-    for e in (ledger or []):
-        if e.get('status') != 'approved':
-            continue
+    for e in g3_gate.check(ledger or [], 'attribution', **(gate or {})):
+        missing = [i for i in range(e['start_id'], e['end_id'] + 1) if i not in by_id]
+        if missing:
+            raise g3_gate.GateError(f"attribution:{e['entry']}: ids {missing[:5]} are not in the corpus")
         for lid in range(e['start_id'], e['end_id'] + 1):
-            r = by_id.get(lid)
-            if r:
+            r = by_id[lid]
+            if e['to'] is None and r['author'] is not None:
+                # a G3 ruling that the line carries no author (a heading shared by several Bhagats)
+                log.append({'id': r['id'], 'ang': r['ang'], 'comp_id': r['comp_id'],
+                            'from': r['author'], 'to': None, 'rule': 'E', 'evidence': e['reason']})
+                r['author'] = None
+            else:
                 setauthor(r, e['to'], 'E', e['reason'])
     return log, flags
 
 
 def load_ledger(path):
-    return json.load(open(path, encoding='utf-8'))['entries'] if os.path.exists(path) else []
+    return g3_gate.load('attribution', path)
