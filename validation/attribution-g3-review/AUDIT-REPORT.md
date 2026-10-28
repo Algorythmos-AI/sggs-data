@@ -412,5 +412,5 @@ Also in `audit-tools/`:
 | 24 | `compare_builds.py` against the 1.3.0 draft | 13 of 59 tables differ, all derived from those fields (`lines`, `sections`, `authors`, `fts_shabad*`, `shabd_*`, `shabad_neighbors`, `raag_analytics`, `theme_network`). `authors` lists 36 names; no null row. |
 | 25 | Re-baselined: `data_quality.py --write-baseline`, `rebaseline_pretiming.sh`; fingerprint from the rebuild | `make guard`, `fingerprint`, `quality`, `verify` PASS. |
 | 26 | Scratch copy with a throwaway key registered as `sam-kalaliya` and the reply signed with it (simulation only; never committed) | 154 tests OK (1 skipped). `make ci`: every gate passes; `G3 gate: ledgers and corpus agree and every G3 ruling is recorded`. |
-| 27 | `mutate.py` in the same scratch copy | See `AUDIT-TRAIL.md` (mutants re-anchored to the ruled state; two moved to fixtures). |
+| 27 | `mutate.py` in the same scratch copy | 44 of 44 mutants and the scripture flip caught, 0 survived. Mutants 27, 29 and 31 re-anchored to the ruled state; 14 and 37 are now caught by the `PendingRulings` fixture tests. |
 

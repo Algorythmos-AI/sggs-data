@@ -30,6 +30,7 @@ reply and his public key are committed; until then the release check fails on th
 | 2026-10-28 (session) | this commit | **Owner decision:** the reviewer cannot sign on his phone, so the owner signs the WhatsApp export himself as the relayer, recorded openly as relayed. Gate: optional `g3.relayed_by` + `g3.channel`; a relayed ruling verifies the relayer's signature (`RELAYERS`, `CHANNELS`) and is reported as "relayed …, not signed by the reviewer". 10 `RelayedRulings` tests; mutants 40–44. `RISKS.md` G-12 updated and G-14 added; `SIGN-OFF.md` step 1 gains the relayed path. No relayer key is registered yet. | `RISKS.md` G-14 |
 | 2026-10-28 (session) | none | The owner relayed the reviewer's clarification: question 2 is **A** (the line stands on its own), question 3 is **B** with the printed names. The owner said he had talked to the reviewer and asked for the rulings to be recorded as given. | Owner's chat |
 | 2026-10-28 (session) | this commit | **Rulings recorded, as relayed.** Evidence: both relayed messages, unchanged, in `rulings/2026-10-28-kanwaljit-singh-whatsapp.txt`. All 10 G3 entries `approved` (Q1, Q2, Q3, Q4, Q5, Q7); two new registered entries implement his words: `surdas-own-shabad` (kind `stands`: line 53935 becomes composition 5384, no heading) and `section-chaubole` (printed name). Q5/Q7 "no author" sets `author` null on lines 23470 and 14771. Q6 (`ਸੁਧੁ`) is **not** applied: it splits scripture line records and needs its own entry and proofs. Gate: `to` may be null for attribution; structure kinds are a closed set; `verify_regroup` allows exactly one headless composition (first line 53935). Rebuilt from the PDF in a scratch copy with the signature check stubbed (the signature never reaches the data). | `SIGN-OFF.md` |
+| 2026-10-28 (session) | follow-up commit | `mutate.py` on the ruled state (signed simulation): 44/44 mutants plus the scripture flip caught. Five had depended on `held` entries in the committed ledgers; three were re-anchored and two (14, 37) are now held by fixture tests (`PendingRulings`). | `AUDIT-REPORT.md` § 9 |
 
 ## Lessons recorded so they are not repeated
 
@@ -48,6 +49,8 @@ reply and his public key are committed; until then the release check fails on th
    examples that did not fit, and was corrected against the DB (`DECISIONS.md`).
 8. **A fixture shortcut can hide the real path.** Mutant 42 first survived: the fixture relayer returned
    before the code a real relayer takes. A test now signs as a name in `RELAYERS` (2026-10-28).
+9. **A test that reads the committed state stops guarding a rule once that state changes.** Mutants
+   14 and 37 survived when the last `held` entry was ruled; such rules now have fixture tests.
 
 ## Outstanding (owner of each in brackets)
 
