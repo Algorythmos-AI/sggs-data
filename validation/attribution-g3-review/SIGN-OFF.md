@@ -64,6 +64,14 @@ The gate (`pipeline/g3_gate.py`) refuses any ruling that does not meet every ste
    That writes `<reply file>.sig`, which is committed next to the reply. The gate verifies it against
    the base branch's `allowed_signers`; a reply without a valid signature counts as no ruling. Nobody
    else signs for him, and nobody else holds his private key.
+
+   **Relayed reply (the owner's decision, 2026-10-28).** If he replies by WhatsApp from a phone, the
+   evidence is the WhatsApp chat **export** ("Export chat → Without media"), saved unchanged. The relayer
+   of record (`RELAYERS`, the owner) signs that export with his own registered key, attesting that it is
+   the reviewer's reply as received:
+   `ssh-keygen -Y sign -f <relayer's private key> -n sggs-g3-ruling <export file>`.
+   The `g3` block then also carries `relayed_by` (the relayer's name) and `channel: whatsapp`, and the
+   gate reports the ruling as relayed, not as signed by the reviewer (`RISKS.md` G-14).
 2. **Fill the `g3` block.** For each entry his ruling covers, the engineer fills the entry's `g3`
    block:
    - `decision`: `approve`, `change` or `reject`;

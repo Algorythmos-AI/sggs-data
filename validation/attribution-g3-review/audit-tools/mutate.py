@@ -88,6 +88,14 @@ MUTANTS = [  # (number, what is broken, file, exact text, replacement)
      'python3 -I base/pipeline/g3_gate.py', 'python3 -I pr/pipeline/g3_gate.py'),
     (39, 'base-branch workflow switched to pull_request', '.github/workflows/g3-gate.yml',
      '  pull_request_target:', '  pull_request:'),
+    (40, 'any relayer accepted', G, "    if relayer not in RELAYERS:", "    if False:"),
+    (41, 'any relay channel accepted', G, "    if channel not in CHANNELS:", "    if False:"),
+    (42, 'relayed ruling verified as the reviewer, not the relayer', G,
+     "    return RELAYERS[relayer], None", "    return PRINCIPALS.get(rev), None"),
+    (43, 'relay fields allowed on an unruled entry', G,
+     "for k in RULING + RELAY if g3.get(k)", "for k in RULING if g3.get(k)"),
+    (44, 'gate report hides that a ruling was relayed', G,
+     "                if g.get('relayed_by'):", "                if False:"),
 ]
 
 

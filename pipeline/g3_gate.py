@@ -24,6 +24,11 @@ Statuses (a closed set; anything else fails the build):
              over to an entry whose range or values were edited after it. The reply must carry the
              reviewer's own SSH signature (<reply>.sig, namespace SIG_NAMESPACE) that verifies against his
              key in SIGNERS: editing a ledger, or committing a reply file, cannot forge a ruling.
+             A RELAYED ruling (the reviewer replied on a channel that cannot carry his signature, e.g.
+             WhatsApp from a phone) names g3.relayed_by, a relayer of record (RELAYERS), and g3.channel
+             (CHANNELS); the evidence is then the unedited channel export and the signature is the
+             RELAYER's, attesting that it is the reviewer's reply as received. It is recorded and shown
+             as relayed, never as the reviewer's own signature.
   rejected   never applied; a G3 rejection records the same complete ruling, decision reject.
   keep       attribution only, never applied, and never for a G3 item (a G3 item is approved or
              rejected by a ruling, or stays proposed/held).
@@ -35,7 +40,7 @@ Ledger-wide rules (enforced wherever a ledger is loaded, and by the CLI):
     and still has exactly the content (entry_sha256) it was approved with;
   - the committed corpus shows every applied entry's `to` and every unapplied G3 entry's `from`.
 
-Trust anchors -- G3_ENTRIES, OWNER_APPROVED, REVIEWERS and the SIGNERS key file -- are always read from
+Trust anchors -- G3_ENTRIES, OWNER_APPROVED, REVIEWERS, RELAYERS and the SIGNERS key file -- are read from
 the copy of the repository this module lives in, never from a --tree under judgement.
 """
 import datetime, hashlib, json, os, re, subprocess, sys
@@ -53,6 +58,7 @@ APPLIED = {'approved', 'held'}
 DECISION_FOR = {'approved': {'approve', 'change'}, 'rejected': {'reject'}}
 ACTING = ('entry', 'kind', 'start_id', 'end_id', 'from', 'to')
 RULING = ('decision', 'reviewer', 'date', 'scope', 'evidence', 'evidence_sha256', 'entry_sha256')
+RELAY = ('relayed_by', 'channel')                      # optional; both or neither
 
 # The G3 items of dataset 1.3.0 (gurbani-soul-ios docs/review/g3-1.4.9, section 6; Ang 323 added by
 # pull request #17). Adding, renaming or removing one is a reviewed code change.
@@ -74,11 +80,18 @@ PRINCIPALS = {'Kanwaljit Singh': 'kanwaljit-singh'}
 REVIEWERS = set(PRINCIPALS)
 SIGNERS = os.path.join(ROOT, PACK, 'allowed_signers')   # ssh-keygen allowed_signers format
 SIG_NAMESPACE = 'sggs-g3-ruling'
+# Who may relay a reviewer's unsigned reply, and their signing principal in SIGNERS. The owner chose
+# this path on 2026-10-28 because the reviewer replies by WhatsApp from a phone. A relayed ruling rests
+# on the relayer's attestation, not the reviewer's key (validation/attribution-g3-review/RISKS.md G-14).
+RELAYERS = {'Sam Kalaliya': 'sam-kalaliya'}
+CHANNELS = {'whatsapp'}
 # No G3 ruling on these entries can predate the held pull request that proposed them.
 MIN_RULING_DATE = datetime.date(2026, 10, 26)
 # Positive tests use this reviewer in temporary fixtures; the committed ledgers may never carry it.
 FIXTURE_REVIEWER = 'TEST-FIXTURE-NOT-A-REVIEWER'
 FIXTURE_PRINCIPAL = 'test-fixture-not-a-reviewer'
+FIXTURE_RELAYER = 'TEST-FIXTURE-NOT-A-RELAYER'
+FIXTURE_RELAYER_PRINCIPAL = 'test-fixture-not-a-relayer'
 REQUIRED = {'attribution': ('entry', 'start_id', 'end_id', 'from', 'to', 'status'),
             'structure': ('entry', 'kind', 'start_id', 'end_id', 'to', 'status')}
 ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
@@ -143,6 +156,21 @@ def _signature_problem(path, principal, signers):
     return None
 
 
+def _signer(g3, rev, allow_fixture):
+    """(principal whose signature the ruling must carry, None) or (None, why it has none)."""
+    relayer, channel = g3.get('relayed_by'), g3.get('channel')
+    if relayer in (None, '') and channel in (None, ''):
+        p = FIXTURE_PRINCIPAL if (allow_fixture and rev == FIXTURE_REVIEWER) else PRINCIPALS.get(rev)
+        return (p, None) if p else (None, 'no signing principal for this reviewer')
+    if channel not in CHANNELS:
+        return None, f'a relayed ruling needs g3.channel in {sorted(CHANNELS)}, not {channel!r}'
+    if allow_fixture and relayer == FIXTURE_RELAYER:
+        return FIXTURE_RELAYER_PRINCIPAL, None
+    if relayer not in RELAYERS:
+        return None, f'g3.relayed_by {relayer!r} is not a relayer of record ({sorted(RELAYERS)})'
+    return RELAYERS[relayer], None
+
+
 def problems(entries, kind, root=ROOT, today=None, allow_fixture=False, signers=SIGNERS):
     """Every reason these entries may not be built, entry by entry (empty = valid)."""
     today = today or _today()
@@ -187,7 +215,7 @@ def problems(entries, kind, root=ROOT, today=None, allow_fixture=False, signers=
             say('a G3 item cannot be `keep`: it is approved or rejected by a ruling, or stays proposed/held')
             continue
         if st in ('proposed', 'held'):
-            filled = [k for k in RULING if g3.get(k) not in (None, '')]
+            filled = [k for k in RULING + RELAY if g3.get(k) not in (None, '')]
             if filled:
                 say(f'status {st} but the ruling fields {filled} are filled: record the ruling by '
                     'moving the status to approved/rejected, or clear them')
@@ -219,9 +247,8 @@ def problems(entries, kind, root=ROOT, today=None, allow_fixture=False, signers=
         elif g3.get('evidence_sha256') != file_sha256(os.path.join(root, g3['evidence'])):
             say('g3.evidence_sha256 does not match the ruling file')
         else:
-            principal = FIXTURE_PRINCIPAL if (allow_fixture and rev == FIXTURE_REVIEWER) else PRINCIPALS.get(rev)
-            why = _signature_problem(os.path.join(root, g3['evidence']), principal, signers) if principal \
-                else 'no signing principal for this reviewer'
+            principal, why = _signer(g3, rev, allow_fixture)
+            why = why or _signature_problem(os.path.join(root, g3['evidence']), principal, signers)
             if why:
                 say(why)
         if g3.get('entry_sha256') != entry_sha256(e):
@@ -323,15 +350,18 @@ def main(argv, ledger_paths=None, root=ROOT, corpus=None):
         for e in entries:
             if e.get('g3'):
                 g = e['g3']
+                who = g.get('reviewer') or '-'
+                if g.get('relayed_by'):
+                    who += f" (relayed by {g['relayed_by']} via {g.get('channel')}, not signed by the reviewer)"
                 rows.append((g.get('item'), kind, e['entry'], e['status'], g.get('decision') or '-',
-                             g.get('reviewer') or '-', g.get('date') or '-'))
+                             who, g.get('date') or '-'))
         pending += [(kind, e['entry'], e['status']) for e in outstanding(entries)]
     if not errors:
         errors += artifact_problems(ledgers, corpus or CORPUS)
     print('G3-governed ledger entries:')
-    print(f"  {'item':<16} {'ledger':<11} {'entry':<28} {'status':<9} {'decision':<9} {'reviewer':<16} date")
+    print(f"  {'item':<16} {'ledger':<11} {'entry':<28} {'status':<9} {'decision':<9} {'date':<10} reviewer")
     for r in rows:
-        print(f'  {r[0]:<16} {r[1]:<11} {r[2]:<28} {r[3]:<9} {r[4]:<9} {r[5]:<16} {r[6]}')
+        print(f'  {r[0]:<16} {r[1]:<11} {r[2]:<28} {r[3]:<9} {r[4]:<9} {r[6]:<10} {r[5]}')
     for msg in errors:
         print(f'::error::{msg}')
     if errors:

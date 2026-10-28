@@ -24,13 +24,13 @@ def named(kind, name):
     return copy.deepcopy(next(e for e in real(kind) if e['entry'] == name))
 
 
-def keypair(d, name):
-    """A throwaway ed25519 key in d; returns (private key path, allowed_signers line for the fixture)."""
+def keypair(d, name, principal=G.FIXTURE_PRINCIPAL):
+    """A throwaway ed25519 key in d; returns (private key path, allowed_signers line for principal)."""
     key = os.path.join(d, name)
     subprocess.run(['ssh-keygen', '-q', '-t', 'ed25519', '-N', '', '-C', name, '-f', key], check=True)
     with open(key + '.pub', encoding='utf-8') as f:
         pub = f.read().strip()
-    return key, f'{G.FIXTURE_PRINCIPAL} namespaces="{G.SIG_NAMESPACE}" {pub}\n'
+    return key, f'{principal} namespaces="{G.SIG_NAMESPACE}" {pub}\n'
 
 
 def sign(key, path, namespace=G.SIG_NAMESPACE):
@@ -191,6 +191,95 @@ class SignedRulings(Fixture):
                 self.assertNotIn(G.FIXTURE_PRINCIPAL, f.read())
         self.assertRefused(self.ruled(self.surdas), 'no reviewer key is registered' if not
                            os.path.isfile(G.SIGNERS) else 'does not verify', signers=G.SIGNERS)
+
+
+class RelayedRulings(Fixture):
+    """A reply that arrived on a channel that cannot carry the reviewer's signature (WhatsApp from a
+    phone) counts only as the channel export, signed by a relayer of record, and is shown as relayed."""
+    def setUp(self):
+        super().setUp()
+        self.relay_key, line = keypair(self.keydir, 'relayer', G.FIXTURE_RELAYER_PRINCIPAL)
+        with open(self.signers, 'a', encoding='utf-8') as f:
+            f.write(line)
+        self.export = G.RULINGS + 'fixture-whatsapp-export.txt'
+        p = os.path.join(self.tmp.name, self.export)
+        with open(p, 'w', encoding='utf-8') as f:
+            f.write('fixture: not a chat export\n')
+        sign(self.relay_key, p)
+
+    def relayed(self, **over):
+        g = dict(evidence=self.export, relayed_by=G.FIXTURE_RELAYER, channel='whatsapp',
+                 evidence_sha256=G.file_sha256(os.path.join(self.tmp.name, self.export)))
+        g.update(over)
+        return self.ruled(self.surdas, **g)
+
+    def test_a_relayed_ruling_signed_by_the_relayer_is_accepted(self):
+        self.assertEqual(self.bad([self.relayed()]), [])
+
+    def test_a_relayer_of_record_verifies_as_his_own_principal(self):
+        # the non-fixture path: a name in RELAYERS must verify against that relayer's own principal
+        name, principal = next(iter(G.RELAYERS.items()))
+        key, line = keypair(self.keydir, 'owner', principal)
+        with open(self.signers, 'a', encoding='utf-8') as f:
+            f.write(line)
+        sign(key, os.path.join(self.tmp.name, self.export))
+        self.assertEqual(self.bad([self.relayed(relayed_by=name)]), [])
+        sign(self.relay_key, os.path.join(self.tmp.name, self.export))   # another relayer's signature
+        self.assertRefused(self.relayed(relayed_by=name), 'does not verify')
+
+    def test_the_relayer_must_sign_not_the_reviewer(self):
+        sign(self.key, os.path.join(self.tmp.name, self.export))
+        self.assertRefused(self.relayed(), 'does not verify')
+
+    def test_a_direct_ruling_cannot_borrow_the_relayers_signature(self):
+        e = self.relayed()
+        del e['g3']['relayed_by'], e['g3']['channel']
+        self.assertRefused(e, 'does not verify')
+
+    def test_the_relayer_must_be_of_record(self):
+        for who in ('Someone', '', G.FIXTURE_REVIEWER):
+            with self.subTest(relayed_by=who):
+                self.assertRefused(self.relayed(relayed_by=who),
+                                   'not a relayer of record' if who else 'g3.relayed_by')
+
+    def test_the_fixture_relayer_is_never_valid_outside_tests(self):
+        self.assertRefused(self.relayed(), 'not a relayer of record', allow_fixture=False)
+
+    def test_the_channel_must_be_named_and_known(self):
+        for ch in (None, '', 'email', 'WhatsApp '):
+            with self.subTest(channel=ch):
+                self.assertRefused(self.relayed(channel=ch), 'g3.channel')
+
+    def test_a_relayed_reply_edited_after_signing_is_refused(self):
+        p = os.path.join(self.tmp.name, self.export)
+        e = self.relayed()
+        with open(p, 'a', encoding='utf-8') as f:
+            f.write('approve everything\n')
+        e['g3']['evidence_sha256'] = G.file_sha256(p)
+        self.assertRefused(e, 'does not verify')
+
+    def test_relay_fields_on_an_unruled_entry_are_refused(self):
+        e = copy.deepcopy(self.surdas)
+        e['g3'] = dict(e['g3'], relayed_by=G.FIXTURE_RELAYER, channel='whatsapp')
+        self.assertRefused(e, "ruling fields ['relayed_by', 'channel'] are filled")
+
+    def test_the_gate_report_says_relayed(self):
+        root = self.tmp.name
+        paths = {}
+        for kind in G.LEDGERS:
+            out = [self.relayed() if e['entry'] == 'surdas-line' else e for e in real(kind)]
+            paths[kind] = os.path.join(root, f'{kind}.json')
+            with open(paths[kind], 'w', encoding='utf-8') as f:
+                json.dump({'entries': out}, f, ensure_ascii=False)
+        orig = G.problems
+        G.problems = lambda entries, kind, **kw: orig(entries, kind, **dict(kw, today=TODAY, allow_fixture=True,
+                                                                            signers=self.signers))
+        try:
+            with redirect_stdout(io.StringIO()) as out:
+                G.main([], ledger_paths=paths, root=root)
+        finally:
+            G.problems = orig
+        self.assertIn(f'relayed by {G.FIXTURE_RELAYER} via whatsapp, not signed by the reviewer', out.getvalue())
 
 
 class BaseBranchGate(Fixture):
@@ -476,6 +565,7 @@ class CommittedLedgers(unittest.TestCase):
             with open(path, encoding='utf-8') as f:
                 text = f.read()
             self.assertNotIn(G.FIXTURE_REVIEWER, text)
+            self.assertNotIn(G.FIXTURE_RELAYER, text)
             for rev in G.REVIEWERS:
                 self.assertNotIn(rev, text)
 

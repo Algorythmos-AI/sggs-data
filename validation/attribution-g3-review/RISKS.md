@@ -179,6 +179,9 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
 - **Never:** generate the key for him, hold his private key, or register a key he did not send. If he
   cannot sign, that is a governance decision for the owner (for example a second named reviewer), made
   openly and recorded here; it is not a reason to weaken the gate.
+- **Owner decision (2026-10-28).** The reviewer replies by WhatsApp from a phone and cannot sign. The
+  owner chose to sign the WhatsApp chat export himself, as the relayer, and to record it openly as
+  relayed (G-14). The reviewer's own key stays the stronger path if he ever sends one.
 
 ### G-13 · The CI report read "8 entries" while the pack said "seven held" (low; closed 2026-10-28)
 
@@ -187,6 +190,21 @@ Prepared 2026-10-27 for the G3 review of pull request #17.
   draft build) and 1, `bhagat-run-heading-ang323`, is `proposed` (registered for G3, not applied).
 - **Fix (commit `581f720`).** The release summary now says "8 … (7 held: applied only in this draft
   build; 1 proposed: not applied)", and a test pins every one of the eight by name and status. Mutant 37.
+
+### G-14 · A relayed ruling rests on the owner's attestation, not the reviewer's key (medium; accepted by the owner 2026-10-28)
+
+- **Finding.** With `g3.relayed_by` and `g3.channel` set, the gate verifies the **relayer's** signature
+  over the unedited channel export (`RELAYERS`, `CHANNELS` in `pipeline/g3_gate.py`). That proves the
+  export was not changed after the relayer signed it. It does not prove the reviewer wrote it: that rests
+  on the relayer's word. The relayer of record, Sam Kalaliya, is also the owner who merges, so on this
+  path the person who records a ruling and the person who attests it are the same.
+- **Mitigations.** The evidence is the WhatsApp **export** (its own file, with the sender's name and
+  timestamps), never a retyped copy. The gate report shows every relayed ruling as "relayed by … via
+  whatsapp, not signed by the reviewer". Only names in `RELAYERS` and channels in `CHANNELS` count, and
+  changing either is a base-branch change. Relay fields on an unruled entry are refused. Shown:
+  `RelayedRulings` tests; mutants 40–44.
+- **What remains.** Anyone reading a relayed ruling should know it is the owner's attestation. A reviewer
+  key (G-12) or a second witness to the export would strengthen it.
 
 ### G-9 · Earlier "G3" approvals were recorded as owner confirmations (medium; for the record)
 

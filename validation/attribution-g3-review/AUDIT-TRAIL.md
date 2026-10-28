@@ -6,7 +6,8 @@ GitHub, not from memory. Append new events at the end. Never rewrite an earlier 
 new dated entry.
 
 **Approval status at the last entry: no G3 item has a ruling.** Every `g3` field in both ledgers is
-blank. No reviewer key is registered. Nothing in this repository records a decision by Kanwaljit Singh.
+blank. No signing key (reviewer or relayer) is registered. A reply from Kanwaljit Singh has reached the
+owner but is not yet recorded (see the 2026-10-28 entries). Nothing in this repository records a decision by him.
 
 ## Events
 
@@ -23,6 +24,9 @@ blank. No reviewer key is registered. Nothing in this repository records a decis
 | 2026-10-28 07:22–07:24 (log file times) | (no commit; rebuild in a COW clone of `8237336`) | Full `make rebuild` with `SOURCE_DATE_EPOCH=1793005527`: exit 0, reconcile char-exact, golden pass, integrity PASS. DB `003cae57…` and corpus `0e228fea…`, **byte-identical** to the committed 1.3.0. This closes `AUDIT-REPORT.md` § 3 row 12's open point. | `AUDIT-REPORT.md` § 8 |
 | 2026-10-28 07:35 | `581f720` | Gate: rulings must carry the reviewer's own SSH signature; `--tree` and `g3-gate.yml` judge a PR with the **base** branch's gate (closes G-11's residual, mitigates G-3); required fields; the 8-entry summary (closes G-13). 140 tests pass; 39 mutants plus the scripture flip, all caught; `build_corpus` through the new gate gives corpus `0e228fea…`, identical. | `AUDIT-REPORT.md` § 8 |
 | 2026-10-28 07:38 | `7ff4c21` | `DECISIONS.md` gains the engineering recommendations (**not rulings**). `RISKS.md` G-3, G-11, G-12 and G-13 are updated or added. `SIGN-OFF.md` gains the signing step. The README, the architecture doc, `AUDIT-REPORT.md` § 0/§ 7/§ 8 and this trail are updated. | This file |
+| 2026-10-28 (session) | none | Ruling forms in English and Punjabi prepared for the reviewer to answer on WhatsApp from his phone. The Punjabi form fixed the English draft's "5 questions" (there are 7) and replaced an example answer that matched the engineering recommendations with a blank one, so as not to steer him. | Owner's chat |
+| 2026-10-28 (session) | none | **A reply from Kanwaljit Singh reached the owner on WhatsApp** and was pasted into the session. **Nothing was recorded in the ledgers:** his Q2 answer is ambiguous (it carries Q1's wording), his Q3 answer needs confirming against the implementation, the reply has no closing line or date, and the record must be the WhatsApp export, not a pasted copy. A Punjabi follow-up asking only those points was prepared for the owner to send. His Q6 answer asks for a separate `ਸੁਧੁ` change, which needs its own entry and review. | Owner's chat |
+| 2026-10-28 (session) | this commit | **Owner decision:** the reviewer cannot sign on his phone, so the owner signs the WhatsApp export himself as the relayer, recorded openly as relayed. Gate: optional `g3.relayed_by` + `g3.channel`; a relayed ruling verifies the relayer's signature (`RELAYERS`, `CHANNELS`) and is reported as "relayed …, not signed by the reviewer". 10 `RelayedRulings` tests; mutants 40–44. `RISKS.md` G-12 updated and G-14 added; `SIGN-OFF.md` step 1 gains the relayed path. No relayer key is registered yet. | `RISKS.md` G-14 |
 
 ## Lessons recorded so they are not repeated
 
@@ -39,13 +43,16 @@ blank. No reviewer key is registered. Nothing in this repository records a decis
    and was corrected before push. Re-read counts against the ledgers before every commit.
 7. **Re-read before claiming a convention.** The A-08 naming recommendation was first written with
    examples that did not fit, and was corrected against the DB (`DECISIONS.md`).
+8. **A fixture shortcut can hide the real path.** Mutant 42 first survived: the fixture relayer returned
+   before the code a real relayer takes. A test now signs as a name in `RELAYERS` (2026-10-28).
 
 ## Outstanding (owner of each in brackets)
 
 | Item | Owner | Where |
 |---|---|---|
 | Rulings on A-07, A-08, A-10, A-11 / Ang 524, Ang 323 | Kanwaljit Singh | `SIGN-OFF.md`, `DECISIONS.md` |
-| Register the reviewer's public key | Owner, from a key the reviewer sends | `RISKS.md` G-12 |
+| Register a signing key: the relayer's (owner's) for the relayed path, or the reviewer's own | Owner | `RISKS.md` G-12, G-14 |
+| Q2/Q3 confirmation, closing line and date from the reviewer; the WhatsApp export | Reviewer, via the owner | This file |
 | Make `g3-base-gate` a required check; restrict the admin bypass; a creation rule for `data-v*` tags | Owner (repository settings) | `RISKS.md` G-2, G-3, G-10 |
 | Consumers pin only released datasets; saved links to composition 2749; section names in iOS | Owner (sggs-platform, gurbani-soul-ios) | `RISKS.md` G-4, C-1, C-2 |
 | Line 50285 `ਨਾਮਦੇਵ ॥` inside Ravidas's composition; the `ਸੁਧੁ` segmentation item (d) | Needs its own entry and review | `DECISIONS.md` A-10, A-11 |
