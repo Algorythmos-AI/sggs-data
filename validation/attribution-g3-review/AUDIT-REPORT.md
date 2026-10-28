@@ -360,7 +360,7 @@ Singh" from the Bir so that CI goes green. That was declined: it would fabricate
 and the print does not decide these editorial questions (`AUDIT-TRAIL.md`). Instead, engineering
 recommendations, labelled as not rulings, were added to `DECISIONS.md`.
 
-**What changed** (commit `581f720`, then the documentation commit):
+**What changed** (commits `581f720`, code, and `7ff4c21`, documentation):
 
 | File | Change |
 |---|---|
