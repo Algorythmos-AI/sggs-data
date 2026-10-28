@@ -7,8 +7,8 @@ new dated entry.
 
 **Approval status at the last entry: every G3 item carries Kanwaljit Singh's ruling of 2026-10-28,
 relayed by the owner (Sam Kalaliya) from WhatsApp** and recorded as relayed, not as signed by the
-reviewer (`SIGN-OFF.md`, `RISKS.md` G-14). The gate accepts it only once the owner's signature over the
-reply and his public key are committed; until then the release check fails on the missing signature.
+reviewer (`SIGN-OFF.md`, `RISKS.md` G-14). The owner signed the reply with his registered key; the release
+check passes.
 
 ## Events
 
@@ -31,6 +31,7 @@ reply and his public key are committed; until then the release check fails on th
 | 2026-10-28 (session) | none | The owner relayed the reviewer's clarification: question 2 is **A** (the line stands on its own), question 3 is **B** with the printed names. The owner said he had talked to the reviewer and asked for the rulings to be recorded as given. | Owner's chat |
 | 2026-10-28 (session) | this commit | **Rulings recorded, as relayed.** Evidence: both relayed messages, unchanged, in `rulings/2026-10-28-kanwaljit-singh-whatsapp.txt`. All 10 G3 entries `approved` (Q1, Q2, Q3, Q4, Q5, Q7); two new registered entries implement his words: `surdas-own-shabad` (kind `stands`: line 53935 becomes composition 5384, no heading) and `section-chaubole` (printed name). Q5/Q7 "no author" sets `author` null on lines 23470 and 14771. Q6 (`ਸੁਧੁ`) is **not** applied: it splits scripture line records and needs its own entry and proofs. Gate: `to` may be null for attribution; structure kinds are a closed set; `verify_regroup` allows exactly one headless composition (first line 53935). Rebuilt from the PDF in a scratch copy with the signature check stubbed (the signature never reaches the data). | `SIGN-OFF.md` |
 | 2026-10-28 (session) | follow-up commit | `mutate.py` on the ruled state (signed simulation): 44/44 mutants plus the scripture flip caught. Five had depended on `held` entries in the committed ledgers; three were re-anchored and two (14, 37) are now held by fixture tests (`PendingRulings`). | `AUDIT-REPORT.md` § 9 |
+| 2026-10-28 (owner's terminal) | this commit | **Signed.** The owner generated his relayer key on his own Mac (`~/.ssh/sggs_g3_relayer`, ed25519, fingerprint `SHA256:4inJAUpH0/+XYEfEScj+4ZMX1RD/rHM7DRKs3Xqfm7U`), signed the reply (`.sig`, namespace `sggs-g3-ruling`) and registered the public key as `sam-kalaliya` in `allowed_signers`. The private key never left his machine. `g3_gate.py --release-check`: every G3 ruling is recorded. | `allowed_signers`, `rulings/*.sig` |
 
 ## Lessons recorded so they are not repeated
 
@@ -56,7 +57,6 @@ reply and his public key are committed; until then the release check fails on th
 
 | Item | Owner | Where |
 |---|---|---|
-| Sign the reply and register the relayer key (one command, `SIGN-OFF.md`) | Owner | `RISKS.md` G-12, G-14 |
 | The `ਸੁਧੁ` / `ਸੁਧੁ ਕੀਚੇ` segmentation (his Q6 direction): its own entry, proofs and review | Engineering, then the reviewer | `SIGN-OFF.md` Q6 |
 | iOS `GranthNames.sections` has no English name for `ਚਉਬੋਲੇ ਮਹਲਾ ੫`; the web's `CLOSING_FIX`/reader chip become dead code | gurbani-soul-ios, sggs-platform | `downstream.md` |
 | Make `g3-base-gate` a required check; restrict the admin bypass; a creation rule for `data-v*` tags | Owner (repository settings) | `RISKS.md` G-2, G-3, G-10 |
