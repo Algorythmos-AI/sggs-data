@@ -3,7 +3,7 @@
 build; held entries never pass the release check; a G3 item cannot be stripped, renamed or quietly
 kept; and a complete ruling -- in a temporary fixture only, never in the committed ledgers, with the
 fixture reviewer -- is accepted end to end. The committed ledgers and corpus are checked as they are."""
-import copy, datetime, io, json, os, shutil, sys, tempfile, unittest
+import copy, datetime, io, json, os, shutil, subprocess, sys, tempfile, unittest
 from contextlib import redirect_stdout
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -24,6 +24,22 @@ def named(kind, name):
     return copy.deepcopy(next(e for e in real(kind) if e['entry'] == name))
 
 
+def keypair(d, name):
+    """A throwaway ed25519 key in d; returns (private key path, allowed_signers line for the fixture)."""
+    key = os.path.join(d, name)
+    subprocess.run(['ssh-keygen', '-q', '-t', 'ed25519', '-N', '', '-C', name, '-f', key], check=True)
+    with open(key + '.pub', encoding='utf-8') as f:
+        pub = f.read().strip()
+    return key, f'{G.FIXTURE_PRINCIPAL} namespaces="{G.SIG_NAMESPACE}" {pub}\n'
+
+
+def sign(key, path, namespace=G.SIG_NAMESPACE):
+    if os.path.exists(path + '.sig'):
+        os.remove(path + '.sig')
+    subprocess.run(['ssh-keygen', '-q', '-Y', 'sign', '-f', key, '-n', namespace, path], check=True,
+                   capture_output=True)
+
+
 class Fixture(unittest.TestCase):
     """A temporary repo root holding a ruling file, so `evidence` resolves and hashes."""
     def setUp(self):
@@ -31,9 +47,17 @@ class Fixture(unittest.TestCase):
         os.makedirs(os.path.join(self.tmp.name, G.RULINGS))
         with open(os.path.join(self.tmp.name, RULING_FILE), 'w', encoding='utf-8') as f:
             f.write('fixture: not a ruling\n')
+        # the fixture reviewer's key, registered in a temporary allowed_signers; the ruling is signed
+        self.keydir = os.path.join(self.tmp.name, 'keys')
+        os.makedirs(self.keydir)
+        self.key, line = keypair(self.keydir, 'fixture')
+        self.signers = os.path.join(self.keydir, 'allowed_signers')
+        with open(self.signers, 'w', encoding='utf-8') as f:
+            f.write(line)
+        sign(self.key, os.path.join(self.tmp.name, RULING_FILE))
         self.surdas = named('attribution', 'surdas-line')
         self.sain = named('structure', 'ang695-sain-opens')
-        self.gate = dict(root=self.tmp.name, today=TODAY, allow_fixture=True)
+        self.gate = dict(root=self.tmp.name, today=TODAY, allow_fixture=True, signers=self.signers)
 
     def tearDown(self):
         self.tmp.cleanup()
@@ -101,13 +125,120 @@ class CompleteRulings(Fixture):
             with open(paths[kind], 'w', encoding='utf-8') as f:
                 json.dump({'entries': out}, f, ensure_ascii=False)
         orig = G.problems
-        G.problems = lambda entries, kind, **kw: orig(entries, kind, **dict(kw, today=TODAY, allow_fixture=True))
+        G.problems = lambda entries, kind, **kw: orig(entries, kind, **dict(kw, today=TODAY, allow_fixture=True,
+                                                                            signers=self.signers))
         try:
             with redirect_stdout(io.StringIO()) as out:
                 self.assertEqual(G.main(['--release-check'], ledger_paths=paths, root=root), 0)
         finally:
             G.problems = orig
         self.assertIn('every G3 ruling is recorded', out.getvalue())
+
+
+class SignedRulings(Fixture):
+    """A ruling counts only with the reviewer's own signature, verified against a key registered in
+    the gate's own tree. Committing a reply file and filling a ledger cannot forge one."""
+    def reply(self, text='forged reply\n', name='forged.txt'):
+        p = os.path.join(self.tmp.name, G.RULINGS, name)
+        with open(p, 'w', encoding='utf-8') as f:
+            f.write(text)
+        return G.RULINGS + name, p
+
+    def with_evidence(self, rel):
+        return self.ruled(self.surdas, evidence=rel,
+                          evidence_sha256=G.file_sha256(os.path.join(self.tmp.name, rel)))
+
+    def test_an_unsigned_ruling_is_refused(self):
+        rel, _ = self.reply()
+        self.assertRefused(self.with_evidence(rel), 'not signed')
+
+    def test_a_signature_by_an_unregistered_key_is_refused(self):
+        rel, p = self.reply()
+        other, _ = keypair(self.keydir, 'impostor')
+        sign(other, p)
+        self.assertRefused(self.with_evidence(rel), 'does not verify')
+
+    def test_a_signature_over_another_file_is_refused(self):
+        rel, p = self.reply()
+        shutil.copy(os.path.join(self.tmp.name, RULING_FILE + '.sig'), p + '.sig')
+        self.assertRefused(self.with_evidence(rel), 'does not verify')
+
+    def test_a_signature_in_another_namespace_is_refused(self):
+        rel, p = self.reply()
+        sign(self.key, p, namespace='git')
+        self.assertRefused(self.with_evidence(rel), 'does not verify')
+
+    def test_a_reply_edited_after_signing_is_refused(self):
+        rel, p = self.reply()
+        sign(self.key, p)
+        with open(p, 'a', encoding='utf-8') as f:
+            f.write('approve everything\n')
+        self.assertRefused(self.with_evidence(rel), 'does not verify')
+
+    def test_no_registered_key_means_no_ruling_verifies(self):
+        self.assertRefused(self.ruled(self.surdas), 'no reviewer key is registered',
+                           signers=os.path.join(self.tmp.name, 'absent'))
+
+    def test_a_symlinked_signature_is_refused(self):
+        rel, p = self.reply()
+        os.symlink(os.path.join(self.tmp.name, RULING_FILE + '.sig'), p + '.sig')
+        self.assertRefused(self.with_evidence(rel), 'not signed')
+
+    def test_the_committed_gate_has_no_key_for_the_fixture(self):
+        # the real SIGNERS (if a key is ever registered) never accepts the fixture principal
+        if os.path.isfile(G.SIGNERS):
+            with open(G.SIGNERS, encoding='utf-8') as f:
+                self.assertNotIn(G.FIXTURE_PRINCIPAL, f.read())
+        self.assertRefused(self.ruled(self.surdas), 'no reviewer key is registered' if not
+                           os.path.isfile(G.SIGNERS) else 'does not verify', signers=G.SIGNERS)
+
+
+class BaseBranchGate(Fixture):
+    """--tree: the gate judges a pull request's data with its own code and trust anchors. A tree that
+    rules every item, signs with its own key and registers that key in its own allowed_signers --
+    everything a pull request can change -- must still fail."""
+    def forged_tree(self):
+        tree = os.path.join(self.tmp.name, 'pr')
+        for sub in ('pipeline', 'corpus', G.RULINGS):
+            os.makedirs(os.path.join(tree, sub), exist_ok=True)
+        shutil.copy(G.CORPUS, os.path.join(tree, 'corpus', 'sggs.jsonl'))
+        for name in (RULING_FILE, RULING_FILE + '.sig'):
+            shutil.copy(os.path.join(self.tmp.name, name), os.path.join(tree, name))
+        shutil.copy(self.signers, os.path.join(tree, G.PACK, 'allowed_signers'))
+        for kind, path in G.LEDGERS.items():
+            out = []
+            for e in real(kind):
+                if e.get('g3'):
+                    e = self.ruled(e, decision='reject', status='rejected') if e['status'] == 'proposed' \
+                        else self.ruled(e)
+                out.append(e)
+            with open(os.path.join(tree, os.path.relpath(path, G.ROOT)), 'w', encoding='utf-8') as f:
+                json.dump({'entries': out}, f, ensure_ascii=False)
+        return tree
+
+    def run_gate(self, argv, **kw):
+        orig = G.problems
+        G.problems = lambda entries, kind, **k: orig(entries, kind, **dict(k, today=TODAY, allow_fixture=True, **kw))
+        try:
+            with redirect_stdout(io.StringIO()) as out:
+                code = G.main(argv)
+        finally:
+            G.problems = orig
+        return code, out.getvalue()
+
+    def test_a_tree_that_registers_its_own_key_is_refused(self):
+        code, out = self.run_gate(['--release-check', '--tree', self.forged_tree()])
+        self.assertEqual(code, 1, out)
+        self.assertTrue('no reviewer key is registered' in out or 'does not verify' in out, out)
+
+    def test_the_same_tree_passes_only_with_a_trusted_key(self):
+        # control: with the key trusted by the gate itself, the forged tree's rulings verify
+        code, out = self.run_gate(['--release-check', '--tree', self.forged_tree()], signers=self.signers)
+        self.assertEqual(code, 0, out)
+
+    def test_tree_needs_a_directory(self):
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(G.main(['--tree']), 2)
 
 
 class IncompleteRulings(Fixture):
@@ -253,6 +384,17 @@ class Statuses(Fixture):
     def test_duplicate_entry_names_are_refused(self):
         self.assertTrue(any('duplicate' in m for m in self.bad([self.surdas, self.surdas])))
 
+    def test_required_fields_must_be_present(self):
+        for field in ('to', 'start_id', 'entry'):
+            e = copy.deepcopy(self.surdas)
+            del e[field]
+            with self.subTest(field=field):
+                self.assertTrue(any('missing required field' in m for m in self.bad([e])))
+        s = copy.deepcopy(self.sain)
+        del s['kind']
+        self.assertRefused(s, 'missing required field', kind='structure')
+        self.assertEqual(self.bad([named('attribution', 'japji')]), [])        # `from` null is allowed
+
     def test_ids_must_be_integers(self):
         for bad in (53935.0, '53935', True):
             with self.subTest(start_id=bad):
@@ -341,7 +483,20 @@ class CommittedLedgers(unittest.TestCase):
         with redirect_stdout(io.StringIO()) as out:
             self.assertEqual(G.main([]), 0)
             self.assertEqual(G.main(['--release-check']), 1)
-        self.assertIn('G3 release check: FAIL — 8 G3 entries', out.getvalue())
+        text = out.getvalue()
+        self.assertIn('G3 release check: FAIL — 8 G3 entries without a recorded scholarly ruling '
+                      '(7 held: applied only in this draft build; 1 proposed: not applied)', text)
+        # every one of the eight, by name and status -- the CI log that reported "8" against "7 held"
+        for kind, name, st in (('attribution', 'surdas-line', 'held'),
+                               ('attribution', 'bhagat-run-heading-ang524', 'held'),
+                               ('attribution', 'bhagat-run-heading-ang323', 'proposed'),
+                               ('structure', 'section-salok-kabir', 'held'),
+                               ('structure', 'section-salok-farid', 'held'),
+                               ('structure', 'ang695-sain-opens', 'held'),
+                               ('structure', 'ang695-pipa-opens', 'held'),
+                               ('structure', 'ang695-dhanna-opens', 'held')):
+            with self.subTest(entry=name):
+                self.assertIn(f'::error::{kind}:{name} is {st}: no G3 ruling is recorded', text)
 
     def test_the_cli_checks_the_corpus_not_only_the_ledgers(self):
         # a valid ledger (held -> proposed, ruling still blank) that no longer matches the committed
@@ -377,6 +532,34 @@ class CommittedLedgers(unittest.TestCase):
                 self.assertEqual(G.main(['--release-check'], ledger_paths=paths), 1)
         finally:
             shutil.rmtree(tmp)
+
+
+class WorkflowRules(unittest.TestCase):
+    """Repository rules: CI runs the release check in the required job, and a second time from the base
+    branch's code against the pull request's data, with nothing from the pull request executed."""
+    def wf(self, name):
+        with open(os.path.join(ROOT, '.github', 'workflows', name), encoding='utf-8') as f:
+            return f.read()
+
+    def test_the_base_branch_judges_the_pull_request(self):
+        text = self.wf('g3-gate.yml')
+        self.assertIn('pull_request_target:', text)
+        self.assertNotIn('\n  pull_request:', text)
+        self.assertIn('ref: ${{ github.event.pull_request.base.sha }}', text)
+        self.assertIn('python3 -I base/pipeline/g3_gate.py --release-check --tree pr', text)
+        self.assertEqual(text.count('persist-credentials: false'), 2)
+        self.assertNotIn('secrets.', text)
+        self.assertNotIn('write', text.split('permissions:')[1].split('jobs:')[0])
+        # nothing under pr/ is run: the only commands are the base gate and a shell test
+        cmds = [ln.strip() for ln in text.splitlines() if ln.strip().startswith('python3')]
+        self.assertEqual(cmds, ['python3 -I base/pipeline/g3_gate.py --release-check --tree pr'])
+
+    def test_the_required_integrity_job_ends_with_the_release_check(self):
+        text = self.wf('data-ci.yml')
+        integrity = text.split('\n  integrity:')[1].split('\n  tests:')[0]
+        steps = [ln for ln in integrity.splitlines() if ln.strip().startswith('- name:')]
+        self.assertIn('G3 gate', steps[-1])
+        self.assertIn('run: python3 pipeline/g3_gate.py --release-check', integrity.split(steps[-1])[1])
 
 
 if __name__ == '__main__':

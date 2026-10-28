@@ -8,6 +8,10 @@ entries a build may apply; attribution.py, structure.py, the tests and CI all ca
   python3 pipeline/g3_gate.py                    validate both ledgers and the committed corpus
   python3 pipeline/g3_gate.py --release-check    also fail while any G3 ruling is outstanding
   python3 pipeline/g3_gate.py --hash ENTRY       print an entry's entry_sha256 (for recording a ruling)
+  python3 base/pipeline/g3_gate.py --release-check --tree pr
+                                                 judge another checkout's ledgers, corpus and rulings
+                                                 with THIS copy's code and trust anchors (CI runs the
+                                                 base branch's gate on a pull request's tree)
 
 Statuses (a closed set; anything else fails the build):
   proposed   recorded for review; never applied
@@ -17,7 +21,9 @@ Statuses (a closed set; anything else fails the build):
              of record (REVIEWERS), a date from MIN_RULING_DATE to today, scope equal to g3.item, the
              reviewer's own reply as a regular, non-symlinked file under RULINGS with its sha256, and
              entry_sha256 -- the hash of what the entry does (ACTING fields), so a ruling never carries
-             over to an entry whose range or values were edited after it.
+             over to an entry whose range or values were edited after it. The reply must carry the
+             reviewer's own SSH signature (<reply>.sig, namespace SIG_NAMESPACE) that verifies against his
+             key in SIGNERS: editing a ledger, or committing a reply file, cannot forge a ruling.
   rejected   never applied; a G3 rejection records the same complete ruling, decision reject.
   keep       attribution only, never applied, and never for a G3 item (a G3 item is approved or
              rejected by a ruling, or stays proposed/held).
@@ -28,8 +34,11 @@ Ledger-wide rules (enforced wherever a ledger is loaded, and by the CLI):
   - an `approved` attribution entry without `g3` is one of OWNER_APPROVED, decided before G3 existed,
     and still has exactly the content (entry_sha256) it was approved with;
   - the committed corpus shows every applied entry's `to` and every unapplied G3 entry's `from`.
+
+Trust anchors -- G3_ENTRIES, OWNER_APPROVED, REVIEWERS and the SIGNERS key file -- are always read from
+the copy of the repository this module lives in, never from a --tree under judgement.
 """
-import datetime, hashlib, json, os, re, sys
+import datetime, hashlib, json, os, re, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEDGERS = {'attribution': os.path.join(ROOT, 'pipeline', 'attribution_ledger.json'),
@@ -59,12 +68,19 @@ OWNER_APPROVED = {
                     'sadu': 'f22cc92b19f2acbf34bdf797abea015dbac31d06d8500edac91ae19ae88b3657'},
     'structure': {},
 }
-# The G3 reviewer of record. Adding a reviewer is a reviewed code change.
-REVIEWERS = {'Kanwaljit Singh'}
+# The G3 reviewer of record and his signing principal in SIGNERS. Adding a reviewer, or registering
+# his public key in SIGNERS, is a reviewed change to the base branch.
+PRINCIPALS = {'Kanwaljit Singh': 'kanwaljit-singh'}
+REVIEWERS = set(PRINCIPALS)
+SIGNERS = os.path.join(ROOT, PACK, 'allowed_signers')   # ssh-keygen allowed_signers format
+SIG_NAMESPACE = 'sggs-g3-ruling'
 # No G3 ruling on these entries can predate the held pull request that proposed them.
 MIN_RULING_DATE = datetime.date(2026, 10, 26)
 # Positive tests use this reviewer in temporary fixtures; the committed ledgers may never carry it.
 FIXTURE_REVIEWER = 'TEST-FIXTURE-NOT-A-REVIEWER'
+FIXTURE_PRINCIPAL = 'test-fixture-not-a-reviewer'
+REQUIRED = {'attribution': ('entry', 'start_id', 'end_id', 'from', 'to', 'status'),
+            'structure': ('entry', 'kind', 'start_id', 'end_id', 'to', 'status')}
 ISO_DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 
@@ -108,7 +124,26 @@ def _evidence_problem(ev, root):
     return None
 
 
-def problems(entries, kind, root=ROOT, today=None, allow_fixture=False):
+def _signature_problem(path, principal, signers):
+    """None if <path>.sig is the principal's SSH signature over path, verified against signers."""
+    sig = path + '.sig'
+    if os.path.islink(sig) or not os.path.isfile(sig):
+        return f'the ruling is not signed: {os.path.basename(sig)} must sit next to it, a regular file'
+    if not os.path.isfile(signers):
+        return (f'no reviewer key is registered ({os.path.relpath(signers, ROOT)} is missing), so no ruling '
+                'can be verified')
+    try:
+        with open(path, 'rb') as f:
+            r = subprocess.run(['ssh-keygen', '-Y', 'verify', '-f', signers, '-I', principal,
+                                '-n', SIG_NAMESPACE, '-s', sig], stdin=f, capture_output=True, timeout=30)
+    except (OSError, subprocess.SubprocessError) as ex:
+        return f'the ruling signature could not be checked ({type(ex).__name__}): fail closed'
+    if r.returncode != 0:
+        return f'the ruling signature does not verify as {principal!r} against the registered key'
+    return None
+
+
+def problems(entries, kind, root=ROOT, today=None, allow_fixture=False, signers=SIGNERS):
     """Every reason these entries may not be built, entry by entry (empty = valid)."""
     today = today or _today()
     out, seen = [], set()
@@ -121,6 +156,15 @@ def problems(entries, kind, root=ROOT, today=None, allow_fixture=False):
         seen.add(name)
         if st not in STATUSES[kind]:
             say(f'unknown status {st!r} (allowed: {sorted(STATUSES[kind])})')
+            continue
+        # what an applied or G3 entry acts with must be there; a proposed or kept note may leave its
+        # values open (raagmala, bhatt-splits, ...), but still names itself and its line range
+        need = REQUIRED[kind] if (st in APPLIED or g3 is not None) else ('entry', 'start_id', 'end_id', 'status')
+        missing = [k for k in need if e.get(k) in (None, '')]
+        if kind == 'attribution' and 'from' in missing and e.get('from', 0) is None:
+            missing.remove('from')                 # an unattributed line legitimately comes `from` null
+        if missing:
+            say(f'missing required field(s) {missing}')
             continue
         if type(e.get('start_id')) is not int or type(e.get('end_id')) is not int \
                 or e['start_id'] > e['end_id']:
@@ -174,6 +218,12 @@ def problems(entries, kind, root=ROOT, today=None, allow_fixture=False):
             say(why)
         elif g3.get('evidence_sha256') != file_sha256(os.path.join(root, g3['evidence'])):
             say('g3.evidence_sha256 does not match the ruling file')
+        else:
+            principal = FIXTURE_PRINCIPAL if (allow_fixture and rev == FIXTURE_REVIEWER) else PRINCIPALS.get(rev)
+            why = _signature_problem(os.path.join(root, g3['evidence']), principal, signers) if principal \
+                else 'no signing principal for this reviewer'
+            if why:
+                say(why)
         if g3.get('entry_sha256') != entry_sha256(e):
             say('g3.entry_sha256 does not match the entry: the ruling was recorded for a different '
                 f'version of it (expected {entry_sha256(e)})')
@@ -246,6 +296,16 @@ def artifact_problems(ledgers, corpus_path):
 
 
 def main(argv, ledger_paths=None, root=ROOT, corpus=None):
+    if '--tree' in argv:
+        # judge another checkout's data with this copy's code and anchors (see the module docstring)
+        i = argv.index('--tree')
+        if i + 1 >= len(argv):
+            print('--tree needs a directory')
+            return 2
+        tree = os.path.realpath(argv[i + 1])
+        argv = argv[:i] + argv[i + 2:]
+        ledger_paths = {k: os.path.join(tree, os.path.relpath(p, ROOT)) for k, p in LEDGERS.items()}
+        root, corpus = tree, os.path.join(tree, os.path.relpath(CORPUS, ROOT))
     if argv[:1] == ['--hash'] and len(argv) == 2:
         hits = [e for k in LEDGERS for e in read(LEDGERS[k]) if e.get('entry') == argv[1]]
         if len(hits) != 1:
@@ -258,7 +318,8 @@ def main(argv, ledger_paths=None, root=ROOT, corpus=None):
     ledgers = {kind: read(p) for kind, p in paths.items()}
     errors, pending, rows = [], [], []
     for kind, entries in ledgers.items():
-        errors += ledger_problems(entries, kind) + problems(entries, kind, root=root)
+        # signers is always this copy's key file, never one inside a --tree under judgement
+        errors += ledger_problems(entries, kind) + problems(entries, kind, root=root, signers=SIGNERS)
         for e in entries:
             if e.get('g3'):
                 g = e['g3']
@@ -281,8 +342,10 @@ def main(argv, ledger_paths=None, root=ROOT, corpus=None):
         for kind, name, st in pending:
             print(f'::error::{kind}:{name} is {st}: no G3 ruling is recorded, so this dataset is not '
                   'releasable')
+        held = sum(st == 'held' for _, _, st in pending)
         print(f'G3 release check: FAIL — {len(pending)} G3 entr{"y" if len(pending) == 1 else "ies"} '
-              'without a recorded scholarly ruling. A green build is not a G3 approval.')
+              f'without a recorded scholarly ruling ({held} held: applied only in this draft build; '
+              f'{len(pending) - held} proposed: not applied). A green build is not a G3 approval.')
         return 1
     print('G3 gate: ledgers and corpus agree' + (' and every G3 ruling is recorded' if release else
                                                 f' ({len(pending)} G3 entries await a ruling)'))

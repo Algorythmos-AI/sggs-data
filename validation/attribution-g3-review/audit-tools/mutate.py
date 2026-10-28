@@ -72,6 +72,22 @@ MUTANTS = [  # (number, what is broken, file, exact text, replacement)
      '`ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗੁ ॥` *(line 53935)*', '`ਛਾਡਿ ਮਨ ਹਰਿ ਬਿਮੁਖਨ ਕੋ ਸੰਗ ॥` *(line 53935)*'),
     (31, 'README.md hand-edited (stale against its template)', PACK + 'README.md',
      '# Held for G3', '# Held for G3 (hand edit)'),
+    # added 2026-10-28 (signed rulings, base-branch gate, required fields, release summary)
+    (32, 'ruling signature not checked', G, "            if why:\n                say(why)\n        if g3.get('entry_sha256')",
+     "            if False:\n                say(why)\n        if g3.get('entry_sha256')"),
+    (33, 'signature verifier ignores its exit code', G, "    if r.returncode != 0:", "    if False:"),
+    (34, 'missing signer file accepted', G, "    if not os.path.isfile(signers):\n        return (",
+     "    if False:\n        return ("),
+    (35, '--tree reads its keys from the tree under judgement', G,
+     "problems(entries, kind, root=root, signers=SIGNERS)",
+     "problems(entries, kind, root=root, signers=os.path.join(root, PACK, 'allowed_signers'))"),
+    (36, 'required-field check removed', G, "        if missing:\n            say(", "        if False:\n            say("),
+    (37, 'release summary hides held vs proposed', G, "without a recorded scholarly ruling ({held} held",
+     "without a recorded scholarly ruling. ({held} held"),
+    (38, 'base-branch workflow judges with the PR\'s own gate', '.github/workflows/g3-gate.yml',
+     'python3 -I base/pipeline/g3_gate.py', 'python3 -I pr/pipeline/g3_gate.py'),
+    (39, 'base-branch workflow switched to pull_request', '.github/workflows/g3-gate.yml',
+     '  pull_request_target:', '  pull_request:'),
 ]
 
 
@@ -84,6 +100,7 @@ def run_tests():
 
 def main():
     shutil.rmtree(COPY, ignore_errors=True)
+    os.makedirs(WORK, exist_ok=True)
     if sys.platform == 'darwin':
         subprocess.run(['cp', '-Rc', REPO, COPY], check=False)
     if not os.path.isdir(COPY):
