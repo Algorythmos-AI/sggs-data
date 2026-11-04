@@ -52,6 +52,8 @@ jobs:
         run: python3 pipeline/sggs_integrity.py db/sggs.sqlite --compare audit/dataset-fingerprint.json
       - name: Data-quality contract — shape, comp_id gaps, headers, script separation, references, review rows
         run: python3 pipeline/data_quality.py
+      - name: English layer — spans well-formed, one English per line
+        run: python3 pipeline/translation_alignment_gate.py db/sggs.sqlite
       - name: Structural + regroup invariants
         run: python3 pipeline/verify_regroup.py --invariants db/sggs.sqlite
       - name: Guard — pre-existing tables byte-identical to the baseline

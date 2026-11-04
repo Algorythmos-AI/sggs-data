@@ -1,0 +1,5 @@
+{
+ "_doc": "Previously exact/skeleton English rows that the 1.4.0 alignment changes outside a span, each reviewed. translation_alignment_report.py fails on any change not listed here.",
+ "47530": "Ang 1106 heading ਮਾਰੂ: its old English 'Maaroo:' was borrowed from a later Ravidas heading (out of source order). Its own ShabadOS record 'ਕਬੀਰੁ ॥ ਮਾਰੂ ॥' covers line 47529 too, which the corpus keeps in the previous composition, so no span is allowed. Left without English pending a structure review of line 47529.",
+ "59519": "Ang 1398: two near-identical Bhatt lines (59515, 59519). The old skeleton match gave 59519 the record of 59515; it now takes its own exact record (adds ||1||). 59515 takes its own record by fuzzy match."
+}

@@ -41,7 +41,8 @@ ISOLATED_SIGN = re.compile(r"(^|[\s\u0964\u0965])[\u0A3E-\u0A4D\u0A70\u0A71]")
 # (table, column) pairs that must point at an existing lines.id when not NULL.
 LINE_REFERENCES = (("translations", "line_id"), ("concept_lines", "line_id"), ("bani_lines", "line_id"),
                    ("line_neighbors", "line_id"), ("line_neighbors", "neighbor_id"),
-                   ("vaar_units", "first_line_id"))
+                   ("vaar_units", "first_line_id"), ("translation_spans", "first_line_id"),
+                   ("translation_spans", "last_line_id"))
 
 
 def _sha(values) -> str:
