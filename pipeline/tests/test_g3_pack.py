@@ -19,9 +19,18 @@ class PackIsCurrent(unittest.TestCase):
         with open(os.path.join(ROOT, 'MANIFEST.json'), encoding='utf-8') as f:
             cls.manifest = json.load(f)
 
+    # The pack reviews attribution and structure, which live in corpus/sggs.jsonl. A later
+    # rebuild that leaves the corpus byte-identical (dataset 1.4.0 changed only the English
+    # layer) does not make it stale, and regenerating it would mix that change into the signed
+    # G3 record. The corpus the pack's DB was built from:
+    PACK_CORPUS = {'4e6777c54140d7c4ff76fd06b5453991daf4cabcb2c98479d216908d4c31455b':
+                   '2e7e1ddf08b81587094ca71a49206232c6e2c3dc58fc816093201ea7894f7e35'}
+
     def test_generated_from_the_committed_db(self):
-        self.assertEqual(self.stamp['post_db_sha256'], self.manifest['db_sha256'],
-                         'the DB was rebuilt: regenerate the pack (scripts/data/g3_attribution_pack.py)')
+        if self.stamp['post_db_sha256'] == self.manifest['db_sha256']:
+            return
+        self.assertEqual(self.PACK_CORPUS.get(self.stamp['post_db_sha256']), self.manifest['corpus_sha256'],
+                         'the corpus was rebuilt: regenerate the pack (scripts/data/g3_attribution_pack.py)')
 
     def test_every_cited_line_is_quoted_verbatim(self):
         # pack convention: `<Gurmukhi>` *(line N)* quotes corpus line N exactly, character for

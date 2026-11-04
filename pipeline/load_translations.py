@@ -6,7 +6,7 @@ in a separate table with source attribution, displayed labeled and subordinate.
 Usage: python3 load_translations.py <db_path> <pairs.jsonl ...>
 Pair format per line: {"ang": N, "gurmukhi": "...", "en": "..."}
 """
-import sys, json, sqlite3, unicodedata, re, difflib, glob
+import sys, json, sqlite3, glob
 sys.path.insert(0, __file__.rsplit('/', 1)[0])
 from build_clock import stamp
 
@@ -37,24 +37,16 @@ INSERT OR REPLACE INTO sources VALUES(
   'Open data with attribution; translation author attribution required', '@BUILD_DATE@');
 ''').replace('@BUILD_DATE@', stamp('%Y-%m-%d')))   # build clock, not wall clock
 
-MATRAS = 'ਾਿੀੁੂੇੈੋੌ੍ੰਂਃ਼ੱੑੵ'
-def norm(s):
-    s = unicodedata.normalize('NFC', s)
-    s = re.sub(r'[॥।|੦-੯\s]+', ' ', s).strip()
-    s = re.sub(r'( ਰਹਾਉ( ਦੂਜਾ)?)+$', '', s)   # refrain label = marker, not verse text
-    return s
-def skel(s):
-    return re.sub('[' + MATRAS + ' ]', '', norm(s))
+from translation_align import Line, Rec, align
 
-# corpus lines per ang
-lines_by_ang = {}
-for lid, ang, text in cur.execute('SELECT id, ang, text FROM lines'):
-    lines_by_ang.setdefault(ang, []).append((lid, norm(text), skel(text)))
+cur.execute('''CREATE TABLE IF NOT EXISTS translation_spans(
+  first_line_id INT, last_line_id INT, lang TEXT, source TEXT,
+  PRIMARY KEY(first_line_id, lang))''')
 
-stats = {'exact': 0, 'skeleton': 0, 'fuzzy': 0, 'unmatched': 0, 'empty': 0}
-unmatched = []
-rows = []
-seen_ids = set()
+# Corpus lines in Granth order; records in source order (file order = ShabadOS order_id).
+lines = [Line(*r) for r in cur.execute(
+    'SELECT id, ang, comp_id, is_header, text FROM lines ORDER BY id')]
+recs, stats = [], {'exact': 0, 'skeleton': 0, 'fuzzy': 0, 'span': 0, 'unplaced': 0, 'empty': 0}
 for f in files:
     for raw in open(f, encoding='utf-8'):
         raw = raw.strip()
@@ -62,28 +54,32 @@ for f in files:
         try: p = json.loads(raw)
         except json.JSONDecodeError: continue
         g, en, ang = p.get('gurmukhi', ''), (p.get('en') or '').strip(), p.get('ang')
-        if not g or not en: stats['empty'] += 1; continue
-        gn, gs = norm(g), skel(g)
-        cands = []
-        for a in (ang, ang - 1, ang + 1):
-            cands += lines_by_ang.get(a, [])
-        lid = quality = None
-        for c_lid, c_n, c_s in cands:
-            if c_n == gn: lid, quality = c_lid, 'exact'; break
-        if lid is None:
-            sk_hits = [c_lid for c_lid, c_n, c_s in cands if c_s == gs and gs]
-            if len(sk_hits) == 1: lid, quality = sk_hits[0], 'skeleton'
-        if lid is None and cands:
-            best = max(cands, key=lambda c: difflib.SequenceMatcher(None, gn, c[1]).ratio())
-            r = difflib.SequenceMatcher(None, gn, best[1]).ratio()
-            if r >= 0.92: lid, quality = best[0], 'fuzzy'
-        if lid is None:
-            stats['unmatched'] += 1; unmatched.append((ang, g[:50])); continue
-        if lid in seen_ids: continue
-        seen_ids.add(lid)
-        stats[quality] += 1
-        rows.append((lid, 'en', SOURCE_ID, en, quality))
+        if not g or not en or ang is None: stats['empty'] += 1; continue
+        recs.append(Rec(len(recs), ang, g, en))
 
+placements, ambiguous = align(recs, lines)
+stats['unplaced'] = len(recs) - len(placements)
+
+# A later pass (BaniDB repair files) may replace a single-line row as v1 did, but it never
+# touches a span: not its row, not any line inside it.
+span_members = set()
+for first, last in cur.execute("SELECT first_line_id, last_line_id FROM translation_spans WHERE lang='en'").fetchall():
+    span_members.update(range(first, last + 1))
+rows, spans = [], []
+for rec, run, quality in placements:
+    ids = [x.id for x in run]
+    if span_members.intersection(ids): stats['unplaced'] += 1; continue
+    if quality == 'span':
+        if cur.execute("SELECT 1 FROM translations WHERE lang='en' AND line_id BETWEEN ? AND ? LIMIT 1",
+                       (ids[0], ids[-1])).fetchone():
+            # an earlier pass already gave a member line its own English: a joined record must
+            # not replace it (BaniDB's Ang 13 record joins two lines but translates only one)
+            stats['unplaced'] += 1; continue
+        spans.append((ids[0], ids[-1], 'en', SOURCE_ID))
+    stats[quality] += 1
+    rows.append((ids[-1], 'en', SOURCE_ID, rec.en, quality))   # a span's English sits under its last line
+
+cur.executemany('INSERT OR REPLACE INTO translation_spans VALUES(?,?,?,?)', spans)
 cur.executemany('INSERT OR REPLACE INTO translations VALUES(?,?,?,?,?)', rows)
 # Record the TOTAL en rows in the table, not just this batch — rebuild_all.sh calls
 # load_translations twice, and writing len(rows) made the 2nd (small) call clobber the
@@ -92,4 +88,4 @@ total_en = cur.execute("SELECT count(*) FROM translations WHERE lang='en'").fetc
 cur.execute("INSERT OR REPLACE INTO meta VALUES('translations_en', ?)", (str(total_en),))
 con.commit(); con.close()
 print(f'loaded {len(rows)} translations | match quality: {stats}')
-for u in unmatched[:10]: print('  unmatched:', u)
+for r, why in ambiguous[:10]: print('  not placed (%s): Ang %s %s' % (why, r.ang, r.g[:50]))

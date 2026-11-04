@@ -1,10 +1,10 @@
 {
-  "created": "2026-10-28T10:26:55+0000",
+  "created": "2026-11-05T03:27:35+1100",
   "db_path": "<external>/pretiming.sqlite",
-  "db_file_sha256": "30e34047ee87c323daeb9bb9d5d36835df44b878b5d6d8bf5f11af137879ef60",
+  "db_file_sha256": "b3e741beb4ab5078f72842915c21f307e5babc3e04943fa99cc024e4dbf9b0cc",
   "corpus_path": "corpus/sggs.jsonl",
   "corpus_sha256": "2e7e1ddf08b81587094ca71a49206232c6e2c3dc58fc816093201ea7894f7e35",
-  "manifest_db_sha256_at_baseline": "4e6777c54140d7c4ff76fd06b5453991daf4cabcb2c98479d216908d4c31455b",
+  "manifest_db_sha256_at_baseline": "86d7ec96f12a6e69b7ae29b2bd81f5fc7c528de2ba48e0196d66ea2c1f8efc1e",
   "manifest_corpus_sha256_at_baseline": "2e7e1ddf08b81587094ca71a49206232c6e2c3dc58fc816093201ea7894f7e35",
   "method": "data: sha256 of newline-joined compact-JSON rows, SELECT * ORDER BY rowid (fallback: ORDER BY all columns); blobs hex; floats repr. schema: sha256 of sqlite_master.sql. virtual tables: schema hash only.",
   "backup": null,
@@ -14,14 +14,14 @@
       "virtual": false,
       "schema_sha256": "ebad4d3bfd9d82a1a26b428960c7eb84e69f5f7a680284a03d03d7d2c0f9afe9",
       "rows": 12,
-      "data_sha256": "abb50386a3063c9f56f2a50781def79a4f08c65bbcd269afb828db3259d1232d"
+      "data_sha256": "405b7c16b4b45721ff1f317c7824bc494b1a90029aeb9ee58d1e8ebc225e0150"
     },
     "author_analytics": {
       "class": "metadata",
       "virtual": false,
       "schema_sha256": "589230cc797a0e2f1221621775432245a49a147cc4ca06bbdc25ff9bd85fe61d",
       "rows": 36,
-      "data_sha256": "3a5503c322deab6442d2d7c1980ac154350c18bd4be2adcb95fc645cdc6f6aae"
+      "data_sha256": "35ff8cd7ecb8a9f7fc8c370818e8bb0dd4d7ab39d72af42912113bd762e0db2b"
     },
     "author_dialogues": {
       "class": "metadata",
@@ -56,7 +56,7 @@
       "virtual": false,
       "schema_sha256": "736195e1cd6ff92e96cbda5b8d82e3eabdcfd58773880ce63c559e4efe6aba56",
       "rows": 679,
-      "data_sha256": "5a1016982475a83e584429b204997af4786b39c274a7be33f008c359269b2221"
+      "data_sha256": "9b27976fac02af6d22ee16325c49cf3b8194fdf446f13a775aa5bcdd6372b7b7"
     },
     "authors": {
       "class": "metadata",
@@ -153,29 +153,29 @@
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "f39e82ba3dd7f5611fa3b6ef351e10b133747df3e58580ac11bcf1c5b13a518d",
-      "rows": 58039,
-      "data_sha256": "595e0a9b2a6cfb96844597a65c5891385a6921229c1dac8a728da7d306d6f877"
+      "rows": 60506,
+      "data_sha256": "179464074403e8c6cd63442843c23e5734615570d43c9caa0a2777e832fe864e"
     },
     "fts_en_data": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "7b2a1dce4c53cad1388006c4abe53d6ff5ea6c53b046fa589f321a6df0dc5803",
-      "rows": 652,
-      "data_sha256": "19cdc49b7d4838b040451641f9931191700521e47b817aa4aa8dadeda389f6ab"
+      "rows": 658,
+      "data_sha256": "3e0381a52bb1406e9b147ec3645ffd813c24daadfb676c8e0b3bf35b74eb29f3"
     },
     "fts_en_docsize": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "575c4eea3e55aaa97f7ed8c8bbcee341e94f20a9f2e057197dc6e3dcd1c9e6c3",
-      "rows": 58039,
-      "data_sha256": "7263028e9802f98ad62f17791b4d11fde585348715e8ec3da845c2877453116e"
+      "rows": 60506,
+      "data_sha256": "31334b4537758546060dee8479db4d910c6e6ff82c2f6fe5fea10a9e57ad25f8"
     },
     "fts_en_idx": {
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "56cfcddeee14d8dcf89851f957d48ce666b32380afea6adaa7a410fd924c5311",
-      "rows": 612,
-      "data_sha256": "33cfa4a10c90cc79b03c0315e2e370760fb931a4b24157ac5720c07562333578"
+      "rows": 623,
+      "data_sha256": "82209542f70ef67f3a4c1fa15962e966ea8dc43a33f38f42f40326355a159a55"
     },
     "fts_idx": {
       "class": "scripture_derived",
@@ -272,8 +272,8 @@
       "class": "scripture_derived",
       "virtual": false,
       "schema_sha256": "8773ec3c445d581b53c622dd63f16cbccbef5267f2172577001b67659c0395bc",
-      "rows": 532212,
-      "data_sha256": "d444cb4339c3ae207a2a2f4aba6d92ccb1bf8b8b60d76d563da0d61a0563cd71"
+      "rows": 534107,
+      "data_sha256": "e1b33b65382ab605965153a689b0c34004e1bed6e04f53d6ddc660ac1a73c8b2"
     },
     "lines": {
       "class": "scripture",
@@ -287,7 +287,7 @@
       "virtual": false,
       "schema_sha256": "ab4e509cf7260b979fd5799a4f45734378fb4e2a67f89b009192e4005405e027",
       "rows": 9,
-      "data_sha256": "b8b88f3e3b07b13f800ec545829ae410d20be32652ae47103cc6a2edac1ce15c"
+      "data_sha256": "cbad079ff64191634df334b08f54d2b39edf8bef3bd4f9ffbf96f090ec65a5b8"
     },
     "raag_analytics": {
       "class": "metadata",
@@ -322,7 +322,7 @@
       "virtual": false,
       "schema_sha256": "4d310698d2dfe4f33d885389565d7a577c8fbeb2ae0c67c69f93b6ccfbd56187",
       "rows": 2,
-      "data_sha256": "ed1de71caaf20f0eeb550ea123225869416db25d16f789fe9cc5a5d97e539814"
+      "data_sha256": "93ef61b4ef11feb81dc7ec0b2825130cd207910efa1a3863356e4a487d0d411d"
     },
     "theme_fingerprint": {
       "class": "metadata",
@@ -338,12 +338,19 @@
       "rows": 2528,
       "data_sha256": "4ad4bd51a4b023f9e4c226c225609ddb5e2d5e330c75ad06954c90bba5850f51"
     },
+    "translation_spans": {
+      "class": "metadata",
+      "virtual": false,
+      "schema_sha256": "c26424ce8edd58f121f2065b40025355f3fc5f4b3117976274c3e6633c5117ae",
+      "rows": 73,
+      "data_sha256": "ab270520a2625a77bfbabd47713409310d87ca4142303fcdf8bcd86412b994e0"
+    },
     "translations": {
       "class": "companion_text",
       "virtual": false,
       "schema_sha256": "dc7d1bcfe6d76034724c82f8a437accf46591018c0e44d9472ebef26a0dfc599",
-      "rows": 58039,
-      "data_sha256": "0cc0cab8b200d2d2a431e036e6e7f2cd5353582641bf1c6340ab6faeeb991bd0"
+      "rows": 60506,
+      "data_sha256": "807b8f55228d8b8de8e1e5f493405712a07a008fecf0360bf755941b4e5bdc41"
     },
     "vaar_units": {
       "class": "scripture_derived",

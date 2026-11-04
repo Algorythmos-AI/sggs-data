@@ -13,7 +13,7 @@ doctor: ## check the local toolchain (PyMuPDF/numpy/scipy interpreter, git-lfs, 
 	@test -f db/sggs.sqlite && head -c 16 db/sggs.sqlite | grep -q "SQLite format 3" && echo "db: real SQLite" || echo "  db/sggs.sqlite missing or an LFS pointer — run: git lfs pull"
 	@test -f "$(PDF)" && echo "pdf: present" || echo "  source PDF not at $(PDF) (needed only for reconcile/rebuild)"
 
-ci: verify guard ledger-check fingerprint quality test-data g3-release ## run the gates CI runs (no PDF needed; g3-release last)
+ci: verify guard ledger-check fingerprint quality translation-alignment test-data g3-release ## run the gates CI runs (no PDF needed; g3-release last)
 	@echo "make ci: PASS"
 
 test-data: ## data-integrity tests: install safety, fingerprints, editorial ledger, reproducibility
@@ -43,6 +43,9 @@ quality: ## data-quality contract: shape, comp_id gaps, headers, script separati
 
 fingerprint: ## db/sggs.sqlite content == audit/dataset-fingerprint.json (per table, FTS index, scripture)
 	python3 pipeline/sggs_integrity.py db/sggs.sqlite --compare audit/dataset-fingerprint.json
+
+translation-alignment: ## English layer: spans well-formed, one English per line; source checks when sources are present
+	python3 pipeline/translation_alignment_gate.py db/sggs.sqlite
 
 fetch-translations: ## restore the private English translation sources (checksum-verified; needs access)
 	bash scripts/data/fetch_translations.sh

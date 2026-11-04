@@ -1,0 +1,872 @@
+{
+ "lines": 60658,
+ "missing": [
+  {
+   "ang": 91,
+   "header": true,
+   "line_id": 3679,
+   "text": "ਸਿਰੀਰਾਗੁ ਕਬੀਰ ਜੀਉ ਕਾ"
+  },
+  {
+   "ang": 91,
+   "header": false,
+   "line_id": 3680,
+   "text": "ਏਕੁ ਸੁਆਨੁ ਕੈ ਘਰਿ ਗਾਵਣਾ ਜਨਨੀ ਜਾਨਤ ਸੁਤੁ ਬਡਾ ਹੋਤੁ ਹੈ ਇਤਨਾ ਕੁ ਨ ਜਾਨੈ ਜਿ ਦਿਨ ਦਿਨ ਅਵਧ ਘਟਤੁ ਹੈ"
+  },
+  {
+   "ang": 93,
+   "header": true,
+   "line_id": 3719,
+   "text": "ਸ੍ਰੀਰਾਗ ਬਾਣੀ ਭਗਤ ਬੇਣੀ ਜੀਉ ਕੀ"
+  },
+  {
+   "ang": 93,
+   "header": false,
+   "line_id": 3720,
+   "text": "ਪਹਰਿਆ ਕੈ ਘਰਿ ਗਾਵਣਾ"
+  },
+  {
+   "ang": 157,
+   "header": true,
+   "line_id": 6582,
+   "text": "ਰਾਗੁ ਗਉੜੀ ਗੁਆਰੇਰੀ"
+  },
+  {
+   "ang": 157,
+   "header": true,
+   "line_id": 6583,
+   "text": "ਮਹਲਾ ੩ ਚਉਪਦੇ"
+  },
+  {
+   "ang": 214,
+   "header": false,
+   "line_id": 9244,
+   "text": "ਓ ੁਹੀ ਪੀਓ ਓ ੁਹੀ ਖੀਓ ਗੁਰਹਿ ਦੀਓ ਦਾਨੁ ਕੀਓ"
+  },
+  {
+   "ang": 214,
+   "header": false,
+   "line_id": 9245,
+   "text": "ਉਆਹੂ ਸਿਉ ਮਨੁ ਰਾਤੋ"
+  },
+  {
+   "ang": 214,
+   "header": false,
+   "line_id": 9246,
+   "text": "ਓ ੁਹੀ ਭਾਠੀ ਓ ੁਹੀ ਪੋਚਾ ਉਹੀ ਪਿਆਰੋ ਉਹੀ ਰੂਚਾ"
+  },
+  {
+   "ang": 214,
+   "header": false,
+   "line_id": 9247,
+   "text": "ਮਨਿ ਓਹੋ ਸੁਖੁ ਜਾਤੋ"
+  },
+  {
+   "ang": 242,
+   "header": true,
+   "line_id": 10626,
+   "text": "ਜੁਮਲਾ"
+  },
+  {
+   "ang": 323,
+   "header": false,
+   "line_id": 14770,
+   "text": "ਨਾਨਕ ਮਨਿ ਤਨਿ ਚਾਉ ਏਹੁ ਨਿਤ ਪ੍ਰਭ ਕਉ ਲੋੜੇ"
+  },
+  {
+   "ang": 323,
+   "header": true,
+   "line_id": 14771,
+   "text": "ਸੁਧੁ ਕੀਚੇ ਰਾਗੁ ਗਉੜੀ ਭਗਤਾਂ ਕੀ ਬਾਣੀ"
+  },
+  {
+   "ang": 327,
+   "header": false,
+   "line_id": 14962,
+   "text": "ਰਹਾਉ"
+  },
+  {
+   "ang": 386,
+   "header": false,
+   "line_id": 17695,
+   "text": "ਤੁਮ੍ਹਰੀ ਕ੍ਰਿਪਾ ਤੇ ਤ੍ਰਿਪਤਿ ਅਘਾਈਂ"
+  },
+  {
+   "ang": 386,
+   "header": false,
+   "line_id": 17696,
+   "text": "ਤੁਮਰਾ ਦੀਆ ਪੈਨ੍ਹਉ ਖਾਈਂ"
+  },
+  {
+   "ang": 386,
+   "header": false,
+   "line_id": 17699,
+   "text": "ਤੁਮ੍ਹਰੈ ਲਵੈ ਨ ਕੋਊ ਲਾਈਂ"
+  },
+  {
+   "ang": 473,
+   "header": false,
+   "line_id": 21410,
+   "text": "ਅੰਨੁ ਦੇਵਤਾ ਪਾਣੀ ਦੇਵਤਾ ਬੈਸੰਤਰੁ ਦੇਵਤਾ ਲੂਣੁ ਪੰਜਵਾ ਪਾਇਆ ਘਿਰਤੁ"
+  },
+  {
+   "ang": 473,
+   "header": false,
+   "line_id": 21411,
+   "text": "ਤਾ ਹੋਆ ਪਾਕੁ ਪਵਿਤੁ"
+  },
+  {
+   "ang": 475,
+   "header": false,
+   "line_id": 21506,
+   "text": "ਇਕਨ੍ਹੀ ਦੁਧੁ ਸਮਾਈਐ ਇਕਿ ਚੁਲ੍ਹੈ ਰਹਨ੍ਹਿ ਚੜੇ"
+  },
+  {
+   "ang": 478,
+   "header": true,
+   "line_id": 21631,
+   "text": "ਦੁਤੁਕੇ"
+  },
+  {
+   "ang": 481,
+   "header": true,
+   "line_id": 21794,
+   "text": "ਬਾਈਸ ਚਉਪਦੇ ਤਥਾ ਪੰਚਪਦੇ ਆਸਾ ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਕੇ ਤਿਪਦੇ ੮ ਦੁਤੁਕੇ ੭ ਇਕਤੁਕਾ ੧"
+  },
+  {
+   "ang": 483,
+   "header": true,
+   "line_id": 21858,
+   "text": "ਆਸਾ"
+  },
+  {
+   "ang": 483,
+   "header": false,
+   "line_id": 21859,
+   "text": "ਤਿਪਦਾ"
+  },
+  {
+   "ang": 483,
+   "header": false,
+   "line_id": 21860,
+   "text": "ਇਕਤੁਕਾ"
+  },
+  {
+   "ang": 485,
+   "header": true,
+   "line_id": 21936,
+   "text": "ਆਸਾ ਬਾਣੀ ਸ੍ਰੀ ਨਾਮਦੇਉ ਜੀ ਕੀ ਏਕ ਅਨੇਕ ਬਿਆਪਕ ਪੂਰਕ ਜਤ ਦੇਖਉ ਤਤ ਸੋਈ"
+  },
+  {
+   "ang": 517,
+   "header": true,
+   "line_id": 23136,
+   "text": "ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਵਾਰ ਮਹਲਾ ੫"
+  },
+  {
+   "ang": 518,
+   "header": false,
+   "line_id": 23179,
+   "text": "ਚੰਗਿਆਈਂ ਆਲਕੁ ਕਰੇ ਬੁਰਿਆਈਂ ਹੋਇ ਸੇਰੁ"
+  },
+  {
+   "ang": 524,
+   "header": false,
+   "line_id": 23469,
+   "text": "ਗੁਰ ਪ੍ਰਸਾਦਿ ਨਾਨਕ ਸਚਿ ਸਮਾਇਆ"
+  },
+  {
+   "ang": 524,
+   "header": true,
+   "line_id": 23470,
+   "text": "ਸੁਧੁ ਰਾਗੁ ਗੂਜਰੀ ਭਗਤਾ ਕੀ ਬਾਣੀ"
+  },
+  {
+   "ang": 528,
+   "header": true,
+   "line_id": 23612,
+   "text": "ਛਕਾ ੧ ਦੇਵਗੰਧਾਰੀ ਮਹਲਾ ੫ ਘਰੁ ੨"
+  },
+  {
+   "ang": 613,
+   "header": false,
+   "line_id": 26681,
+   "text": "ਰਹਾਉ"
+  },
+  {
+   "ang": 728,
+   "header": true,
+   "line_id": 31309,
+   "text": "ਰਾਗੁ ਸੂਹੀ ਮਹਲਾ ੧ ਚਉਪਦੇ ਘਰੁ ੧ ਭਾਂਡਾ ਧੋਇ ਬੈਸਿ ਧੂਪੁ ਦੇਵਹੁ ਤਉ ਦੂਧੈ ਕਉ ਜਾਵਹੁ"
+  },
+  {
+   "ang": 792,
+   "header": true,
+   "line_id": 33831,
+   "text": "ਰਾਗੁ ਸੂਹੀ ਬਾਣੀ ਸ੍ਰੀ ਕਬੀਰ ਜੀਉ ਤਥਾ ਸਭਨਾ ਭਗਤਾ ਕੀ"
+  },
+  {
+   "ang": 792,
+   "header": true,
+   "line_id": 33832,
+   "text": "ਕਬੀਰ ਕੇ"
+  },
+  {
+   "ang": 828,
+   "header": false,
+   "line_id": 35309,
+   "text": "ਤੁਮ੍ਹਰੀ ਸੇਵਾ ਤੁਮ੍ਹਾਰੇ ਅੰਗਾ"
+  },
+  {
+   "ang": 829,
+   "header": false,
+   "line_id": 35328,
+   "text": ""
+  },
+  {
+   "ang": 855,
+   "header": true,
+   "line_id": 36433,
+   "text": "ਬਿਲਾਵਲੁ ਬਾਣੀ ਭਗਤਾ ਕੀ"
+  },
+  {
+   "ang": 855,
+   "header": true,
+   "line_id": 36434,
+   "text": "ਕਬੀਰ ਜੀਉ ਕੀ"
+  },
+  {
+   "ang": 870,
+   "header": true,
+   "line_id": 37092,
+   "text": "ਰਾਗੁ ਗੋਂਡ ਬਾਣੀ ਭਗਤਾ ਕੀ"
+  },
+  {
+   "ang": 870,
+   "header": true,
+   "line_id": 37093,
+   "text": "ਕਬੀਰ ਜੀ ਘਰੁ ੧"
+  },
+  {
+   "ang": 892,
+   "header": false,
+   "line_id": 38153,
+   "text": "ਰਹਾਉ"
+  },
+  {
+   "ang": 900,
+   "header": false,
+   "line_id": 38623,
+   "text": "ਈਂਧਨ ਤੇ ਬੈਸੰਤਰੁ ਭਾਗੈ"
+  },
+  {
+   "ang": 947,
+   "header": true,
+   "line_id": 40604,
+   "text": "ਰਾਮਕਲੀ ਕੀ ਵਾਰ ਮਹਲਾ ੩"
+  },
+  {
+   "ang": 947,
+   "header": false,
+   "line_id": 40605,
+   "text": "ਜੋਧੈ ਵੀਰੈ ਪੂਰਬਾਣੀ ਕੀ ਧੁਨੀ"
+  },
+  {
+   "ang": 968,
+   "header": true,
+   "line_id": 41641,
+   "text": "ਰਾਮਕਲੀ ਬਾਣੀ ਭਗਤਾ ਕੀ"
+  },
+  {
+   "ang": 968,
+   "header": true,
+   "line_id": 41642,
+   "text": "ਕਬੀਰ ਜੀਉ"
+  },
+  {
+   "ang": 1094,
+   "header": true,
+   "line_id": 46991,
+   "text": "ਮਾਰੂ ਵਾਰ ਮਹਲਾ ੫ ਡਖਣੇ ਮਃ ੫"
+  },
+  {
+   "ang": 1106,
+   "header": false,
+   "line_id": 47529,
+   "text": "ਕਬੀਰੁ"
+  },
+  {
+   "ang": 1106,
+   "header": true,
+   "line_id": 47530,
+   "text": "ਮਾਰੂ"
+  },
+  {
+   "ang": 1157,
+   "header": true,
+   "line_id": 49741,
+   "text": "ਭੈਰਉ ਬਾਣੀ ਭਗਤਾ ਕੀ"
+  },
+  {
+   "ang": 1157,
+   "header": true,
+   "line_id": 49742,
+   "text": "ਕਬੀਰ ਜੀਉ ਘਰੁ ੧"
+  },
+  {
+   "ang": 1181,
+   "header": false,
+   "line_id": 50913,
+   "text": "ਜੀਅ ਪ੍ਰਾਣ ਤੁਮ੍ਹ ਪਿੰਡ ਦੀਨ੍ਹ"
+  },
+  {
+   "ang": 1193,
+   "header": true,
+   "line_id": 51569,
+   "text": "ਬਸੰਤੁ ਬਾਣੀ ਭਗਤਾਂ ਕੀ"
+  },
+  {
+   "ang": 1193,
+   "header": true,
+   "line_id": 51570,
+   "text": "ਕਬੀਰ ਜੀ ਘਰੁ ੧"
+  },
+  {
+   "ang": 1196,
+   "header": false,
+   "line_id": 51697,
+   "text": "ਸੰਸਾਰੁ ਸਮੁੰਦੇ ਤਾਰਿ ਗੋਬਿੰਦੇ"
+  },
+  {
+   "ang": 1196,
+   "header": false,
+   "line_id": 51698,
+   "text": "ਤਾਰਿ ਲੈ ਬਾਪ ਬੀਠੁਲਾ"
+  },
+  {
+   "ang": 1251,
+   "header": true,
+   "line_id": 53870,
+   "text": "ਰਾਗੁ ਸਾਰੰਗ ਬਾਣੀ ਭਗਤਾਂ ਕੀ"
+  },
+  {
+   "ang": 1251,
+   "header": true,
+   "line_id": 53871,
+   "text": "ਕਬੀਰ ਜੀ"
+  },
+  {
+   "ang": 1275,
+   "header": false,
+   "line_id": 54755,
+   "text": "ਰਹਾਉ"
+  },
+  {
+   "ang": 1275,
+   "header": false,
+   "line_id": 54758,
+   "text": "ਨਾਮੁ ਸਮ੍ਹਾਲਸਿ ਰੂੜ੍ਹੀ ਬਾਣਿ"
+  },
+  {
+   "ang": 1353,
+   "header": false,
+   "line_id": 57859,
+   "text": "ਪੜ੍ਹਿ ਪੁ੍ਸਤਕ ਸੰਧਿਆ ਬਾਦੰ"
+  },
+  {
+   "ang": 1354,
+   "header": false,
+   "line_id": 57892,
+   "text": "ਅਤ੍ਯ੍ਯੰਤ ਆਸਾ ਆਥਿਤ੍ਯ੍ਯ ਭਵਨੰ"
+  },
+  {
+   "ang": 1356,
+   "header": false,
+   "line_id": 57973,
+   "text": "ਵਰਤੰਤਿ ਸੁਖ ਆਨੰਦ ਪ੍ਰਸਾਦਹ"
+  },
+  {
+   "ang": 1356,
+   "header": false,
+   "line_id": 57974,
+   "text": "ਸਿਮਰੰਤ ਨਾਨਕ ਹਰਿ ਹਰਿ ਹਰੇ"
+  },
+  {
+   "ang": 1356,
+   "header": false,
+   "line_id": 57975,
+   "text": "ਅਨਿਤ੍ਯ੍ਯ ਰਚਨਾ ਨਿਰਮੋਹ ਤੇ"
+  },
+  {
+   "ang": 1360,
+   "header": false,
+   "line_id": 58148,
+   "text": "ਅਪਜਸੰ ਮਿਟੰਤ ਸਤ ਪੁਤ੍ਰਹ"
+  },
+  {
+   "ang": 1360,
+   "header": false,
+   "line_id": 58149,
+   "text": "ਸਿਮਰਤਬ੍ਯ੍ਯ ਰਿਦੈ ਗੁਰ ਮੰਤ੍ਰਣਹ"
+  },
+  {
+   "ang": 1361,
+   "header": false,
+   "line_id": 58152,
+   "text": "ਮਰਣੰ ਬਿਸਰਣੰ ਗੋਬਿੰਦਹ"
+  },
+  {
+   "ang": 1361,
+   "header": false,
+   "line_id": 58153,
+   "text": "ਜੀਵਣੰ ਹਰਿ ਨਾਮ ਧ੍ਯ੍ਯਾਵਣਹ"
+  },
+  {
+   "ang": 1361,
+   "header": false,
+   "line_id": 58162,
+   "text": "ਚਰਣਾਰਬਿੰਦ ਮਨ ਬਿਧ੍ਯ੍ਯੰ"
+  },
+  {
+   "ang": 1361,
+   "header": false,
+   "line_id": 58163,
+   "text": "ਸਿਧ੍ਯ੍ਯੰ ਸਰਬ ਕੁਸਲਣਹ"
+  },
+  {
+   "ang": 1410,
+   "header": true,
+   "line_id": 59869,
+   "text": "ਸਲੋਕ ਵਾਰਾਂ ਤੇ ਵਧੀਕ"
+  },
+  {
+   "ang": 1410,
+   "header": true,
+   "line_id": 59870,
+   "text": "ਮਹਲਾ ੧"
+  }
+ ],
+ "missing_headings": 33,
+ "missing_verse": 41,
+ "missing_verse_per_ang": {
+  "91": 1,
+  "93": 1,
+  "214": 4,
+  "323": 1,
+  "327": 1,
+  "386": 3,
+  "473": 2,
+  "475": 1,
+  "483": 2,
+  "518": 1,
+  "524": 1,
+  "613": 1,
+  "828": 1,
+  "829": 1,
+  "892": 1,
+  "900": 1,
+  "947": 1,
+  "1106": 1,
+  "1181": 1,
+  "1196": 2,
+  "1275": 2,
+  "1353": 1,
+  "1354": 1,
+  "1356": 3,
+  "1360": 2,
+  "1361": 4
+ },
+ "missing_verse_per_raag": {
+  "-": 11,
+  "ਆਸਾ": 8,
+  "ਗਉੜੀ": 6,
+  "ਗੂਜਰੀ": 2,
+  "ਬਸੰਤੁ": 3,
+  "ਬਿਲਾਵਲੁ": 2,
+  "ਮਲਾਰ": 2,
+  "ਮਾਰੂ": 1,
+  "ਰਾਮਕਲੀ": 3,
+  "ਸਿਰੀਰਾਗੁ": 2,
+  "ਸੋਰਠਿ": 1
+ },
+ "quality": {
+  "exact": 58602,
+  "fuzzy": 1303,
+  "skeleton": 528,
+  "span": 73
+ },
+ "span_sizes": {
+  "2": 69,
+  "3": 3,
+  "4": 1
+ },
+ "spans": 73,
+ "spans_list": [
+  {
+   "first_line_id": 552,
+   "last_line_id": 553,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 557,
+   "last_line_id": 558,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 3676,
+   "last_line_id": 3677,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 6269,
+   "last_line_id": 6270,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9187,
+   "last_line_id": 9188,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9189,
+   "last_line_id": 9190,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9191,
+   "last_line_id": 9192,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9218,
+   "last_line_id": 9219,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9220,
+   "last_line_id": 9221,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9222,
+   "last_line_id": 9223,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9224,
+   "last_line_id": 9225,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9228,
+   "last_line_id": 9229,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9230,
+   "last_line_id": 9231,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9232,
+   "last_line_id": 9233,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9236,
+   "last_line_id": 9237,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9238,
+   "last_line_id": 9239,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9240,
+   "last_line_id": 9241,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 9248,
+   "last_line_id": 9249,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 14413,
+   "last_line_id": 14415,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 14418,
+   "last_line_id": 14419,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 14490,
+   "last_line_id": 14491,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 14497,
+   "last_line_id": 14498,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 17456,
+   "last_line_id": 17457,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 17458,
+   "last_line_id": 17459,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 17460,
+   "last_line_id": 17461,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 17462,
+   "last_line_id": 17463,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 18668,
+   "last_line_id": 18669,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 18670,
+   "last_line_id": 18673,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 18709,
+   "last_line_id": 18710,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 18711,
+   "last_line_id": 18712,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 18713,
+   "last_line_id": 18714,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 21129,
+   "last_line_id": 21130,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 21131,
+   "last_line_id": 21132,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 21137,
+   "last_line_id": 21138,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 21139,
+   "last_line_id": 21140,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 21141,
+   "last_line_id": 21142,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 21518,
+   "last_line_id": 21519,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 23696,
+   "last_line_id": 23697,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 23739,
+   "last_line_id": 23740,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 24043,
+   "last_line_id": 24044,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 24625,
+   "last_line_id": 24626,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 26050,
+   "last_line_id": 26051,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 30030,
+   "last_line_id": 30032,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 31154,
+   "last_line_id": 31155,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 31298,
+   "last_line_id": 31299,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 31529,
+   "last_line_id": 31530,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 34194,
+   "last_line_id": 34195,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 34196,
+   "last_line_id": 34198,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 35386,
+   "last_line_id": 35387,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 36431,
+   "last_line_id": 36432,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 36649,
+   "last_line_id": 36650,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 37411,
+   "last_line_id": 37412,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 41095,
+   "last_line_id": 41096,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 41549,
+   "last_line_id": 41550,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 42170,
+   "last_line_id": 42171,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 42238,
+   "last_line_id": 42239,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 46989,
+   "last_line_id": 46990,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 47958,
+   "last_line_id": 47959,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 50155,
+   "last_line_id": 50156,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 51695,
+   "last_line_id": 51696,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 51699,
+   "last_line_id": 51700,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 51701,
+   "last_line_id": 51702,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 51703,
+   "last_line_id": 51704,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 53868,
+   "last_line_id": 53869,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 55516,
+   "last_line_id": 55517,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 56221,
+   "last_line_id": 56222,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 56481,
+   "last_line_id": 56482,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 56557,
+   "last_line_id": 56558,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 56749,
+   "last_line_id": 56750,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 57135,
+   "last_line_id": 57136,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 58150,
+   "last_line_id": 58151,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 58154,
+   "last_line_id": 58155,
+   "source": "ssk-shabados"
+  },
+  {
+   "first_line_id": 58160,
+   "last_line_id": 58161,
+   "source": "ssk-shabados"
+  }
+ ],
+ "with_english_or_in_span": 60584
+}

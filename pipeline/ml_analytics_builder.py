@@ -307,8 +307,11 @@ EXISTING_COUNTS = {
     # UNCHECKED (None): the tag count legitimately shifts whenever concept term-lists are curated;
     # integrity is enforced by the scripture guards (lines/fts/translations + the Mool Mantar check).
 def verify_additive(con):
+    # The English layer is the loader's (load_translations.py records its total in meta); this
+    # builder must leave it exactly as loaded. 58,039 rows before the 1.4.0 alignment, 60,506 after.
     en = con.execute("SELECT count(*) FROM translations WHERE lang='en'").fetchone()[0]
-    assert en == 58039, f"translations en changed: {en}"
+    loaded = int(con.execute("SELECT value FROM meta WHERE key='translations_en'").fetchone()[0])
+    assert en == loaded, f"translations en changed: {en} != {loaded} loaded"
     for tbl, expect in EXISTING_COUNTS.items():
         got = con.execute(f"SELECT count(*) FROM {tbl}").fetchone()[0]
         if expect is not None:
