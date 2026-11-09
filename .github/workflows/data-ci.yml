@@ -48,6 +48,10 @@ jobs:
           else
             python3 pipeline/ledger_check.py --base "$BASE"
           fi
+      - name: Line-id stability — existing ids keep their (ang, gurmukhi); new ids only appended
+        run: python3 pipeline/line_id_gate.py
+      - name: Hukamnama range contract — id-range text hashes reproduce from corpus + DB
+        run: python3 pipeline/hukamnama_contract.py
       - name: Dataset fingerprint — DB content == audit/dataset-fingerprint.json
         run: python3 pipeline/sggs_integrity.py db/sggs.sqlite --compare audit/dataset-fingerprint.json
       - name: Data-quality contract — shape, comp_id gaps, headers, script separation, references, review rows
