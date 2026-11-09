@@ -17,8 +17,9 @@ The engineering wiki publishes this repository's docs at
 |---|---|
 | `corpus/sggs.jsonl` | the machine-readable corpus — the data source of truth (SHA-pinned) |
 | `db/sggs.sqlite` | the dataset: lines + FTS5 indexes, translations layer, analytics, timing claims, bani registry (Git LFS) |
-| `pipeline/` | PDF → corpus → DB, the gates (`reconcile.py`, `golden_test.py`, `verify_regroup.py`, `ledger_check.py`, `sggs_integrity.py`) and `pipeline/tests/` |
-| `audit/` | scripture baseline, editorial ledger, dataset fingerprint |
+| `pipeline/` | PDF → corpus → DB, the gates (`reconcile.py`, `golden_test.py`, `verify_regroup.py`, `ledger_check.py`, `line_id_gate.py`, `sggs_integrity.py`) and `pipeline/tests/` |
+| `audit/` | scripture baseline, editorial ledger, dataset fingerprint, line-id baseline |
+| `contract/` | `golden_hukamnama.ndjson` — line-id ranges + `range_sha256` every client must reproduce |
 | `validation/` | reconcile attestation, concept seeds, review packs |
 | `DATASET_VERSION` | the dataset's own SemVer (independent of the apps) |
 
@@ -27,6 +28,7 @@ The engineering wiki publishes this repository's docs at
 - **Fingerprinted**: every table and every FTS5 index matches `audit/dataset-fingerprint.json`, by content, across SQLite versions.
 - **Reproducible**: the same commit + source + toolchain rebuilds identical content (`make compare-builds`).
 - **Governed**: scripture text changes only through the editorial ledger.
+- **Stable ids**: an existing line `id` always names the same Ang and Gurmukhi; new lines are appended ([scripture-integrity](docs/architecture/scripture-integrity.md#line-ids-are-permanent-addresses)).
 
 ## Use it
 ```bash

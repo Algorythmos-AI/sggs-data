@@ -62,6 +62,9 @@ python3 pipeline/golden_test.py "$PDF" "$CORPUS_NEW" >/dev/null && echo "ALL GOL
 # Authorship: every verse whose author differs from the pinned ShabadOS database must be a
 # reviewed case in pipeline/shabados_crosscheck_flags.json.
 python3 pipeline/crosscheck_authors.py "$CORPUS_NEW" database.sqlite
+# Line ids are addresses clients keep (the Hukamnama push sends id ranges): no existing id may
+# change its (ang, gurmukhi); new lines take ids at the end (audit/line-id-baseline.json).
+python3 pipeline/line_id_gate.py --corpus "$CORPUS_NEW" --no-db
 python3 pipeline/atomic_install.py "$CORPUS_NEW" corpus/sggs.jsonl
 echo "── 4/8 database + FTS"
 python3 pipeline/build_db.py corpus/sggs.jsonl "$TMPDB"
@@ -141,6 +144,8 @@ python3 pipeline/banis/guard_banis.py --db "$ANALYTICS_DB"
 
 echo "── 8/8 integrity gate + atomic install + manifest"
 python3 pipeline/db_integrity_gate.py "$ANALYTICS_DB"
+python3 pipeline/line_id_gate.py --db "$ANALYTICS_DB"
+python3 pipeline/hukamnama_contract.py --db "$ANALYTICS_DB"
 python3 pipeline/atomic_install.py "$ANALYTICS_DB" db/sggs.sqlite
 python3 - <<'EOF'
 import json, hashlib, datetime, sqlite3, os, tempfile

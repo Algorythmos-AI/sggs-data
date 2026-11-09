@@ -3,7 +3,7 @@
 PIPELINE_PY ?= /usr/bin/python3
 PDF ?= ../Siri-Guru-Granth-Sahib-in-Gurmukhi-with-Index.pdf
 
-.PHONY: g3-gate g3-release crosscheck-authors help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
+.PHONY: line-ids hukamnama-contract g3-gate g3-release crosscheck-authors help doctor ci test-data verify guard quality ledger-check fingerprint fetch-translations fetch-shabados dr-drill toolchain reconcile rebuild ios-db scripture-diff compare-builds
 help: ## list targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-20s\033[0m %s\n",$$1,$$2}'
 
@@ -13,7 +13,7 @@ doctor: ## check the local toolchain (PyMuPDF/numpy/scipy interpreter, git-lfs, 
 	@test -f db/sggs.sqlite && head -c 16 db/sggs.sqlite | grep -q "SQLite format 3" && echo "db: real SQLite" || echo "  db/sggs.sqlite missing or an LFS pointer — run: git lfs pull"
 	@test -f "$(PDF)" && echo "pdf: present" || echo "  source PDF not at $(PDF) (needed only for reconcile/rebuild)"
 
-ci: verify guard ledger-check fingerprint quality translation-alignment test-data g3-release ## run the gates CI runs (no PDF needed; g3-release last)
+ci: verify guard ledger-check line-ids hukamnama-contract fingerprint quality translation-alignment test-data g3-release ## run the gates CI runs (no PDF needed; g3-release last)
 	@echo "make ci: PASS"
 
 test-data: ## data-integrity tests: install safety, fingerprints, editorial ledger, reproducibility
@@ -37,6 +37,12 @@ ledger-check: ## editorial ledger: fix_text rules == register; scripture diffs v
 
 crosscheck-authors: ## every verse author that differs from ShabadOS is a reviewed flag (needs make fetch-shabados)
 	python3 pipeline/crosscheck_authors.py corpus/sggs.jsonl database.sqlite
+
+line-ids: ## line-id stability: every existing id keeps its (ang, gurmukhi); new ids only appended
+	python3 pipeline/line_id_gate.py
+
+hukamnama-contract: ## contract/golden_hukamnama.ndjson: id-range text hashes reproduce from corpus + DB
+	python3 pipeline/hukamnama_contract.py
 
 quality: ## data-quality contract: shape, comp_id gaps, headers, script separation, references, tracked review rows
 	python3 pipeline/data_quality.py
